@@ -7,6 +7,8 @@ type Source string
 const (
 	SQL Source = "SQL"
 	Bootstrap = "Bootstrap"
+	Main = "Main"
+	REST = "REST"
 )
 
 func Log(msg string, source Source) {

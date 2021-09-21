@@ -17,7 +17,7 @@ func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
 	datamap := recmap.Data
 
 	// we sneak in "id" because React-Admin minimally requires "id"
-	datamap["id"] = datamap["x_id"]
+	//datamap["id"] = datamap["x_id"]
 
 	first := true
 	for key, valuebytes := range datamap {
