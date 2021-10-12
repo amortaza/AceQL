@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"fmt"
 	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
@@ -18,9 +19,17 @@ func PutRecord(c echo.Context) error {
 		logger.Error(err, logger.Main)
 	}
 
-	_ = updateRecord(name, id, m)
+	e := updateRecord(name, id, m)
 
-	return c.JSON(200, "wow")
+	code := 200
+
+	if e != nil {
+		code = 500
+	}
+
+	c.JSON(code, e.Error())
+
+	return e
 }
 
 func updateRecord(name string, id string, m *echo.Map) error {
@@ -35,6 +44,7 @@ func updateRecord(name string, id string, m *echo.Map) error {
 	}
 
 	for key, value := range *m {
+		fmt.Println( "ace key ", key, " value ", value )
 		rec.Set(key, value)
 	}
 

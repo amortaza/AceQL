@@ -23,6 +23,8 @@ func GetRecordsByQuery(c echo.Context) error {
 			break
 		}
 
+		//fmt.Println( "x_id is " , r.Get("x_id") )
+
 		list = append(list, r.GetMap())
 	}
 

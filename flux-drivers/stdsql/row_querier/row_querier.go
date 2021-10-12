@@ -53,7 +53,7 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 		return nil, nil
 	}
 
-	columns := make([]interface{}, len(query.columns))
+	columns        := make([]interface{}, len(query.columns))
 	columnPointers := make([]interface{}, len(query.columns))
 
 	for i := range columns {
@@ -64,12 +64,12 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 		return nil, fmt.Errorf("%v", err)
 	}
 
-	values := flux.NewRecordMap()
+	valuesRecordMap := flux.NewRecordMap()
 
 	for i, name := range query.columns {
 		val := columnPointers[i].(*interface{})
-		values.Put(name, *val)
+		valuesRecordMap.Put(name, *val)
 	}
 
-	return values, nil
+	return valuesRecordMap, nil
 }

@@ -57,6 +57,9 @@ func (rec *Record) Update() error {
 		return err
 	}
 
+	//v, _ := rec.Get("x_name")
+	//fmt.Println( "bro ", v )
+
 	return rec.crud.Update(rec.relationName, pk, rec.GetMap())
 }
 

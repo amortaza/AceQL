@@ -14,14 +14,14 @@ func main() {
 
 	e.Use(middleware.CORS())
 
-	e.GET("/table/:table/:id", rest.GetRecordById)
-
 	e.GET("/table/:table", rest.GetRecordsByQuery)
-	e.PUT("/table/:table/:id", rest.PutRecord)
-	e.POST("/table/:table", rest.PostRecord)
+	e.GET("/table/:table/:id", rest.GetRecordById)
 
 	// create a table
 	e.POST("/schema/:table", rest.PostSchema)
+	e.POST("/table/:table", rest.PostRecord)
+
+	e.PUT("/table/:table/:id", rest.PutRecord)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

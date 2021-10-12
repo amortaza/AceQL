@@ -15,7 +15,7 @@ func (generator *RowUpdate_SqlGenerator) GenerateSQL(table string, pk string, da
 	sql := fmt.Sprintf("UPDATE `%s` SET ", table)
 	first := true
 
-	for key, value := range data.Data {
+	for key, _ := range data.Data {
 
 		// skip primary key
 		if key == "x_id" {
@@ -29,7 +29,11 @@ func (generator *RowUpdate_SqlGenerator) GenerateSQL(table string, pk string, da
 			sql = fmt.Sprintf("%s, ", sql)
 		}
 
-		sql = fmt.Sprintf("%s `%s` = %s", sql, key, generator.valueToSQL(value))
+		// debug
+		valueAsString, _ := data.Get(key)
+		fmt.Println( "valueAsString " , valueAsString )
+
+		sql = fmt.Sprintf("%s `%s` = %s", sql, key, generator.valueToSQL(valueAsString))
 	}
 
 	return fmt.Sprintf("%s WHERE %s ='%s';", sql, "x_id", pk)
