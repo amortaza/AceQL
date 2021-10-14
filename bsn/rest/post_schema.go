@@ -3,7 +3,7 @@ package rest
 import (
 	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/relation_type"
+	"github.com/amortaza/aceql/flux/relations"
 	"github.com/labstack/echo"
 )
 
@@ -27,15 +27,15 @@ func PostSchema(c echo.Context) error {
 	return c.JSON(200, "")
 }
 
-func makeCollectionObject(name string, fields []interface{}) *relation_type.Relation {
-	relation := relation_type.NewRelation(name)
+func makeCollectionObject(name string, fields []interface{}) *relations.Relation {
+	relation := relations.NewRelation(name)
 
 	for _, v := range fields {
 		m := v.(map[string]interface{})
 
 		fieldname := m["field"].(string)
 
-		fieldtype, err := relation_type.GetFieldTypeByName(m["type"].(string))
+		fieldtype, err := relations.GetFieldTypeByName(m["type"].(string))
 		if err != nil {
 			logger.Error(err, logger.Main)
 			continue

@@ -6,6 +6,7 @@ type Source string
 
 const (
 	JsonEncoding Source = "JSON-ENCODING"
+	MAIN = "MAIN"
 )
 
 func Log(msg string, source Source) {

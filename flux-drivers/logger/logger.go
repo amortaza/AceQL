@@ -2,17 +2,11 @@ package logger
 
 import "fmt"
 
-type Source string
-
-const (
-	SQL Source = "SQL"
-)
-
-func Log(msg string, source Source) {
+func Log(msg string, source string) {
 	fmt.Println("(", source, ")", msg)
 }
 
-func Error(msg interface{}, source Source) {
+func Error(msg interface{}, source string) {
 	fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	fmt.Println("***** ( ERROR ) ", source, msg)
 }

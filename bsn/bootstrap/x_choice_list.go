@@ -3,16 +3,17 @@ package bootstrap
 import (
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/relation_type"
+	"github.com/amortaza/aceql/flux/relations"
 )
 
-func makeSpecificationFor_ChoiceList() *relation_type.Relation {
-	relation := relation_type.NewRelation( "x_choice_list") 
+func makeSpecificationFor_ChoiceList() *relations.Relation {
+	relation := relations.NewRelation( "x_choice_list")
 
-	stringType, _ := relation_type.GetFieldTypeByName( "String")
-	numberType, _ := relation_type.GetFieldTypeByName( "Number")
-	boolType, _ := relation_type.GetFieldTypeByName( "Bool")
+	stringType, _ := relation.GetFieldTypeByName( "String")
+	numberType, _ := relation.GetFieldTypeByName( "Number")
+	boolType, _ := relation.GetFieldTypeByName( "Bool")
 
+	relation.AddField( "x_id", stringType )
 	relation.AddField( "x_table", stringType )
 	relation.AddField( "x_field", stringType )
 	relation.AddField( "x_name", stringType )
@@ -30,7 +31,7 @@ func makeRecordsFor_ChoiceList() []*flux.Record {
 	rec.Set("x_table", "x_schema")
 	rec.Set("x_field", "x_type")
 	rec.Set("x_name", "Relation")
-	rec.Set("x_value", "relation")
+	rec.Set("x_value", "relations")
 	rec.Set("x_order", "1")
 	rec.Set("x_enabled", 1)
 	records = append(records, rec)

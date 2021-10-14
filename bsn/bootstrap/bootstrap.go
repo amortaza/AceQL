@@ -3,7 +3,7 @@ package bootstrap
 import (
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/relation_type"
+	"github.com/amortaza/aceql/flux/relations"
 )
 
 func Run() error {
@@ -22,7 +22,7 @@ func Run() error {
 	return nil
 }
 
-func bootstrap(relation *relation_type.Relation, records []*flux.Record) error {
+func bootstrap(relation *relations.Relation, records []*flux.Record) error {
 	schema := stdsql.NewSchema()
 
 	if err := schema.CreateRelation_withName(relation.Name(), relation.Name() != "x_schema"); err != nil {

@@ -6,6 +6,7 @@ import (
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/labstack/echo"
+	"strconv"
 )
 
 func PutRecord(c echo.Context) error {
@@ -21,19 +22,20 @@ func PutRecord(c echo.Context) error {
 
 	e := updateRecord(name, id, m)
 
-	code := 200
-
 	if e != nil {
-		code = 500
+		c.JSON(500, e.Error())
+		return e
 	}
 
-	c.JSON(code, e.Error())
+	c.JSON(200, nil)
 
-	return e
+	return nil
 }
 
 func updateRecord(name string, id string, m *echo.Map) error {
-	rec := flux.NewRecord(name, stdsql.NewCRUD())
+	crud := stdsql.NewCRUD()
+	relation := flux.GetRelation(name, crud)
+	rec := flux.NewRecord(relation, crud)
 	_ = rec.AddPrimaryKey(id)
 	_ = rec.Query()
 
@@ -44,8 +46,28 @@ func updateRecord(name string, id string, m *echo.Map) error {
 	}
 
 	for key, value := range *m {
-		fmt.Println( "ace key ", key, " value ", value )
-		rec.Set(key, value)
+		field := relation.GetField( key )
+
+		fmt.Println( "ace key ", key ) // debug
+
+		// todo make front end aware of field types
+		// 10/13/2021 - daddie
+		if field.IsNumber() {
+			v64, err := strconv.ParseFloat(value.(string), 32)
+
+			if err != nil {
+				logger.Error("Will not set field " + key + " because cannot parse float, see " + value.(string), "rest.updateRecord()")
+				continue
+			}
+
+			rec.Set(key, float32(v64) )
+
+		} else if field.IsBool() {
+			rec.Set(key, value.(string) == "true" )
+
+		} else {
+			rec.Set(key, value)
+		}
 	}
 
 	return rec.Update()

@@ -11,7 +11,9 @@ import (
 func GetRecordsByQuery(c echo.Context) error {
 	name := c.Param("table")
 
-	r := flux.NewRecord(name, stdsql.NewCRUD())
+	crud := stdsql.NewCRUD()
+
+	r := flux.NewRecord( flux.GetRelation(name,crud), crud )
 	_ = r.Query()
 
 	list := make([]*flux.RecordMap, 0)

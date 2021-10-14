@@ -11,7 +11,7 @@ func NewRowUpdate_SqlGenerator() *RowUpdate_SqlGenerator {
 	return &RowUpdate_SqlGenerator{}
 }
 
-func (generator *RowUpdate_SqlGenerator) GenerateSQL(table string, pk string, data *flux.RecordMap) string {
+func (generator *RowUpdate_SqlGenerator) GenerateSQL(table string, pk string, data *flux.RecordMap) (string, error) {
 	sql := fmt.Sprintf("UPDATE `%s` SET ", table)
 	first := true
 
@@ -29,24 +29,58 @@ func (generator *RowUpdate_SqlGenerator) GenerateSQL(table string, pk string, da
 			sql = fmt.Sprintf("%s, ", sql)
 		}
 
-		// debug
-		valueAsString, _ := data.Get(key)
-		fmt.Println( "valueAsString " , valueAsString )
+		var valueAsString string
+		var err error
 
-		sql = fmt.Sprintf("%s `%s` = %s", sql, key, generator.valueToSQL(valueAsString))
+		isString, err := data.IsString(key)
+		if err != nil {
+			return "", err
+		}
+
+		isNumber, err := data.IsNumber(key)
+		if err != nil {
+			return "", err
+		}
+
+		isBool, err := data.IsBool(key)
+		if err != nil {
+			return "", err
+		}
+
+		if isString {
+			valueAsString, err = data.Get(key)
+			if err != nil {
+				return "", err
+			}
+
+			sql = fmt.Sprintf("%s `%s` = '%s'", sql, key, valueAsString)
+
+		} else if isNumber {
+			valueAsFloat, err := data.GetNumber(key)
+			if err != nil {
+				return "", err
+			}
+
+			valueAsString = fmt.Sprintf("%f", valueAsFloat)
+
+			sql = fmt.Sprintf("%s `%s` = %s", sql, key, valueAsString)
+
+		} else if isBool {
+			valueAsBool, err := data.GetBool(key)
+			if err != nil {
+				return "", err
+			}
+
+			if valueAsBool {
+				valueAsString = "true"
+			} else {
+				valueAsString = "false"
+			}
+
+			sql = fmt.Sprintf("%s `%s` = %s", sql, key, valueAsString)
+		}
 	}
 
-	return fmt.Sprintf("%s WHERE %s ='%s';", sql, "x_id", pk)
+	return fmt.Sprintf("%s WHERE %s ='%s';", sql, "x_id", pk), nil
 }
 
-func (generator *RowUpdate_SqlGenerator) valueToSQL(value interface{}) string {
-	sql := ""
-
-	if stringValue, ok := value.(string); ok {
-		sql = fmt.Sprintf("'%s'", stringValue)
-	} else {
-		sql = fmt.Sprintf("%v", value)
-	}
-
-	return sql
-}

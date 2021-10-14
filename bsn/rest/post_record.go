@@ -23,7 +23,8 @@ func PostRecord(c echo.Context) error {
 }
 
 func createRecord(name string, m *echo.Map) (string, error) {
-	rec := flux.NewRecord(name, stdsql.NewCRUD())
+	crud := stdsql.NewCRUD()
+	rec := flux.NewRecord(flux.GetRelation(name, crud), crud)
 
 	for key, value := range *m {
 		rec.Set(key, value)

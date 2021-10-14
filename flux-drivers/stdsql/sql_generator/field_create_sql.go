@@ -2,7 +2,7 @@ package sql_generator
 
 import (
 	"fmt"
-	"github.com/amortaza/aceql/flux/relation_type"
+	"github.com/amortaza/aceql/flux/relations"
 )
 
 type FieldCreate_SqlGenerator struct {}
@@ -11,7 +11,7 @@ func NewFieldCreate_SqlGenerator() *FieldCreate_SqlGenerator {
 	return &FieldCreate_SqlGenerator{}
 }
 
-func (generator *FieldCreate_SqlGenerator) GenerateCreateFieldSQL(table string, field * relation_type.Field) (string, error) {
+func (generator *FieldCreate_SqlGenerator) GenerateCreateFieldSQL(table string, field * relations.Field) (string, error) {
 	sqlType, err := generator.fieldTypeToSQLType(field.Type)
 	if err != nil {
 		return "", err
@@ -28,33 +28,33 @@ func (generator *FieldCreate_SqlGenerator) GenerateCreateFieldSQL(table string, 
 	return sql, nil
 }
 
-func (generator *FieldCreate_SqlGenerator) fieldTypeToDefaultValue(fieldType relation_type.FieldType) (string, error) {
-	if fieldType == relation_type.String {
+func (generator *FieldCreate_SqlGenerator) fieldTypeToDefaultValue(fieldType relations.FieldType) (string, error) {
+	if fieldType == relations.String {
 		return "NULL", nil
 	}
 
-	if fieldType == relation_type.Bool {
+	if fieldType == relations.Bool {
 		return "0", nil
 	}
 
-	if fieldType == relation_type.Number {
+	if fieldType == relations.Number {
 		return "0", nil
 	}
 
 	return "", fmt.Errorf("unrecognized fieldtype `%s`", fieldType)
 }
 
-func (generator *FieldCreate_SqlGenerator) fieldTypeToSQLType(fieldType relation_type.FieldType) (string, error) {
-	if fieldType == relation_type.String {
+func (generator *FieldCreate_SqlGenerator) fieldTypeToSQLType(fieldType relations.FieldType) (string, error) {
+	if fieldType == relations.String {
 		return "VARCHAR(255)", nil
 	}
 
-	if fieldType == relation_type.Bool {
+	if fieldType == relations.Bool {
 		return "TINYINT", nil
 	}
 
-	if fieldType == relation_type.Number {
-		return "DECIMAL(10,5)", nil
+	if fieldType == relations.Number {
+		return "FLOAT", nil
 	}
 
 	return "", fmt.Errorf("unrecognized fieldtype %s", fieldType)

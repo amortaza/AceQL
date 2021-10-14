@@ -4,25 +4,30 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/amortaza/aceql/flux"
+	"github.com/amortaza/aceql/flux-drivers/logger"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/compiler"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_runner"
 	"github.com/amortaza/aceql/flux/node"
+	"github.com/amortaza/aceql/flux/relations"
 )
 
 type RowQuerier struct {
-	rows    *sql.Rows
-	columns []string
+	rows   *sql.Rows
+	fields [] *relations.Field
 
 	sqlRunner      *sql_runner.SqlRunner
 	selectCompiler *compiler.SelectCompiler
 }
 
-func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, table string, root node.Node) *RowQuerier {
-	var selectCompiler = compiler.NewSelectCompiler(table, root)
+func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, table string, fields [] *relations.Field, root node.Node) *RowQuerier {
+	columns := relations.FieldsToNames( fields )
+	selectCompiler := compiler.NewSelectCompiler(table, columns, root)
 
 	return &RowQuerier{
 		sqlRunner:      sqlRunner,
 		selectCompiler: selectCompiler,
+
+		fields: fields,
 	}
 }
 
@@ -32,15 +37,18 @@ func (query *RowQuerier) Query() error {
 		return fmt.Errorf("%v", err)
 	}
 
+	logger.Log( sqlstr, "SQL:RowQuerier.Query()" )
+
 	query.rows, err = query.sqlRunner.Query(sqlstr)
 	if err != nil {
 		return fmt.Errorf("%v", err)
 	}
 
-	query.columns, err = query.rows.Columns()
-	if err != nil {
-		return fmt.Errorf("%v", err)
-	}
+	// fields should be known well before query is made
+	//query.fields, err = query.rows.Columns()
+	//if err != nil {
+	//	return fmt.Errorf("%v", err)
+	//}
 
 	return nil
 }
@@ -53,22 +61,37 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 		return nil, nil
 	}
 
-	columns        := make([]interface{}, len(query.columns))
-	columnPointers := make([]interface{}, len(query.columns))
+	columns        := make([]interface{}, len(query.fields))
+	columnPointers := make([]interface{}, len(query.fields))
 
 	for i := range columns {
 		columnPointers[i] = &columns[i]
 	}
 
 	if err := query.rows.Scan(columnPointers...); err != nil {
-		return nil, fmt.Errorf("%v", err)
+		logger.Error(err, "RowQuerier.Next() rows.Scan")
+		return nil, err
 	}
 
 	valuesRecordMap := flux.NewRecordMap()
 
-	for i, name := range query.columns {
-		val := columnPointers[i].(*interface{})
-		valuesRecordMap.Put(name, *val)
+	for i, field := range query.fields {
+		value := columnPointers[ i ].(*interface{})
+
+		if field.IsString() {
+			valuesRecordMap.PutStringByteArray(field.Name, (*value).([]byte))
+
+		} else if field.IsNumber() {
+			valuesRecordMap.PutNumberByteArray(field.Name, (*value).([]byte))
+
+		} else if field.IsBool() {
+			valuesRecordMap.PutBoolByteArray(field.Name, (*value).([]byte))
+
+		} else {
+			err := fmt.Errorf("\"in Next(), field type is unknown, see\"%s : %s\"", field.Name, field.Type)
+			logger.Error(err, "RowQuerier.Next()")
+			return nil, err
+		}
 	}
 
 	return valuesRecordMap, nil

@@ -2,14 +2,14 @@ package flux
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/amortaza/aceql/flux/logger"
-	"github.com/amortaza/aceql/flux/relation_type"
+	"github.com/amortaza/aceql/flux/relations"
+	"strconv"
 )
 
 type RecordMap struct {
-	Data map[string]interface{}
+	Data map[string] *TypedValue
 }
 
 func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
@@ -20,7 +20,7 @@ func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
 	//datamap["id"] = datamap["x_id"]
 
 	first := true
-	for key, valuebytes := range datamap {
+	for key, typedValue := range datamap {
 
 		if first {
 			first = false
@@ -28,16 +28,20 @@ func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
 			buffer.WriteString(",")
 		}
 
-		value := string(valuebytes.([]byte))
+		if typedValue.IsString() {
+			asStr := fmt.Sprintf("\"%s\" : \"%s\"", key, typedValue.GetString() )
+			buffer.WriteString( asStr )
 
-		valuemarshalled, err := json.Marshal(value)
-		if err != nil {
-			return nil, err
+		} else if typedValue.IsBool() {
+			asStr := fmt.Sprintf("\"%s\" : %s", key, strconv.FormatBool( typedValue.GetBool() ) )
+			buffer.WriteString( asStr )
+
+		} else if typedValue.IsNumber() {
+			asStr := fmt.Sprintf("\"%s\" : %f", key, typedValue.GetNumber() )
+			buffer.WriteString( asStr )
+		} else {
+			logger.Error("Typed value type unrecognized", "MarshalJSON()")
 		}
-
-		asStr := fmt.Sprintf("\"%s\" : %s", key, string(valuemarshalled))
-
-		buffer.WriteString(asStr)
 	}
 
 	buffer.WriteString("}")
@@ -49,12 +53,80 @@ func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
 
 func NewRecordMap() *RecordMap {
 	return &RecordMap{
-		Data: make(map[string]interface{}),
+		Data: make(map[string] *TypedValue),
 	}
 }
 
-func (recmap *RecordMap) Put(key string, value interface{}) {
-	recmap.Data[key] = value
+func (recmap *RecordMap) PutStringByteArray(key string, bytes []byte) {
+	typedValue := &TypedValue{}
+	typedValue.SetStringByteArray( bytes )
+
+	recmap.Data[ key ] = typedValue
+}
+
+func (recmap *RecordMap) PutString(key string, value string) {
+	typedValue := &TypedValue{}
+	typedValue.SetString( value )
+
+	recmap.Data[ key ] = typedValue
+}
+
+func (recmap *RecordMap) PutNumberByteArray(key string, bytes []byte) {
+	typedValue := &TypedValue{}
+	typedValue.SetNumberByteArray( bytes )
+
+	recmap.Data[ key ] = typedValue
+}
+
+func (recmap *RecordMap) PutNumber(key string, value float32) {
+	typedValue := &TypedValue{}
+	typedValue.SetNumber( value )
+
+	recmap.Data[ key ] = typedValue
+}
+
+func (recmap *RecordMap) PutBoolByteArray(key string, bytes []byte) {
+	typedValue := &TypedValue{}
+	typedValue.SetBoolByteArray( bytes )
+
+	recmap.Data[ key ] = typedValue
+}
+
+func (recmap *RecordMap) PutBool(key string, value bool) {
+	typedValue := &TypedValue{}
+	typedValue.SetBool( value )
+
+	recmap.Data[ key ] = typedValue
+}
+
+func (recmap *RecordMap) IsString(key string) (bool, error) {
+	if !recmap.Has(key) {
+		return false, fmt.Errorf("key not '%s' not found in map", key)
+	}
+
+	typedValue, _ := recmap.Data[ key ]
+
+	return typedValue.fieldType == relations.String, nil
+}
+
+func (recmap *RecordMap) IsNumber(key string) (bool, error) {
+	if !recmap.Has(key) {
+		return false, fmt.Errorf("key not '%s' not found in map", key)
+	}
+
+	typedValue, _ := recmap.Data[ key ]
+
+	return typedValue.fieldType == relations.Number, nil
+}
+
+func (recmap *RecordMap) IsBool(key string) (bool, error) {
+	if !recmap.Has(key) {
+		return false, fmt.Errorf("key not '%s' not found in map", key)
+	}
+
+	typedValue, _ := recmap.Data[ key ]
+
+	return typedValue.fieldType == relations.Bool, nil
 }
 
 func (recmap *RecordMap) Get(key string) (string, error) {
@@ -62,12 +134,17 @@ func (recmap *RecordMap) Get(key string) (string, error) {
 		return "", fmt.Errorf("key not '%s' not found in map", key)
 	}
 
-	asByteArray, ok := recmap.Data[key].([]byte)
-	if !ok {
-		return "", fmt.Errorf("value for key'%s' not a string", key)
+	typedValue := recmap.Data[ key ]
+
+	if !typedValue.IsString() {
+		err := fmt.Errorf("typed-value is a '%s' and not a string", typedValue.fieldType)
+		logger.Error(err, logger.MAIN)
+
+		return "", err
 	}
 
-	return string(asByteArray), nil
+	//fmt.Println( "attempting to get string ", key, typedValue.GetString() ) // debug
+	return typedValue.GetString(), nil
 }
 
 func (recmap *RecordMap) GetNumber(key string) (float32, error) {
@@ -75,12 +152,16 @@ func (recmap *RecordMap) GetNumber(key string) (float32, error) {
 		return 0, fmt.Errorf("key not '%s' not found in map", key)
 	}
 
-	value, ok := recmap.Data[key].(float32)
-	if !ok {
-		return 0, fmt.Errorf("value for key'%s' not a number", key)
+	typedValue := recmap.Data[ key ]
+
+	if !typedValue.IsNumber() {
+		err := fmt.Errorf("typed-value is a '%s' and not a number", typedValue.fieldType)
+		logger.Error(err, logger.MAIN)
+
+		return 0, err
 	}
 
-	return value, nil
+	return typedValue.GetNumber(), nil
 }
 
 func (recmap *RecordMap) GetBool(key string) (bool, error) {
@@ -88,34 +169,17 @@ func (recmap *RecordMap) GetBool(key string) (bool, error) {
 		return false, fmt.Errorf("key not '%s' not found in map", key)
 	}
 
-	value, ok := recmap.Data[key].(bool)
-	if !ok {
-		return false, fmt.Errorf("value for key'%s' not a bool", key)
+	typedValue := recmap.Data[ key ]
+
+	if !typedValue.IsBool() {
+		err := fmt.Errorf("typed-value is a '%s' and not a bool", typedValue.fieldType)
+		logger.Error(err, logger.MAIN)
+
+		return false, err
 	}
 
-	return value, nil
-}
-
-func (recmap *RecordMap) Type(key string) (relation_type.FieldType, error) {
-	if !recmap.Has(key) {
-		return "", fmt.Errorf("key not '%s' not found in map", key)
-	}
-
-	value := recmap.Data[key]
-
-	if _, ok := value.(string); ok {
-		return relation_type.String, nil
-	}
-
-	if _, ok := value.(float32); ok {
-		return relation_type.Number, nil
-	}
-
-	if _, ok := value.(bool); ok {
-		return relation_type.Bool, nil
-	}
-
-	return "", fmt.Errorf("cannot determine type of value for key '%s', see '%v'", key, value)
+	fmt.Println( "attempting to get bool ", key, typedValue.GetBool() ) // debug
+	return typedValue.GetBool(), nil
 }
 
 func (recmap *RecordMap) Has(key string) bool {
@@ -128,11 +192,11 @@ func (recmap *RecordMap) Combine(other *RecordMap) *RecordMap {
 	result := NewRecordMap()
 
 	for k, v := range recmap.Data {
-		result.Put(k, v)
+		result.Data[ k ] = v
 	}
 
 	for k, v := range other.Data {
-		result.Put(k, v)
+		result.Data[ k ] = v
 	}
 
 	return result

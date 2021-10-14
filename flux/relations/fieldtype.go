@@ -1,4 +1,4 @@
-package relation_type
+package relations
 
 import (
 	"fmt"

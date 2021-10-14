@@ -7,7 +7,7 @@ import (
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_generator"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_runner"
 	"github.com/amortaza/aceql/flux/node"
-	"github.com/amortaza/aceql/flux/relation_type"
+	"github.com/amortaza/aceql/flux/relations"
 	"github.com/amortaza/aceql/flux/utils"
 )
 
@@ -35,8 +35,8 @@ func (crud *CRUD) Compiler() node.Compiler {
 	return crud.compiler
 }
 
-func (crud *CRUD) Query(table string, root node.Node) error {
-	crud.querier = row_querier.NewRowQuerier( crud.sqlRunner, table, root)
+func (crud *CRUD) Query(table string, fields []* relations.Field, root node.Node) error {
+	crud.querier = row_querier.NewRowQuerier( crud.sqlRunner, table, fields, root)
 
 	return crud.querier.Query()
 }
@@ -59,7 +59,10 @@ func (crud *CRUD) Create(table string, values *flux.RecordMap) (string, error) {
 func (crud *CRUD) Update(table string, id string, values *flux.RecordMap) error {
 	sqlGenerator := sql_generator.NewRowUpdate_SqlGenerator()
 
-	sql := sqlGenerator.GenerateSQL( table, id, values )
+	sql, err := sqlGenerator.GenerateSQL( table, id, values )
+	if err != nil {
+		return err
+	}
 
 	return crud.sqlRunner.Run( sql )
 }
@@ -88,7 +91,7 @@ func (crud *CRUD) DeleteRelation(name string) error {
 	return crud.sqlRunner.Run( sql )
 }
 
-func (crud *CRUD) CreateField(relationName string, field *relation_type.Field) error {
+func (crud *CRUD) CreateField(relationName string, field *relations.Field) error {
 	sqlGenerator := sql_generator.NewFieldCreate_SqlGenerator()
 
 	sql, err := sqlGenerator.GenerateCreateFieldSQL( relationName, field )

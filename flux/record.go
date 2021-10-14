@@ -3,30 +3,47 @@ package flux
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/amortaza/aceql/flux/logger"
 	"github.com/amortaza/aceql/flux/query"
+	"github.com/amortaza/aceql/flux/relations"
 )
 
 type Record struct {
 	relationName string
-	filterQuery  *query.FilterQuery
+	fields [] *relations.Field
 
-	fieldnames []string
+	filterQuery  *query.FilterQuery
 
 	values     *RecordMap
 	userValues *RecordMap
 
+	nameToType map[string] *relations.FieldType
+
 	crud CRUD
 }
 
-func NewRecord(relationName string, crud CRUD) *Record {
+func NewRecord(relation *relations.Relation, crud CRUD) *Record {
+	return NewRecord_withDefinition( relation.Name(), relation.Fields(), crud )
+}
+
+// beause this is low level, it cannot take "Relation" type
+// it must take table name and field list (so we can hard code it when bootstrapping)
+func NewRecord_withDefinition(relationName string, fields [] *relations.Field, crud CRUD) *Record {
 	rec := &Record{
 		filterQuery:  query.NewFilterQuery(crud.Compiler()),
 		crud:         crud,
 		relationName: relationName,
+		fields: fields,
 	}
 
 	rec.values = NewRecordMap()
 	rec.userValues = NewRecordMap()
+
+	rec.nameToType = make(map[string] *relations.FieldType)
+
+	for _, field := range fields {
+		rec.nameToType[ field.Name ] = &field.Type
+	}
 
 	return rec
 }
@@ -43,8 +60,25 @@ func (rec *Record) GetMap() *RecordMap {
 	return rec.values.Combine(rec.userValues)
 }
 
-func (rec *Record) Set(field string, value interface{}) {
-	rec.userValues.Put(field, value)
+func (rec *Record) Set( fieldname string, value interface{} ) {
+	fieldType, ok := rec.nameToType[ fieldname ]
+	if !ok {
+		logger.Error("Field does not exist, see " + fieldname, "Record.Set()")
+		return
+	}
+
+	if *fieldType == relations.String {
+		rec.userValues.PutString(fieldname, value.(string))
+
+	} else if *fieldType == relations.Number {
+		rec.userValues.PutNumber(fieldname, value.(float32))
+
+	} else if *fieldType == relations.Bool {
+		rec.userValues.PutBool(fieldname, value.(bool))
+
+	} else {
+		logger.Error("Field type unrecognized, see " + fieldname + " : " + string(*fieldType), "Record.Set()")
+	}
 }
 
 func (rec *Record) Insert() (string, error) {
@@ -78,7 +112,7 @@ func (rec *Record) Query() error {
 		return err
 	}
 
-	return rec.crud.Query(rec.relationName, root)
+	return rec.crud.Query(rec.relationName, rec.fields, root)
 }
 
 // Next will return false when no records left.
@@ -107,6 +141,30 @@ func (rec *Record) Get(field string) (string, error) {
 	}
 
 	return "", fmt.Errorf("field '%s' does not exist in record", field)
+}
+
+func (rec *Record) GetNumber(field string) (float32, error) {
+	if rec.userValues.Has(field) {
+		return rec.userValues.GetNumber(field)
+	}
+
+	if rec.values.Has(field) {
+		return rec.values.GetNumber(field)
+	}
+
+	return 0, fmt.Errorf("field '%s' does not exist in record", field)
+}
+
+func (rec *Record) GetBool(field string) (bool, error) {
+	if rec.userValues.Has(field) {
+		return rec.userValues.GetBool(field)
+	}
+
+	if rec.values.Has(field) {
+		return rec.values.GetBool(field)
+	}
+
+	return true, fmt.Errorf("field '%s' does not exist in record", field)
 }
 
 func (rec *Record) AddPrimaryKey(id string) error {

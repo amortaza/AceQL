@@ -1,17 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 )
 
-func main() {
+func init() {
 	stdsql.Init("mysql", "clown:1844@/bsn")
+}
 
-	r := flux.NewRecord("x_choice_list", stdsql.NewCRUD())
+func main() {
+	crud := stdsql.NewCRUD()
+	r := flux.NewRecord(flux.GetRelation("x_choice_list", crud), crud)
 	_ = r.Query()
-
-	//list := make([]*flux.RecordMap, 0)
 
 	for {
 		hasNext, _ := r.Next()
@@ -20,15 +22,34 @@ func main() {
 			break
 		}
 
+		//fmt.Println( "row ", i ) // dbug
 		//list = append(list, r.GetMap())
 		//v, _ := r.Get("x_name")
 		//fmt.Println( "wth ", v )
 		//break
 
+		r.Set("x_value", "ace rox")
+
 		r.Update()
+
+		break
 	}
 }
+
+func main1() {
+	a := flux.GetRelation( "x_user", stdsql.NewCRUD())
+	if a == nil {
+		fmt.Println( "no relations found" )
+		return
+	}
+
+	fmt.Println( a.Fields()[0].Name )
+	fmt.Println( a.Fields()[0].Type )
+}
+
+
 func main2() {
+	/*
 	stdsql.Init( "mysql", "clown:1844@/bsn")
 
 	rec := flux.NewRecord("x_choice_list", stdsql.NewCRUD())
@@ -47,5 +68,6 @@ func main2() {
 
 		rec.Update()
 	}
+	 */
 }
 

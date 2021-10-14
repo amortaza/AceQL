@@ -7,5 +7,5 @@ import (
 func NewRecord(relationName string) *flux.Record {
 	crud := NewCRUD()
 
-	return flux.NewRecord(relationName, crud)
+	return flux.NewRecord(flux.GetRelation(relationName, crud), crud)
 }

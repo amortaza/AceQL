@@ -29,7 +29,7 @@ func (runner *SqlRunner) Run(sql string) error {
 		return err
 	}
 
-	logger.Log(sql, logger.SQL)
+	logger.Log(sql, "SQL:SqlRunner.Run()")
 
 	_, err := runner.db.Exec(sql)
 

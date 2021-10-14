@@ -2,7 +2,7 @@ package flux
 
 import (
 	"github.com/amortaza/aceql/flux/query"
-	"github.com/amortaza/aceql/flux/relation_type"
+	"github.com/amortaza/aceql/flux/relations"
 )
 
 type StandardJournalist struct {
@@ -12,10 +12,10 @@ type StandardJournalist struct {
 func (journalist *StandardJournalist) CreateRelation(relationName string) error {
 	recordmap := NewRecordMap()
 
-	recordmap.Put("x_type", "relation")
-	recordmap.Put("x_table", relationName)
-	recordmap.Put("x_field", "x_id")
-	recordmap.Put("x_field_type", string(relation_type.String))
+	recordmap.PutString("x_type", "relations" )
+	recordmap.PutString("x_table", relationName)
+	recordmap.PutString("x_field", "x_id")
+	recordmap.PutString("x_field_type", string(relations.String))
 
 	_, err := journalist.crud.Create("x_schema", recordmap)
 
@@ -23,7 +23,7 @@ func (journalist *StandardJournalist) CreateRelation(relationName string) error 
 }
 
 func (journalist *StandardJournalist) DeleteRelation(relationName string) error {
-	record := NewRecord("x_schema", journalist.crud)
+	record := NewRecord(GetRelation("x_schema", journalist.crud), journalist.crud)
 
 	_ = record.Add("x_table", query.Equals, relationName)
 
@@ -43,13 +43,13 @@ func (journalist *StandardJournalist) DeleteRelation(relationName string) error 
 	return nil
 }
 
-func (journalist *StandardJournalist) CreateField(relationName string, field *relation_type.Field) error {
+func (journalist *StandardJournalist) CreateField(relationName string, field *relations.Field) error {
 	recordmap := NewRecordMap()
 
-	recordmap.Put("x_type", "field")
-	recordmap.Put("x_table", relationName)
-	recordmap.Put("x_field", field.Name)
-	recordmap.Put("x_field_type", string(field.Type))
+	recordmap.PutString("x_type", "field")
+	recordmap.PutString("x_table", relationName)
+	recordmap.PutString("x_field", field.Name)
+	recordmap.PutString("x_field_type", string(field.Type))
 
 	_, err := journalist.crud.Create("x_schema", recordmap)
 
@@ -57,7 +57,7 @@ func (journalist *StandardJournalist) CreateField(relationName string, field *re
 }
 
 func (journalist *StandardJournalist) DeleteField(relationName string, fieldname string) error {
-	record := NewRecord("x_schema", journalist.crud)
+	record := NewRecord(GetRelation("x_schema", journalist.crud), journalist.crud)
 
 	_ = record.Add("x_table", query.Equals, relationName)
 	_ = record.Add("x_field", query.Equals, fieldname)

@@ -1,7 +1,9 @@
 package flux
 
 import (
-	"github.com/amortaza/aceql/flux/relation_type"
+	"fmt"
+	"github.com/amortaza/aceql/flux/logger"
+	"github.com/amortaza/aceql/flux/relations"
 	"github.com/amortaza/aceql/flux/schema_journalist"
 )
 
@@ -17,7 +19,7 @@ func NewSchema(journalist schema_journalist.Journalist, crud CRUD) *Schema {
 	}
 }
 
-func (schema *Schema) CreateRelation_withFields(relation *relation_type.Relation, journal bool) error {
+func (schema *Schema) CreateRelation_withFields(relation *relations.Relation, journal bool) error {
 	if err := schema.CreateRelation_withName(relation.Name(), journal); err != nil {
 		return err
 	}
@@ -34,7 +36,7 @@ func (schema *Schema) CreateRelation_withFields(relation *relation_type.Relation
 func (schema *Schema) CreateRelation_withName(name string, journal bool) error {
 
 	// the order here is importan because if we are creating 'x_schema'
-	// we want to create the relation first THEN journal it
+	// we want to create the relations first THEN journal it
 
 	err := schema.crud.CreateRelation(name)
 	if err != nil {
@@ -55,16 +57,25 @@ func (schema *Schema) DeleteRelation(name string) error {
 	return schema.crud.DeleteRelation(name)
 }
 
-func (schema *Schema) CreateField(relationName string, field *relation_type.Field, journal bool) error {
+func (schema *Schema) CreateField(relationName string, field *relations.Field, journal bool) error {
 
 	if journal {
 		_ = schema.journalist.CreateField(relationName, field)
+	}
+
+	if field.Name == "x_id" {
+		return nil
 	}
 
 	return schema.crud.CreateField(relationName, field)
 }
 
 func (schema *Schema) DeleteField(relationName string, fieldname string) error {
+	if fieldname == "x_id" {
+		err := fmt.Errorf("field x_id cannot be deleted")
+		logger.Error(err, "Schema.DeleteField()")
+		return err
+	}
 
 	_ = schema.journalist.DeleteField(relationName, fieldname)
 

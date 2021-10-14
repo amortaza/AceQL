@@ -2,7 +2,7 @@ package flux
 
 import (
 	"github.com/amortaza/aceql/flux/node"
-	"github.com/amortaza/aceql/flux/relation_type"
+	"github.com/amortaza/aceql/flux/relations"
 	"github.com/amortaza/aceql/flux/schema_journalist"
 )
 
@@ -10,7 +10,7 @@ type CRUD interface {
 	// Compiler is here for now for convenience, but it really doesn't belong here
 	Compiler() node.Compiler
 
-	Query(relationName string, root node.Node) error
+	Query(relationName string, fields []*relations.Field, root node.Node) error
 	Next() (*RecordMap, error)
 
 	Create(relationName string, values *RecordMap) (string, error)
@@ -20,7 +20,7 @@ type CRUD interface {
 	// schema crud operations
 	CreateRelation(name string) error
 	DeleteRelation(name string) error
-	CreateField(relationName string, field *relation_type.Field) error
+	CreateField(relationName string, field *relations.Field) error
 	DeleteField(relationName string, fieldname string) error
 }
 
