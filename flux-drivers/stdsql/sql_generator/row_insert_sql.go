@@ -15,8 +15,12 @@ func (generator *RowInsert_SqlGenerator) GenerateInsertSQL(table string, newId s
 	columnsSQL := "`x_id`"
 	valuesSQL := fmt.Sprintf("'%s'", newId)
 
-	for column, value := range values.Data {
-		sqlValue := generator.valueToSQL(value)
+	for column, typedValue := range values.Data {
+		if column == "x_id" {
+			continue
+		}
+
+		sqlValue := generator.typedValueToSQL(typedValue)
 
 		columnsSQL = fmt.Sprintf("%s, `%s`", columnsSQL, column)
 		valuesSQL = fmt.Sprintf("%s, %s", valuesSQL, sqlValue)
@@ -25,13 +29,20 @@ func (generator *RowInsert_SqlGenerator) GenerateInsertSQL(table string, newId s
 	return fmt.Sprintf("INSERT INTO `%s` (%s) VALUES(%s);", table, columnsSQL, valuesSQL)
 }
 
-func (generator *RowInsert_SqlGenerator) valueToSQL(value interface{}) string {
+func (generator *RowInsert_SqlGenerator) typedValueToSQL(typedValue *flux.TypedValue) string {
 	sql := ""
 
-	if stringValue, ok := value.(string); ok {
-		sql = fmt.Sprintf("'%s'", stringValue)
+	if typedValue.IsString() {
+		sql = fmt.Sprintf("'%s'", typedValue.GetString())
+
+	} else if typedValue.IsNumber() {
+		sql = fmt.Sprintf("%1.2f", typedValue.GetNumber())
+
+	} else if typedValue.IsBool() {
+		sql = fmt.Sprintf("%t", typedValue.GetBool())
+
 	} else {
-		sql = fmt.Sprintf("%v", value)
+		panic("TypedValue type is unrecognized in typedValueToSQL()")
 	}
 
 	return sql

@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"fmt"
 	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
@@ -48,7 +47,7 @@ func updateRecord(name string, id string, m *echo.Map) error {
 	for key, value := range *m {
 		field := relation.GetField( key )
 
-		fmt.Println( "ace key ", key ) // debug
+		//fmt.Println( "ace key ", key ) // debu
 
 		// todo make front end aware of field types
 		// 10/13/2021 - daddie

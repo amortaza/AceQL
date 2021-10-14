@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
+	"github.com/amortaza/aceql/flux/query"
 )
 
 func init() {
@@ -11,6 +12,14 @@ func init() {
 }
 
 func main() {
+	r := stdsql.NewRecord("x_choice_list")
+	_ = r.Add("x_type", query.Equals, "field")
+	_ = r.Add("x_table", query.Equals, table)
+	_ = r.Query()
+
+	_, _ = r.Next()
+}
+func main4() {
 	crud := stdsql.NewCRUD()
 	r := flux.NewRecord(flux.GetRelation("x_choice_list", crud), crud)
 	_ = r.Query()

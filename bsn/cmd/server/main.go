@@ -17,6 +17,8 @@ func main() {
 	e.GET("/table/:table", rest.GetRecordsByQuery)
 	e.GET("/table/:table/:id", rest.GetRecordById)
 
+	e.GET("/schema/:table", rest.GetSchemaByTable)
+
 	// create a table
 	e.POST("/schema/:table", rest.PostSchema)
 	e.POST("/table/:table", rest.PostRecord)
