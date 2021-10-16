@@ -27,6 +27,12 @@ func main() {
 
 	e.PUT("/table/:table/:id", rest.PutRecord)
 
+	// delete field
+	e.DELETE("/schema/table/:table/field/:field", rest.DeleteSchemaField)
+
+	// delete record
+	e.DELETE("/table/:table/id/:id", rest.DeleteRecordById)
+
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
