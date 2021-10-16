@@ -22,6 +22,8 @@ type CRUD interface {
 	DeleteRelation(name string) error
 	CreateField(relationName string, field *relations.Field) error
 	DeleteField(relationName string, fieldname string) error
+
+	Close() error
 }
 
 func NewJournalist(crud CRUD) schema_journalist.Journalist {

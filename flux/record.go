@@ -52,7 +52,7 @@ func (rec *Record) MarshalJSON() ([]byte, error) {
 	return json.Marshal(rec.GetMap())
 }
 
-func (rec *Record) RelationName() string {
+func (rec *Record) GetTable() string {
 	return rec.relationName
 }
 
@@ -81,6 +81,10 @@ func (rec *Record) Set( fieldname string, value interface{} ) {
 	}
 }
 
+func (rec *Record) Close() error {
+	return rec.crud.Close()
+}
+
 func (rec *Record) Insert() (string, error) {
 	return rec.crud.Create(rec.relationName, rec.GetMap())
 }
@@ -90,9 +94,6 @@ func (rec *Record) Update() error {
 	if err != nil {
 		return err
 	}
-
-	//v, _ := rec.Get("x_name")
-	//fmt.Println( "bro ", v )
 
 	return rec.crud.Update(rec.relationName, pk, rec.GetMap())
 }

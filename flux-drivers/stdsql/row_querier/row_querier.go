@@ -31,6 +31,14 @@ func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, table string, fields [] *rel
 	}
 }
 
+func (query *RowQuerier) Close() error {
+	if query.rows == nil {
+		return nil
+	}
+
+	return query.rows.Close()
+}
+
 func (query *RowQuerier) Query() error {
 	sqlstr, err := query.selectCompiler.Compile()
 	if err != nil {

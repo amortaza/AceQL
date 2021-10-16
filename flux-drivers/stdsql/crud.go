@@ -109,3 +109,11 @@ func (crud *CRUD) DeleteField(relationName string, fieldname string) error {
 
 	return crud.sqlRunner.Run( sql )
 }
+
+func (crud *CRUD) Close() error {
+	if crud.querier == nil {
+		return nil
+	}
+
+	return crud.querier.Close()
+}
