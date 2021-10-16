@@ -12,7 +12,7 @@ type StandardJournalist struct {
 func (journalist *StandardJournalist) CreateRelation(relationName string) error {
 	recordmap := NewRecordMap()
 
-	recordmap.PutString("x_type", "relations" )
+	recordmap.PutString("x_type", "relation" )
 	recordmap.PutString("x_table", relationName)
 	recordmap.PutString("x_field", "x_id")
 	recordmap.PutString("x_field_type", string(relations.String))

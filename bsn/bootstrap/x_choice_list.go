@@ -31,7 +31,7 @@ func makeRecordsFor_ChoiceList() []*flux.Record {
 	rec.Set("x_table", "x_schema")
 	rec.Set("x_field", "x_type")
 	rec.Set("x_name", "Relation")
-	rec.Set("x_value", "relations")
+	rec.Set("x_value", "relation")
 	rec.Set("x_order", "1")
 	rec.Set("x_enabled", 1)
 	records = append(records, rec)
