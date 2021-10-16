@@ -20,7 +20,9 @@ func main() {
 	e.GET("/schema/:table", rest.GetSchemaByTable)
 
 	// create a table
-	e.POST("/schema/:table", rest.PostSchema)
+	e.POST("/schema/:table", rest.PostSchemaTable)
+	e.POST("/schema/table/:table/field/:field", rest.PostSchemaField)
+
 	e.POST("/table/:table", rest.PostRecord)
 
 	e.PUT("/table/:table/:id", rest.PutRecord)

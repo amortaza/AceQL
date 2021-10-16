@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func PostSchema(c echo.Context) error {
+func PostSchemaTable(c echo.Context) error {
 	name := c.Param("table")
 
 	m := &echo.Map{}
