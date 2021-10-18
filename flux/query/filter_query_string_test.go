@@ -74,7 +74,7 @@ func TestWhenContains_ExpectNoError(t *testing.T) {
 
 	_ = filterQuery.Add("u_name", Contains, "foo")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE u_name LIKE '%foo%'" {
 		fmt.Println(sql)
@@ -87,7 +87,7 @@ func TestWhenNotContains_ExpectNoError(t *testing.T) {
 
 	_ = filterQuery.Add("u_name", NotContains, "foo")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE u_name NOT LIKE '%foo%'" {
 		fmt.Println(sql)

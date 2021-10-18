@@ -11,15 +11,48 @@ func init() {
 	stdsql.Init("mysql", "clown:1844@/bsn")
 }
 
+// 5
 func main() {
+	//encodedQuery = "where age=\"45\" and name=\"afshin \\\"the clown\\\"\" and thats it"
+
+
+	query.Parse("")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse(" abc ")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse(" abc def    ghi")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse(" abc def    ghi  jklmnop")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse("my name is \"ace\"")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse("my name is \"ace nia\"")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse("my name is \"ace nia")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse("my name is\"ace mia\"")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse("my name is\"\\\"")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse("my name is\"\\\\\"")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse("where value = \"ace \\\"the\\\" man\"")
+	fmt.Println( "---------------------" ) // debug
+	query.Parse("where value=\"ace \\\"the\\\" man\"")
+
+}
+
+func main4() {
+	/*
 	r := stdsql.NewRecord("x_choice_list")
 	_ = r.Add("x_type", query.Equals, "field")
 	_ = r.Add("x_table", query.Equals, table)
 	_ = r.Query()
 
 	_, _ = r.Next()
+	*/
 }
-func main4() {
+func main3() {
 	crud := stdsql.NewCRUD()
 	r := flux.NewRecord(flux.GetRelation("x_choice_list", crud), crud)
 	_ = r.Query()
@@ -45,7 +78,7 @@ func main4() {
 	}
 }
 
-func main1() {
+func main2() {
 	a := flux.GetRelation( "x_user", stdsql.NewCRUD())
 	if a == nil {
 		fmt.Println( "no relations found" )
@@ -57,12 +90,12 @@ func main1() {
 }
 
 
-func main2() {
+func main1() {
 	/*
 	stdsql.Init( "mysql", "clown:1844@/bsn")
 
 	rec := flux.NewRecord("x_choice_list", stdsql.NewCRUD())
-	_ = rec.AddPrimaryKey("0c8e07932620473ab290b781911dbe9f")
+	_ = rec.AddPK("0c8e07932620473ab290b781911dbe9f")
 	_ = rec.Query()
 
 	b, _ := rec.Next()

@@ -1,20 +1,39 @@
 package query
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestWhenEmptyWhere_ExpectNoError(t *testing.T) {
-	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
+func TestParserWhenEmpty_ExpectNoError(t *testing.T) {
+	encoded := ""
 
-	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
+	root, err := Parse(encoded)
+	if err != nil {
+		t.Error()
+	}
+
+	sql, _ := testutil_NodeToSQL("u_user", root)
 
 	if sql != "SELECT * FROM u_user" {
 		t.Error()
 	}
 }
 
+func TestParserWhenEqualsNumber_ExpectNoError(t *testing.T) {
+	encoded := "age = 45"
+
+	root, err := Parse(encoded)
+	if err != nil {
+		t.Error()
+	}
+
+	sql, _ := testutil_NodeToSQL("u_user", root)
+
+	if sql != "SELECT * FROM u_user where age = 45" {
+		t.Error()
+	}
+}
+/*
 func TestWhenEqualsString_ExpectNoError(t *testing.T) {
 	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
 
@@ -129,3 +148,4 @@ func TestWhenComplexAndGroup_ExpectNoError(t *testing.T) {
 		t.Error()
 	}
 }
+*/

@@ -31,7 +31,7 @@ func createRecord(name string, m *echo.Map) (string, error) {
 	for key, value := range *m {
 		field := relation.GetField( key )
 
-		//fmt.Println( "post field ", field.Name, field.Type, value ) // debug
+		//fmt.Println( "post field ", field.Name, field.SyntaxType, value ) // debug
 
 		// todo make front end aware of field types
 		// 10/13/2021 - daddie

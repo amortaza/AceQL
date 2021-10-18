@@ -168,7 +168,7 @@ func (rec *Record) GetBool(field string) (bool, error) {
 	return true, fmt.Errorf("field '%s' does not exist in record", field)
 }
 
-func (rec *Record) AddPrimaryKey(id string) error {
+func (rec *Record) AddPK(id string) error {
 	return rec.filterQuery.Add("x_id", query.Equals, id)
 }
 

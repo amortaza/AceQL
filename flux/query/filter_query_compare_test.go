@@ -10,7 +10,7 @@ func TestWhenEquals_ExpectNoError(t *testing.T) {
 
 	_ = filterQuery.Add("u_name", Equals, "u_id")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE u_name = 'u_id'" {
 		fmt.Println(sql)
@@ -23,7 +23,7 @@ func TestWhenNotEquals_ExpectNoError(t *testing.T) {
 
 	_ = filterQuery.Add("u_name", NotEquals, "u_id")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE u_name != 'u_id'" {
 		fmt.Println(sql)
@@ -36,7 +36,7 @@ func TestWhenLessThan_ExpectNoError(t *testing.T) {
 
 	_ = filterQuery.Add("u_name", LessThan, "u_id")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE u_name < 'u_id'" {
 		fmt.Println(sql)
@@ -49,7 +49,7 @@ func TestWhenLessThanEqualTo_ExpectNoError(t *testing.T) {
 
 	_ = filterQuery.Add("u_name", LessOrEqual, "u_id")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE u_name <= 'u_id'" {
 		fmt.Println(sql)
@@ -62,7 +62,7 @@ func TestWhenGreaterThan_ExpectNoError(t *testing.T) {
 
 	_ = filterQuery.Add("u_name", GreaterThan, "u_id")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE u_name > 'u_id'" {
 		fmt.Println(sql)
@@ -75,7 +75,7 @@ func TestWhenGreaterThanEqualTo_ExpectNoError(t *testing.T) {
 
 	_ = filterQuery.Add("u_name", GreaterOrEqual, "u_id")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE u_name >= 'u_id'" {
 		fmt.Println(sql)

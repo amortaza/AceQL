@@ -11,7 +11,7 @@ func TestWhenNotEqual_ExpectNoError(t *testing.T) {
 	filterQuery.Not()
 	_ = filterQuery.Add("u_name", Equals, "u_id")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE NOT ( u_name = 'u_id' )" {
 		fmt.Println(sql)
@@ -26,7 +26,7 @@ func TestQueryWhenNotAnd_ExpectNoError(t *testing.T) {
 	_ = filterQuery.Add("u_name", Equals, "u_id")
 	_ = filterQuery.Add("u_age", Equals, "u_years")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE NOT ( ( u_name = 'u_id' AND u_age = 'u_years' ) )" {
 		fmt.Println(sql)
@@ -42,7 +42,7 @@ func TestQueryWhenNotAndAnd_ExpectNoError(t *testing.T) {
 	_ = filterQuery.Add("u_age", Equals, "u_years")
 	_ = filterQuery.Add("u_date", Equals, "u_today")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE NOT ( ( ( u_name = 'u_id' AND u_age = 'u_years' ) AND u_date = 'u_today' ) )" {
 		fmt.Println(sql)
@@ -58,7 +58,7 @@ func TestWhenNotAndGroupedWithAnd_ExpectNoError(t *testing.T) {
 	_ = filterQuery.AndGroup()
 	_ = filterQuery.Add("u_age", Equals, "u_years")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE ( NOT ( u_name = 'u_id' ) AND u_age = 'u_years' )" {
 		fmt.Printf("'%s'", sql)
@@ -74,7 +74,7 @@ func TestWhenAndNot_ExpectNoError(t *testing.T) {
 	filterQuery.Not()
 	_ = filterQuery.Add("u_age", Equals, "u_years")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE ( u_name = 'u_id' AND NOT ( u_age = 'u_years' ) )" {
 		fmt.Printf("'%s'", sql)
@@ -91,7 +91,7 @@ func TestWhenNot2AndsWithSeparateAnd_ExpectNoError(t *testing.T) {
 	_ = filterQuery.AndGroup()
 	_ = filterQuery.Add("e", Equals, "f")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE ( NOT ( ( a = 'b' AND c = 'd' ) ) AND e = 'f' )" {
 		fmt.Printf("'%s'", sql)
@@ -109,7 +109,7 @@ func TestWhenAndNotAnd_ExpectNoError(t *testing.T) {
 	_ = filterQuery.Add("e", Equals, "f")
 	_ = filterQuery.Add("g", Equals, "h")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE ( ( a = 'b' AND c = 'd' ) AND NOT ( ( e = 'f' AND g = 'h' ) ) )" {
 		fmt.Printf("'%s'", sql)
@@ -135,7 +135,7 @@ func TestWhenComplexGroups_ExpectNoError(t *testing.T) {
 	_ = filterQuery.Add("q", Equals, "r")
 	_ = filterQuery.Add("s", Equals, "t")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE ( ( ( a = 'b' AND ( c = 'd' AND e = 'f' ) ) AND NOT ( ( ( g = 'h' AND i = 'j' ) AND k = 'l' ) ) ) AND ( ( ( m = 'n' AND o = 'p' ) AND q = 'r' ) AND s = 't' ) )" {
 		fmt.Printf("'%s'", sql)
@@ -162,7 +162,7 @@ func TestWhenComplexGroupsVariation_ExpectNoError(t *testing.T) {
 	_ = filterQuery.Add("q", Equals, "r")
 	_ = filterQuery.Add("s", Equals, "t")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE ( ( ( a = 'b' AND ( c = 'd' AND e = 'f' ) ) AND NOT ( ( ( g = 'h' AND i = 'j' ) AND k = 'l' ) ) ) AND NOT ( ( ( ( m = 'n' AND o = 'p' ) AND q = 'r' ) AND s = 't' ) ) )" {
 		fmt.Printf("'%s'", sql)
@@ -188,7 +188,7 @@ func TestWhenComplexGroupsAnotherVariation_ExpectNoError(t *testing.T) {
 	_ = filterQuery.Add("q", Equals, "r")
 	_ = filterQuery.Add("s", Equals, "t")
 
-	sql, _ := testutilToSQL("u_user", filterQuery)
+	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
 	if sql != "SELECT * FROM u_user WHERE ( ( ( a = 'b' AND ( c = 'd' AND e = 'f' ) ) AND ( ( g = 'h' AND i = 'j' ) AND k = 'l' ) ) AND NOT ( ( ( ( m = 'n' AND o = 'p' ) AND q = 'r' ) AND s = 't' ) ) )" {
 		fmt.Printf("'%s'", sql)
