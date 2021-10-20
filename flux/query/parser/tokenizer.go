@@ -1,29 +1,11 @@
 package parser
 
 import (
-	"github.com/amortaza/aceql/flux/logger"
-	"github.com/amortaza/aceql/flux/node"
+	"errors"
+	"github.com/amortaza/aceql/flux/query"
 )
 
-
-func Parse( encodedQuery string ) (node.Node, error) {
-	stack := newGenericNodeStack()
-
-	tokens := Tokenize(encodedQuery)
-
-	for _, token := range tokens {
-		stack.Push( token )
-		stackReduce(stack)
-	}
-
-	return nil, nil
-}
-
-func stackReduce(stack *StringStack) {
-
-}
-
-func Tokenize(s string) []string {
+func tokenize(s string) ([]string, error) {
 	tokens := make([]string, 0)
 	token := ""
 	state := 0
@@ -85,15 +67,28 @@ func Tokenize(s string) []string {
 	}
 
 	if state != 0 && state != 1 && state != 3 {
-		logger.Error("failed to parse encoded query, see ---" + s + "---", "Parser()")
-		return make([]string, 0)
+		return nil, errors.New("(6) failed to parse encoded query, see ---" + s + "--- tokenize.Parser()")
 	}
 
-	return tokens
+	// now we go through all the tokens
+	// if a token contains an operation like '=', it better be the whole operation
+	// that is, it cannot be something like 'age=50', since we MUST surround operations by space
+	for _, token := range tokens {
+		if query.IsEncodedOps(token) {
+			continue
+		}
+
+		if query.ContainsEncodedOps(token) {
+			return nil, errors.New("operators must be separated by space, see ---" + s + "---")
+		}
+	}
+
+	return tokens, nil
 }
 
 func isUniToken(t rune) bool {
 	result := t == '.' || t == '(' || t == ')'
 	return result
 }
+
 
