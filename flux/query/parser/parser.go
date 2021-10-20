@@ -4,17 +4,24 @@ import (
 	"errors"
 	"github.com/amortaza/aceql/flux/node"
 	"github.com/amortaza/aceql/flux/query"
+	"strings"
 )
 
-func Parse( encodedQuery string ) (node.Node, error){
-	stack := newLRStack()
-
+func Parse( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
 	tokens, err := tokenize(encodedQuery)
 	if err != nil {
 		return nil, err
 	}
 
+	if len(tokens) == 0 {
+		return nil, nil
+	}
+
+	stack := newLRStack()
+
 	for _, token := range tokens {
+		lctoken := strings.ToLower(token)
+
 		if token == "(" {
 			stack.Push("", nil, "", nil, "")
 
@@ -40,6 +47,10 @@ func Parse( encodedQuery string ) (node.Node, error){
 				N := stack.Pop()
 				stack.Push( token, N, "", nil, "")
 			}
+		} else if lctoken == "and" || lctoken == "or" {
+			N := stack.Pop()
+			stack.Push( token, N, "", nil, "")
+			stack.Push( "", nil, "", nil, "")
 		} else {
 			if stack.IsEmpty() {
 				stack.Push( "", nil, token, nil, "")
@@ -55,6 +66,108 @@ func Parse( encodedQuery string ) (node.Node, error){
 		}
 	}
 
-	return nil, nil
+	lrnode, err := collapse(stack.top)
+	if err != nil {
+		return nil, err
+	}
+
+	return lrNodeToNode(lrnode, compiler)
+}
+
+func collapse(top *LRNode) (*LRNode, error) {
+	if top.prev == nil {
+		if top.HasOps() && top.HasLeft() && top.HasRight() {
+			return top, nil
+
+		} else if top.HasOps() {
+			return nil, errors.New("when there is ops, cannot have left or right empty when collapsing")
+
+		} else {
+			// no ops
+			if top.HasLeft() && top.HasRight() {
+				return nil, errors.New("when there is no ops, cannot have both left and right when collapsing")
+			} else if top.HasLeft() {
+				if top.leftLRNode == nil {
+					return nil, errors.New("must be left NODE when collapsing")
+				}
+				return top.leftLRNode, nil
+
+			} else if top.HasRight() {
+				if top.rightLRNode == nil {
+					return nil, errors.New("must be right NODE when collapsing")
+				}
+				return top.rightLRNode, nil
+			} else {
+				return nil, errors.New("not possible")
+			}
+		}
+	}
+
+	newTop := top.prev
+
+	if newTop.IsLeftEmpty() && newTop.IsRightEmpty() && !newTop.HasOps() {
+		top.prev = newTop.prev
+		return collapse(top)
+	}
+
+	if newTop.HasRight() {
+		return nil, errors.New("expected new top to be empty when collapsing")
+	}
+
+	newTop.rightLRNode = top
+
+	return collapse(newTop)
+}
+
+func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
+	if lrnode.ops == "" {
+		if lrnode.HasLeft() {
+			if lrnode.leftLRNode == nil {
+				return nil, errors.New("when ops is empty and there is a left node, it MUST be a node")
+			}
+			return lrNodeToNode(lrnode.leftLRNode, compiler)
+		}
+		return nil, nil
+	}
+
+	if lrnode.IsLeftEmpty() {
+		return nil, errors.New("(lrNodeToNode 1) left of LRNode cannot be empty when ops is not empty")
+	}
+
+	if lrnode.IsRightEmpty() {
+		// if right is empty, then left MUST be a node - it cannot be a text because "a" is not
+		// an expression requires an ops - like "a = 5"
+		if lrnode.leftLRNode == nil {
+			return nil, errors.New("(lrNodeToNode 2) left of LRNode MUST be a node, if right is empty")
+		}
+		return lrNodeToNode( lrnode.leftLRNode, compiler )
+	}
+
+	parent, err := query.EncodedOpToNode(lrnode.ops, compiler)
+	if err != nil {
+		return nil, err
+	}
+
+	if lrnode.leftText != "" {
+		parent.Put( node.NewString( lrnode.leftText, compiler ) )
+	} else {
+		kid, err := lrNodeToNode( lrnode.leftLRNode, compiler )
+		if err != nil {
+			return nil, err
+		}
+		parent.Put( kid )
+	}
+
+	if lrnode.rightText != "" {
+		parent.Put( node.NewString( lrnode.rightText, compiler ) )
+	} else {
+		kid, err := lrNodeToNode( lrnode.rightLRNode, compiler )
+		if err != nil {
+			return nil, err
+		}
+		parent.Put( kid )
+	}
+
+	return parent, nil
 }
 

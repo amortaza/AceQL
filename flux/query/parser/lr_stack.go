@@ -46,12 +46,28 @@ func (stack *LRStack) IsEmpty() bool {
 	return stack.size == 0
 }
 
+func (lrnode *LRNode) HasOps() bool {
+	return lrnode.ops != ""
+}
+
+func (lrnode *LRNode) SetOps(ops string) {
+	lrnode.ops = ops
+}
+
 func (lrnode *LRNode) IsLeftEmpty() bool {
 	return lrnode.leftText == "" && lrnode.leftLRNode == nil
 }
 
+func (lrnode *LRNode) HasLeft() bool {
+	return lrnode.leftText != "" || lrnode.leftLRNode != nil
+}
+
 func (lrnode *LRNode) IsRightEmpty() bool {
 	return lrnode.rightText == "" && lrnode.rightLRNode == nil
+}
+
+func (lrnode *LRNode) HasRight() bool {
+	return lrnode.rightText != "" || lrnode.rightLRNode != nil
 }
 
 func (lrnode *LRNode) SetLeftText(text string) {

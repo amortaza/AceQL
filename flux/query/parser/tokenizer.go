@@ -2,7 +2,6 @@ package parser
 
 import (
 	"errors"
-	"github.com/amortaza/aceql/flux/query"
 )
 
 func tokenize(s string) ([]string, error) {
@@ -68,19 +67,6 @@ func tokenize(s string) ([]string, error) {
 
 	if state != 0 && state != 1 && state != 3 {
 		return nil, errors.New("(6) failed to parse encoded query, see ---" + s + "--- tokenize.Parser()")
-	}
-
-	// now we go through all the tokens
-	// if a token contains an operation like '=', it better be the whole operation
-	// that is, it cannot be something like 'age=50', since we MUST surround operations by space
-	for _, token := range tokens {
-		if query.IsEncodedOps(token) {
-			continue
-		}
-
-		if query.ContainsEncodedOps(token) {
-			return nil, errors.New("operators must be separated by space, see ---" + s + "---")
-		}
 	}
 
 	return tokens, nil

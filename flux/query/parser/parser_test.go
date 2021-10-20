@@ -4,10 +4,12 @@ import (
 	"testing"
 )
 
-func TestParserWhenEmpty_ExpectNoError(t *testing.T) {
+var compiler = newTestUtil_NodeCompiler()
+
+func TestParser_00(t *testing.T) {
 	encoded := ""
 
-	root, err := Parse(encoded)
+	root, err := Parse(encoded, compiler)
 	if err != nil {
 		t.Error()
 	}
@@ -19,133 +21,155 @@ func TestParserWhenEmpty_ExpectNoError(t *testing.T) {
 	}
 }
 
-func TestParserWhenEqualsNumber_ExpectNoError(t *testing.T) {
+func TestParser_01(t *testing.T) {
 	encoded := "age = 45"
 
-	root, err := Parse(encoded)
+	root, err := Parse(encoded, compiler)
 	if err != nil {
 		t.Error()
 	}
 
-	sql, _ := testutil_NodeToSQL("u_user", root)
+	sql, _ := testutil_NodeToSQL("sys_user", root)
 
-	if sql != "SELECT * FROM u_user where age = 45" {
-		t.Error()
-	}
-}
-/*
-func TestWhenEqualsString_ExpectNoError(t *testing.T) {
-	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
-
-	_ = filterQuery.Add("u_name", Equals, "u_id")
-
-	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
-
-	if sql != "SELECT * FROM u_user WHERE u_name = 'u_id'" {
-		fmt.Println(sql)
-		t.Error()
+	if sql != "SELECT * FROM sys_user WHERE 'age' = '45'" {
+		t.Error(sql)
 	}
 }
 
-func TestWhenAnd_ExpectNoError(t *testing.T) {
-	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
+func TestParser_02(t *testing.T) {
+	encoded := "age = 45 and name = ace"
 
-	_ = filterQuery.Add("u_name", Equals, "u_id")
-	_ = filterQuery.Add("u_age", Equals, "u_years")
-
-	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
-
-	if sql != "SELECT * FROM u_user WHERE ( u_name = 'u_id' AND u_age = 'u_years' )" {
-		fmt.Println(sql)
+	root, err := Parse(encoded, compiler)
+	if err != nil {
 		t.Error()
+	}
+
+	sql, _ := testutil_NodeToSQL("sys_user", root)
+
+	if sql != "SELECT * FROM sys_user WHERE ( 'age' = '45' AND 'name' = 'ace' )" {
+		t.Error(sql)
 	}
 }
 
-func TestWhenAndAnd_ExpectNoError(t *testing.T) {
-	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
+func TestParser_03(t *testing.T) {
+	encoded := "age = 45 and name = ace or loser = no"
 
-	_ = filterQuery.Add("u_name", Equals, "u_id")
-	_ = filterQuery.Add("u_age", Equals, "u_years")
-	_ = filterQuery.Add("u_date", Equals, "u_today")
-
-	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
-
-	if sql != "SELECT * FROM u_user WHERE ( ( u_name = 'u_id' AND u_age = 'u_years' ) AND u_date = 'u_today' )" {
-		fmt.Println(sql)
+	root, err := Parse(encoded, compiler)
+	if err != nil {
 		t.Error()
+	}
+
+	sql, _ := testutil_NodeToSQL("sys_user", root)
+
+	if sql != "SELECT * FROM sys_user WHERE ( 'age' = '45' AND ( 'name' = 'ace' OR 'loser' = 'no' ) )" {
+		t.Error(sql)
 	}
 }
 
-func TestWhenAndGroup_ExpectNoError(t *testing.T) {
-	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
+func TestParser_04(t *testing.T) {
+	encoded := "(loser = no)"
 
-	_ = filterQuery.Add("u_name", Equals, "u_id")
-	_ = filterQuery.AndGroup()
-	_ = filterQuery.Add("u_age", Equals, "u_years")
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
 
-	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
 
-	if sql != "SELECT * FROM u_user WHERE ( u_name = 'u_id' AND u_age = 'u_years' )" {
-		fmt.Printf("'%s'", sql)
-		t.Error()
+	if sql != "SELECT * FROM sys_user WHERE 'loser' = 'no'" {
+		t.Error(sql)
 	}
 }
 
-func TestWhenAndAndGroupAnd_ExpectNoError(t *testing.T) {
-	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
+func TestParser_05(t *testing.T) {
+	encoded := "(((loser = no)))"
 
-	_ = filterQuery.Add("a", Equals, "b")
-	_ = filterQuery.Add("c", Equals, "d")
-	_ = filterQuery.AndGroup()
-	_ = filterQuery.Add("e", Equals, "f")
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
 
-	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
 
-	if sql != "SELECT * FROM u_user WHERE ( ( a = 'b' AND c = 'd' ) AND e = 'f' )" {
-		fmt.Printf("'%s'", sql)
-		t.Error()
+	if sql != "SELECT * FROM sys_user WHERE 'loser' = 'no'" {
+		t.Error(sql)
 	}
 }
 
-func TestWhenAndAndGroupAndAnd_ExpectNoError(t *testing.T) {
-	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
+func TestParser_06(t *testing.T) {
+	encoded := "(((loser = no)) or age = 45)"
 
-	_ = filterQuery.Add("a", Equals, "b")
-	_ = filterQuery.Add("c", Equals, "d")
-	_ = filterQuery.AndGroup()
-	_ = filterQuery.Add("e", Equals, "f")
-	_ = filterQuery.Add("g", Equals, "h")
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
 
-	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
 
-	if sql != "SELECT * FROM u_user WHERE ( ( a = 'b' AND c = 'd' ) AND ( e = 'f' AND g = 'h' ) )" {
-		fmt.Printf("'%s'", sql)
-		t.Error()
+	if sql != "SELECT * FROM sys_user WHERE ( 'loser' = 'no' OR 'age' = '45' )" {
+		t.Error(sql)
 	}
 }
 
-func TestWhenComplexAndGroup_ExpectNoError(t *testing.T) {
-	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
+func TestParser_07(t *testing.T) {
+	encoded := "( (a = 1 and b = 2) or d = 3)"
 
-	_ = filterQuery.Add("a", Equals, "b")
-	_ = filterQuery.AndGroup()
-	_ = filterQuery.Add("c", Equals, "d")
-	_ = filterQuery.Add("e", Equals, "f")
-	_ = filterQuery.AndGroup()
-	_ = filterQuery.Add("g", Equals, "h")
-	_ = filterQuery.Add("i", Equals, "j")
-	_ = filterQuery.Add("k", Equals, "l")
-	_ = filterQuery.AndGroup()
-	_ = filterQuery.Add("m", Equals, "n")
-	_ = filterQuery.Add("o", Equals, "p")
-	_ = filterQuery.Add("q", Equals, "r")
-	_ = filterQuery.Add("s", Equals, "t")
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
 
-	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
 
-	if sql != "SELECT * FROM u_user WHERE ( ( ( a = 'b' AND ( c = 'd' AND e = 'f' ) ) AND ( ( g = 'h' AND i = 'j' ) AND k = 'l' ) ) AND ( ( ( m = 'n' AND o = 'p' ) AND q = 'r' ) AND s = 't' ) )" {
-		fmt.Printf("'%s'", sql)
-		t.Error()
+	if sql != "SELECT * FROM sys_user WHERE ( ( 'a' = '1' AND 'b' = '2' ) OR 'd' = '3' )" {
+		t.Error(sql)
 	}
 }
-*/
+
+func TestParser_08(t *testing.T) {
+	encoded := "( (a = 1 and b = 2) or ((((d = 3)))))"
+
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	if sql != "SELECT * FROM sys_user WHERE ( ( 'a' = '1' AND 'b' = '2' ) OR 'd' = '3' )" {
+		t.Error(sql)
+	}
+}
+
+func TestParser_09(t *testing.T) {
+	encoded := "a = 1 and (b = 2 or x = 3)"
+
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	if sql != "SELECT * FROM sys_user WHERE ( ( 'a' = '1' AND 'b' = '2' ) OR 'd' = '3' )" {
+		t.Error(sql)
+	}
+}

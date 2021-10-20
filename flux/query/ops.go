@@ -1,6 +1,10 @@
 package query
 
-import "strings"
+import (
+	"errors"
+	"github.com/amortaza/aceql/flux/node"
+	"strings"
+)
 
 type OpType string
 
@@ -22,6 +26,8 @@ const (
 
 // IsEncodedOps : Ops is Equals, EncodedOps is =
 func IsEncodedOps( s string ) bool {
+	s = strings.ToLower(s)
+
 	return s == "=" ||
 		   s == "!=" ||
 		s == "<"  ||
@@ -37,18 +43,38 @@ func IsEncodedOps( s string ) bool {
 		s == string(NotContains)
 }
 
-func ContainsEncodedOps( s string ) bool {
-	return strings.Index(s, "=") > -1 ||
-		strings.Index(s, "!=") > -1 ||
-		strings.Index(s, "<") > -1 ||
-		strings.Index(s, "<=") > -1 ||
-		strings.Index(s, ">") > -1 ||
-		strings.Index(s, ">=") > -1 ||
+func EncodedOpToNode(op string, compiler node.Compiler) (node.Node, error) {
+	op = strings.ToLower(op)
 
-		strings.Index(s, string(StartsWith)) > -1 ||
-		strings.Index(s, string(NotStartsWith)) > -1 ||
-		strings.Index(s, string(EndsWith)) > -1 ||
-		strings.Index(s, string(NotEndsWith)) > -1 ||
-		strings.Index(s, string(Contains)) > -1 ||
-		strings.Index(s, string(NotContains)) > -1
+	if op == "=" {
+		return node.NewEquals(compiler), nil
+	} else if op == "!=" {
+		return node.NewNotEquals(compiler), nil
+	} else if op == "<" {
+		return node.NewLessThan(compiler), nil
+	} else if op == "<=" {
+		return node.NewLessOrEquals(compiler), nil
+	} else if op == ">" {
+		return node.NewGreaterThan(compiler), nil
+	} else if op == ">=" {
+		return node.NewGreaterOrEquals(compiler), nil
+	} else if op == "startswith" {
+		return node.NewStartsWith(compiler), nil
+	} else if op == "notstartswith" {
+		return node.NewNotStartsWith(compiler), nil
+	} else if op == "endswith" {
+		return node.NewEndsWith(compiler), nil
+	} else if op == "notendswith" {
+		return node.NewNotEndsWith(compiler), nil
+	} else if op == "contains" {
+		return node.NewContains(compiler), nil
+	} else if op == "notcontains" {
+		return node.NewNotContains(compiler), nil
+	} else if op == "and" {
+		return node.NewAnd(compiler), nil
+	} else if op == "or" {
+		return node.NewOr(compiler), nil
+	}
+
+	return nil, errors.New("EncodedOpToNode() does not recognize ---" + op + "---")
 }
