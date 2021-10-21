@@ -1,9 +1,8 @@
-package parser
+package query
 
 import (
 	"errors"
 	"github.com/amortaza/aceql/flux/node"
-	"github.com/amortaza/aceql/flux/query"
 	"strings"
 )
 
@@ -40,7 +39,7 @@ func Parse( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
 			} else {
 				return nil, errors.New("encoded query is malformed (2), see ---" + encodedQuery + "---")
 			}
-		} else if query.IsEncodedOps( token ) {
+		} else if IsEncodedOps( token ) {
 			if stack.top.ops == "" {
 				stack.top.ops = token
 			} else {
@@ -143,13 +142,13 @@ func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
 		return lrNodeToNode( lrnode.leftLRNode, compiler )
 	}
 
-	parent, err := query.EncodedOpToNode(lrnode.ops, compiler)
+	parent, err := EncodedOpToNode(lrnode.ops, compiler)
 	if err != nil {
 		return nil, err
 	}
 
 	if lrnode.leftText != "" {
-		parent.Put( node.NewString( lrnode.leftText, compiler ) )
+		parent.Put( node.NewColumn( lrnode.leftText, compiler ) )
 	} else {
 		kid, err := lrNodeToNode( lrnode.leftLRNode, compiler )
 		if err != nil {

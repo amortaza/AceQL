@@ -2,13 +2,14 @@ package query
 
 import (
 	"fmt"
-
 	"github.com/amortaza/aceql/flux/node"
 )
 
 type FilterQuery struct {
 	b1 *chainBuilder
 	b2 *chainBuilder
+
+	encodedQuery string
 
 	compiler node.Compiler
 }
@@ -18,6 +19,10 @@ func NewFilterQuery(compiler node.Compiler) *FilterQuery {
 		compiler: compiler,
 		b1:       newChainBuilder(compiler),
 	}
+}
+
+func (query *FilterQuery) SetEncodedQuery(encodedQuery string) {
+	query.encodedQuery = encodedQuery
 }
 
 func (query *FilterQuery) Not() {
@@ -245,6 +250,14 @@ func (query *FilterQuery) OrGroup() error {
 }
 
 func (query *FilterQuery) GetRoot() (node.Node, error) {
+	if query.encodedQuery == "" {
+		return query.getRoot()
+	}
+
+	return Parse( query.encodedQuery, query.compiler )
+}
+
+func (query *FilterQuery) getRoot() (node.Node, error) {
 	var root node.Node
 	var err error
 

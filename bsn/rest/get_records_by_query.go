@@ -11,9 +11,14 @@ import (
 func GetRecordsByQuery(c echo.Context) error {
 	name := c.Param("table")
 
+	encodedQuery := c.QueryParam("query")
+
 	crud := stdsql.NewCRUD()
 
 	r := flux.NewRecord( flux.GetRelation(name,crud), crud )
+	if encodedQuery != "" {
+		r.SetEncodedQuery(encodedQuery)
+	}
 	_ = r.Query()
 
 	list := make([]*flux.RecordMap, 0)

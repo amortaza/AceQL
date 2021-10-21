@@ -1,4 +1,4 @@
-package parser
+package query
 
 import (
 	"testing"
@@ -169,7 +169,25 @@ func TestParser_09(t *testing.T) {
 		t.Error(err2)
 	}
 
-	if sql != "SELECT * FROM sys_user WHERE ( ( 'a' = '1' AND 'b' = '2' ) OR 'd' = '3' )" {
+	if sql != "SELECT * FROM sys_user WHERE ( 'a' = '1' AND ( 'b' = '2' OR 'x' = '3' ) )" {
+		t.Error(sql)
+	}
+}
+
+func TestParser_10(t *testing.T) {
+	encoded := "(a = 1 and b = 2 and d = 3) or ( e = 4 and f = 5 and g = 6 ) or ( h = 7 and i = 8 )"
+
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	if sql != "SELECT * FROM sys_user WHERE ( 'a' = '1' AND ( ( 'b' = '2' AND 'd' = '3' ) OR ( 'e' = '4' AND ( ( 'f' = '5' AND 'g' = '6' ) OR ( 'h' = '7' AND 'i' = '8' ) ) ) ) )\n" {
 		t.Error(sql)
 	}
 }

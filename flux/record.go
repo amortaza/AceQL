@@ -172,6 +172,10 @@ func (rec *Record) AddPK(id string) error {
 	return rec.filterQuery.Add("x_id", query.Equals, id)
 }
 
+func (rec *Record) SetEncodedQuery(encodedQuery string) {
+	rec.filterQuery.SetEncodedQuery(encodedQuery)
+}
+
 func (rec *Record) Add(field string, op query.OpType, rhs string) error {
 	return rec.filterQuery.Add(field, op, rhs)
 }

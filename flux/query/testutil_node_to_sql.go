@@ -1,4 +1,4 @@
-package parser
+package query
 
 import "github.com/amortaza/aceql/flux/node"
 

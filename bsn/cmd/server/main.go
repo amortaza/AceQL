@@ -14,6 +14,7 @@ func main() {
 
 	e.Use(middleware.CORS())
 
+	// get
 	e.GET("/table/:table", rest.GetRecordsByQuery)
 	e.GET("/table/:table/:id", rest.GetRecordById)
 
