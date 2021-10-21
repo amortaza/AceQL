@@ -13,12 +13,30 @@ func GetRecordsByQuery(c echo.Context) error {
 
 	encodedQuery := c.QueryParam("query")
 
+	paginationIndex := c.QueryParam("index")
+	paginationSize := c.QueryParam("size")
+
 	crud := stdsql.NewCRUD()
 
 	r := flux.NewRecord( flux.GetRelation(name,crud), crud )
 	if encodedQuery != "" {
 		r.SetEncodedQuery(encodedQuery)
 	}
+
+	if paginationIndex != "" && paginationSize != "" {
+		index, err1 := strconv.Atoi(paginationIndex)
+		if err1 != nil {
+			return err1
+		}
+
+		size, err2 := strconv.Atoi(paginationSize)
+		if err2 != nil {
+			return err2
+		}
+
+		r.Pagination(index, size)
+	}
+
 	_ = r.Query()
 
 	list := make([]*flux.RecordMap, 0)

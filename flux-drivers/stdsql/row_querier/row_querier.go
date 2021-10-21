@@ -39,8 +39,8 @@ func (query *RowQuerier) Close() error {
 	return query.rows.Close()
 }
 
-func (query *RowQuerier) Query() error {
-	sqlstr, err := query.selectCompiler.Compile()
+func (query *RowQuerier) Query(paginationIndex int, paginationSize int) error {
+	sqlstr, err := query.selectCompiler.Compile(paginationIndex, paginationSize)
 	if err != nil {
 		return fmt.Errorf("%v", err)
 	}

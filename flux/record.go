@@ -19,6 +19,8 @@ type Record struct {
 
 	nameToType map[string] *relations.FieldType
 
+	paginationIndex, paginationSize int
+
 	crud CRUD
 }
 
@@ -34,6 +36,7 @@ func NewRecord_withDefinition(relationName string, fields [] *relations.Field, c
 		crud:         crud,
 		relationName: relationName,
 		fields: fields,
+		paginationSize: -1,
 	}
 
 	rec.values = NewRecordMap()
@@ -113,7 +116,7 @@ func (rec *Record) Query() error {
 		return err
 	}
 
-	return rec.crud.Query(rec.relationName, rec.fields, root)
+	return rec.crud.Query(rec.relationName, rec.fields, root, rec.paginationIndex, rec.paginationSize)
 }
 
 // Next will return false when no records left.
@@ -130,6 +133,11 @@ func (rec *Record) Next() (bool, error) {
 	}
 
 	return true, err
+}
+
+func (rec *Record) Pagination(index, size int) {
+	rec.paginationIndex = index
+	rec.paginationSize = size
 }
 
 func (rec *Record) Get(field string) (string, error) {
