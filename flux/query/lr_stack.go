@@ -54,6 +54,14 @@ func (lrnode *LRNode) SetOps(ops string) {
 	lrnode.ops = ops
 }
 
+func (lrnode *LRNode) IsOpsGroup() bool {
+	return lrnode.ops == "and" || lrnode.ops == "or"
+}
+
+func (lrnode *LRNode) IsOpsEmpty() bool {
+	return lrnode.ops == ""
+}
+
 func (lrnode *LRNode) IsLeftEmpty() bool {
 	return lrnode.leftText == "" && lrnode.leftLRNode == nil
 }

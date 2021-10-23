@@ -25,17 +25,15 @@ func NewSelectCompiler(table string, columns []string, where node.Node) *SelectC
 func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int) (string, error) {
 	q := "SELECT " + strings.Join( s.Columns[:],", ") + " FROM " + s.From
 
-	if s.Where == nil {
-		return q, nil
-	}
+	if s.Where != nil {
+		sql, err := s.Where.Compile()
+		if err != nil {
+			return "", err
+		}
 
-	sql, err := s.Where.Compile()
-	if err != nil {
-		return "", err
-	}
-
-	if sql != "" {
-		q += " WHERE " + sql
+		if sql != "" {
+			q += " WHERE " + sql
+		}
 	}
 
 	if paginationSize > -1 {

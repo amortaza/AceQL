@@ -2,11 +2,96 @@ package query
 
 import (
 	"errors"
+	"fmt"
 	"github.com/amortaza/aceql/flux/node"
 	"strings"
 )
 
 func Parse( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
+	tokens, err := tokenize(encodedQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(tokens) == 0 {
+		return nil, nil
+	}
+
+	stack := newLRStack()
+
+	for _, token := range tokens {
+		lctoken := strings.ToLower(token)
+
+		if token == "(" {
+			stack.Push("", nil, "", nil, "")
+
+		} else if lctoken == "and" || lctoken == "or" {
+			N := stack.Pop()
+			stack.Push(token, N, "", nil, "")
+
+		} else if IsEncodedOps( token ) {
+			if stack.top.ops == "" {
+				stack.top.ops = token
+			} else {
+				N := stack.Pop()
+				stack.Push( token, N, "", nil, "")
+			}
+		} else if token == ")" {
+			for stack.top.prev != nil {
+				if stack.top.prev.HasRight() {
+					break
+				}
+
+				newTop := stack.top.prev
+				newTop.rightLRNode = stack.top
+				stack.top = newTop
+				stack.size--
+
+				if stack.top.IsOpsEmpty() {
+					if stack.top.HasLeft() {
+						return nil, errors.New("(2) Parse() encoded query is malformed, see ---" + encodedQuery + "---")
+					} else {
+						stack.top.leftText = "true"
+						stack.top.ops = "AND"
+					}
+				}
+			}
+		} else {
+			if stack.IsEmpty() {
+				stack.Push("", nil, token, nil, "")
+
+			} else {
+				if stack.top.IsOpsGroup() {
+					if !stack.top.IsRightEmpty() {
+						fmt.Println("I dont know what to do (1)") // debug
+						return nil, errors.New("(1) Parse() encoded query is malformed, see ---" + encodedQuery + "---")
+					}
+
+					stack.Push("", nil, token, nil, "")
+
+				} else if stack.top.IsLeftEmpty() {
+					stack.top.SetLeftText( token )
+
+				} else if stack.top.IsRightEmpty() {
+					stack.top.SetRightText( token )
+
+				} else {
+					fmt.Println("I dont know what to do ") // debug
+					return nil, errors.New("(2) Parse() encoded query is malformed, see ---" + encodedQuery + "---")
+				}
+			}
+		}
+	}
+
+	lrnode, err := collapse(stack.top)
+	if err != nil {
+		return nil, err
+	}
+
+	return lrNodeToNode(lrnode, compiler)
+}
+
+func Parse2( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
 	tokens, err := tokenize(encodedQuery)
 	if err != nil {
 		return nil, err
