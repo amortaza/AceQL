@@ -9,6 +9,7 @@ import (
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_runner"
 	"github.com/amortaza/aceql/flux/node"
 	"github.com/amortaza/aceql/flux/relations"
+	"strconv"
 )
 
 type RowQuerier struct {
@@ -39,26 +40,60 @@ func (query *RowQuerier) Close() error {
 	return query.rows.Close()
 }
 
-func (query *RowQuerier) Query(paginationIndex int, paginationSize int) error {
-	sqlstr, err := query.selectCompiler.Compile(paginationIndex, paginationSize)
+func (query *RowQuerier) Query(paginationIndex int, paginationSize int) (int, error) {
+	sqlstr, sqlstr_forCount, err := query.selectCompiler.Compile(paginationIndex, paginationSize)
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return -1, fmt.Errorf("%v", err)
 	}
 
 	logger.Log( sqlstr, "SQL:RowQuerier.Query()" )
 
 	query.rows, err = query.sqlRunner.Query(sqlstr)
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return -1, fmt.Errorf("%v", err)
 	}
 
+	rowcount, err2 := query.sqlRunner.Query(sqlstr_forCount)
+	if err2 != nil {
+		return -1, fmt.Errorf("%v", err2)
+	}
+
+	rowcount.Next()
+
+	count, err3 := readTotal( rowcount )
+	if err3 != nil {
+		return -1, fmt.Errorf("%v", err3)
+	}
 	// fields should be known well before query is made
 	//query.fields, err = query.rows.Columns()
 	//if err != nil {
 	//	return fmt.Errorf("%v", err)
 	//}
 
-	return nil
+	return count, nil
+}
+
+func readTotal( rows *sql.Rows ) (int, error) {
+	columnPointers := make( []interface{}, 1 )
+
+	columns := []string{"total"}
+
+	columnPointers[ 0 ] = &columns[ 0 ]
+
+	if err := rows.Scan(columnPointers...); err != nil {
+		logger.Error(err, "readTotal() could not scan")
+		return -1, err
+	}
+
+	value := columns[0]
+
+	total, err := strconv.ParseInt( value, 10, 32 )
+	if err != nil {
+		logger.Error(err, "readTotal() could not parse answer")
+		return -1, err
+	}
+
+	return int(total), nil
 }
 
 // Next returns nil if there is no records left

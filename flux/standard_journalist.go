@@ -27,7 +27,7 @@ func (journalist *StandardJournalist) DeleteRelation(relationName string) error 
 
 	_ = record.Add("x_table", query.Equals, relationName)
 
-	_ = record.Query()
+	_, _ = record.Query()
 
 	for {
 		has, _ := record.Next()
@@ -62,7 +62,7 @@ func (journalist *StandardJournalist) DeleteField(relationName string, fieldname
 	_ = record.Add("x_table", query.Equals, relationName)
 	_ = record.Add("x_field", query.Equals, fieldname)
 
-	_ = record.Query()
+	_, _ = record.Query()
 
 	for {
 		has, _ := record.Next()

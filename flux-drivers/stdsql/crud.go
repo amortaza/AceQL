@@ -35,7 +35,7 @@ func (crud *CRUD) Compiler() node.Compiler {
 	return crud.compiler
 }
 
-func (crud *CRUD) Query(table string, fields []* relations.Field, root node.Node, paginationIndex int, paginationSize int) error {
+func (crud *CRUD) Query(table string, fields []* relations.Field, root node.Node, paginationIndex int, paginationSize int) (int, error) {
 	crud.querier = row_querier.NewRowQuerier( crud.sqlRunner, table, fields, root)
 
 	return crud.querier.Query(paginationIndex, paginationSize)

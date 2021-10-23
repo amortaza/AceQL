@@ -10,7 +10,7 @@ type CRUD interface {
 	// Compiler is here for now for convenience, but it really doesn't belong here
 	Compiler() node.Compiler
 
-	Query(relationName string, fields []*relations.Field, root node.Node, paginationIndex int, paginationSize int) error
+	Query(relationName string, fields []*relations.Field, root node.Node, paginationIndex int, paginationSize int) (int,error)
 	Next() (*RecordMap, error)
 
 	Create(relationName string, values *RecordMap) (string, error)

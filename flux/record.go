@@ -110,10 +110,10 @@ func (rec *Record) Delete() error {
 	return rec.crud.Delete(rec.relationName, pk)
 }
 
-func (rec *Record) Query() error {
+func (rec *Record) Query() (int,error) {
 	root, err := rec.filterQuery.GetRoot()
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	return rec.crud.Query(rec.relationName, rec.fields, root, rec.paginationIndex, rec.paginationSize)

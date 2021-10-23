@@ -22,17 +22,19 @@ func NewSelectCompiler(table string, columns []string, where node.Node) *SelectC
 	return s
 }
 
-func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int) (string, error) {
+func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int) (string, string, error) {
 	q := "SELECT " + strings.Join( s.Columns[:],", ") + " FROM " + s.From
+	queryUsedForCount := "SELECT COUNT(1) AS total FROM " + s.From
 
 	if s.Where != nil {
 		sql, err := s.Where.Compile()
 		if err != nil {
-			return "", err
+			return "", "", err
 		}
 
 		if sql != "" {
 			q += " WHERE " + sql
+			queryUsedForCount += " WHERE " + sql
 		}
 	}
 
@@ -40,5 +42,5 @@ func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int) (strin
 		q += " LIMIT " + strconv.Itoa(paginationIndex) + ", " + strconv.Itoa(paginationSize)
 	}
 
-	return q, nil
+	return q, queryUsedForCount, nil
 }

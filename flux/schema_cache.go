@@ -27,7 +27,7 @@ func GetRelation( name string, crud CRUD) *relations.Relation {
 	r := NewRecord(GetRelation("x_schema", crud), crud)
 	r.Add( "x_table", query.Equals, name )
 	r.Add( "x_type", query.Equals, "field" )
-	err := r.Query()
+	_, err := r.Query()
 
 	if err != nil {
 		logger.Error(err, logger.SQL)

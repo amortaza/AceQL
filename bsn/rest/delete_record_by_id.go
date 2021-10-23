@@ -15,7 +15,7 @@ func DeleteRecordById(c echo.Context) error {
 
 	r := stdsql.NewRecord(name)
 	_ = r.Add("x_id", query.Equals, id)
-	_ = r.Query()
+	_ , _= r.Query()
 
 	ok, _ := r.Next()
 

@@ -36,7 +36,7 @@ func updateRecord(name string, id string, m *echo.Map) error {
 	relation := flux.GetRelation(name, crud)
 	rec := flux.NewRecord(relation, crud)
 	_ = rec.AddPK(id)
-	_ = rec.Query()
+	_, _ = rec.Query()
 
 	b, _ := rec.Next()
 

@@ -37,7 +37,7 @@ func GetRecordsByQuery(c echo.Context) error {
 		r.Pagination(index, size)
 	}
 
-	_ = r.Query()
+	total , _ := r.Query()
 
 	list := make([]*flux.RecordMap, 0)
 
@@ -53,9 +53,9 @@ func GetRecordsByQuery(c echo.Context) error {
 		list = append(list, r.GetMap())
 	}
 
-	size := strconv.Itoa(len(list))
+	//size := strconv.Itoa(len(list))
 
-	c.Response().Header().Set("X-Total-Count", size)
+	c.Response().Header().Set("X-Total-Count", strconv.Itoa(total))
 	c.Response().Header().Set("Access-Control-Expose-Headers", "X-Total-Count")
 
 	return c.JSON(http.StatusOK, list)
