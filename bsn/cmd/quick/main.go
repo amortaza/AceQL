@@ -16,29 +16,6 @@ func main() {
 	//encodedQuery = "where age=\"45\" and name=\"afshin \\\"the clown\\\"\" and thats it"
 
 
-	query.Parse("")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse(" abc ")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse(" abc def    ghi")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse(" abc def    ghi  jklmnop")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse("my name is \"ace\"")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse("my name is \"ace nia\"")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse("my name is \"ace nia")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse("my name is\"ace mia\"")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse("my name is\"\\\"")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse("my name is\"\\\\\"")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse("where value = \"ace \\\"the\\\" man\"")
-	fmt.Println( "---------------------" ) // debug
-	query.Parse("where value=\"ace \\\"the\\\" man\"")
 
 }
 

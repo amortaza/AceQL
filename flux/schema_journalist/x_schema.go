@@ -14,6 +14,7 @@ func Get_X_SCHEMA_relation() *relations.Relation {
 	relation.AddField( "x_table", stringType )
 	relation.AddField( "x_field", stringType )
 	relation.AddField( "x_field_type", stringType )
+	relation.AddField( "x_label", stringType )
 
 	return relation
 }
