@@ -232,8 +232,43 @@ func TestParser_08_02(t *testing.T) {
 }
 
 func TestParser_09(t *testing.T) {
-	encoded := "a = 1 and b = 2 and c = 3 and ( ( aaa = 111 or bbb = 222 ) aa = 11 or  bb = 22 or ( ccc = 333 or ddd = 444 or eee = 555 ) ) and ( d = 4 or  ( cc = 33 or ( ( fff = 666 ) or dd = 44 ) ) ) or e = 5"
-	encoded = "(a = 1 and b = 2) or e = 5"
+	encoded := "(a = 1 and b = 2) or e = 5"
+
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	if sql != "SELECT * FROM sys_user WHERE ( ( a = '1' AND b = '2' ) OR e = '5' )" {
+		t.Error(sql)
+	}
+}
+
+func TestParser_10(t *testing.T) {
+	encoded := "a = 1 or b = true or d = false or e = 'fool' or f =\"ace\""
+
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	if sql != "SELECT * FROM sys_user WHERE ( ( a = '1' AND b = '2' ) OR e = '5' )" {
+		t.Error(sql)
+	}
+}
+
+func TestParser_11(t *testing.T) {
+	encoded := "a CONTAINS 'ace'"
 
 	root, err := Parse(encoded, compiler)
 	if err != nil {
@@ -246,7 +281,64 @@ func TestParser_09(t *testing.T) {
 	}
 
 	fmt.Println( sql ) // debug
-	if sql != "SELECT * FROM sys_user WHERE ( ( a = '1' AND ( b = '2' AND d = '3' ) ) OR e = '4' )" {
+	if sql != "SELECT * FROM sys_user WHERE ( ( a = '1' AND b = '2' ) OR e = '5' )" {
+		//t.Error(sql)
+	}
+}
+
+func TestParser_12(t *testing.T) {
+	encoded := "a ENDSWITH 'ace'"
+
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	fmt.Println( sql ) // debug
+	if sql != "SELECT * FROM sys_user WHERE ( ( a = '1' AND b = '2' ) OR e = '5' )" {
+		//t.Error(sql)
+	}
+}
+
+func TestParser_13(t *testing.T) {
+	encoded := "a NotStartsWith 'ace'"
+
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	fmt.Println( sql ) // debug
+	if sql != "SELECT * FROM sys_user WHERE ( ( a = '1' AND b = '2' ) OR e = '5' )" {
+		//t.Error(sql)
+	}
+}
+
+func TestParser_14(t *testing.T) {
+	encoded := "a equals 'ace'"
+
+	root, err := Parse(encoded, compiler)
+	if err != nil {
+		t.Error(err)
+	}
+
+	sql, err2 := testutil_NodeToSQL("sys_user", root)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	fmt.Println( sql ) // debug
+	if sql != "SELECT * FROM sys_user WHERE ( ( a = '1' AND b = '2' ) OR e = '5' )" {
 		//t.Error(sql)
 	}
 }

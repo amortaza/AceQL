@@ -47,7 +47,7 @@ func TestWhenLessThan_ExpectNoError(t *testing.T) {
 func TestWhenLessThanEqualTo_ExpectNoError(t *testing.T) {
 	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
 
-	_ = filterQuery.Add("u_name", LessOrEqual, "u_id")
+	_ = filterQuery.Add("u_name", LessOrEquals, "u_id")
 
 	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 
@@ -70,10 +70,10 @@ func TestWhenGreaterThan_ExpectNoError(t *testing.T) {
 	}
 }
 
-func TestWhenGreaterThanEqualTo_ExpectNoError(t *testing.T) {
+func TestWhenGreaterOrEquals_ExpectNoError(t *testing.T) {
 	filterQuery := NewFilterQuery(newTestUtil_NodeCompiler())
 
-	_ = filterQuery.Add("u_name", GreaterOrEqual, "u_id")
+	_ = filterQuery.Add("u_name", GreaterOrEquals, "u_id")
 
 	sql, _ := testutil_FilterQueryToSQL("u_user", filterQuery)
 

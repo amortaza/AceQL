@@ -11,10 +11,10 @@ type OpType string
 const (
 	Equals         OpType = "Equals"
 	NotEquals      OpType = "NotEquals"
-	LessThan       OpType = "LessThan"
-	LessOrEqual    OpType = "LessOrEqual"
-	GreaterThan    OpType = "GreaterThan"
-	GreaterOrEqual OpType = "GreaterOrEqual"
+	LessThan     OpType = "LessThan"
+	LessOrEquals OpType = "LessOrEquals"
+	GreaterThan     OpType = "GreaterThan"
+	GreaterOrEquals OpType = "GreaterOrEquals"
 
 	StartsWith    OpType = "StartsWith"
 	NotStartsWith OpType = "NotStartsWith"
@@ -35,28 +35,35 @@ func IsEncodedOps( s string ) bool {
 		s == ">"  ||
 		s == ">="  ||
 
-		s == string(StartsWith)  ||
-		s == string(NotStartsWith)  ||
-		s == string(EndsWith)  ||
-		s == string(NotEndsWith)  ||
-		s == string(Contains)  ||
-		s == string(NotContains)
+		s == strings.ToLower(string(Equals))  ||
+		s == strings.ToLower(string(NotEquals))  ||
+		s == strings.ToLower(string(LessThan))  ||
+		s == strings.ToLower(string(LessOrEquals))  ||
+		s == strings.ToLower(string(GreaterThan))  ||
+		s == strings.ToLower(string(GreaterOrEquals))  ||
+
+		s == strings.ToLower(string(StartsWith))  ||
+		s == strings.ToLower(string(NotStartsWith))  ||
+		s == strings.ToLower(string(EndsWith))  ||
+		s == strings.ToLower(string(NotEndsWith))  ||
+		s == strings.ToLower(string(Contains))  ||
+		s == strings.ToLower(string(NotContains))
 }
 
 func EncodedOpToNode(op string, compiler node.Compiler) (node.Node, error) {
 	op = strings.ToLower(op)
 
-	if op == "=" {
+	if op == "=" || op == "equals" {
 		return node.NewEquals(compiler), nil
-	} else if op == "!=" {
+	} else if op == "!=" || op == "notequals" {
 		return node.NewNotEquals(compiler), nil
-	} else if op == "<" {
+	} else if op == "<"  || op == "lessthan" {
 		return node.NewLessThan(compiler), nil
-	} else if op == "<=" {
+	} else if op == "<="  || op == "lessorequals"{
 		return node.NewLessOrEquals(compiler), nil
-	} else if op == ">" {
+	} else if op == ">"  || op == "greaterthan"{
 		return node.NewGreaterThan(compiler), nil
-	} else if op == ">=" {
+	} else if op == ">="  || op == "greaterorequals"{
 		return node.NewGreaterOrEquals(compiler), nil
 	} else if op == "startswith" {
 		return node.NewStartsWith(compiler), nil

@@ -2,7 +2,9 @@ package query
 
 import (
 	"errors"
+	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux/node"
+	"strconv"
 	"strings"
 )
 
@@ -149,7 +151,22 @@ func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
 	}
 
 	if lrnode.rightText != "" {
-		parent.Put( node.NewString( lrnode.rightText, compiler ) )
+		if strings.Index(lrnode.rightText, "'") == 0 || strings.Index(lrnode.rightText, "\"") == 0 {
+			unquoted := lrnode.rightText[ 1 : len(lrnode.rightText) - 1 ]
+			parent.Put(node.NewString( unquoted, compiler))
+
+		} else if lrnode.rightText == "true" || lrnode.rightText == "false" {
+			parent.Put(node.NewBool(lrnode.rightText == "true", compiler))
+
+		} else {
+			numberValue, err := strconv.ParseFloat(lrnode.rightText, 32)
+			if err == nil {
+				parent.Put(node.NewNumber(float32(numberValue), compiler))
+			} else {
+				logger.Log("Dont know how to handle \"" + lrnode.rightText + "\"", "Parser")
+				return nil, errors.New("parser issue")
+			}
+		}
 	} else {
 		kid, err := lrNodeToNode( lrnode.rightLRNode, compiler )
 		if err != nil {

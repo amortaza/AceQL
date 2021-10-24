@@ -94,12 +94,12 @@ func (query *FilterQuery) compareStringOp(op OpType) error {
 		err = query.b1.NotEquals()
 	} else if op == LessThan {
 		err = query.b1.LessThan()
-	} else if op == LessOrEqual {
-		err = query.b1.LessOrEqual()
+	} else if op == LessOrEquals {
+		err = query.b1.LessOrEquals()
 	} else if op == GreaterThan {
 		err = query.b1.GreaterThan()
-	} else if op == GreaterOrEqual {
-		err = query.b1.GreaterOrEqual()
+	} else if op == GreaterOrEquals {
+		err = query.b1.GreaterOrEquals()
 	} else if op == StartsWith {
 		err = query.b1.StartsWith()
 	} else if op == NotStartsWith {
@@ -128,12 +128,12 @@ func (query *FilterQuery) compareNumberOp(op OpType) error {
 		err = query.b1.NotEquals()
 	} else if op == LessThan {
 		err = query.b1.LessThan()
-	} else if op == LessOrEqual {
-		err = query.b1.LessOrEqual()
+	} else if op == LessOrEquals {
+		err = query.b1.LessOrEquals()
 	} else if op == GreaterThan {
 		err = query.b1.GreaterThan()
-	} else if op == GreaterOrEqual {
-		err = query.b1.GreaterOrEqual()
+	} else if op == GreaterOrEquals {
+		err = query.b1.GreaterOrEquals()
 	} else {
 		err = fmt.Errorf("filterQuery.compareOp does not recognize OpType")
 	}

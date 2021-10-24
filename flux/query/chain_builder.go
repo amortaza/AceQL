@@ -124,7 +124,7 @@ func (builder *chainBuilder) LessThan() error {
 	return nil
 }
 
-func (builder *chainBuilder) LessOrEqual() error {
+func (builder *chainBuilder) LessOrEquals() error {
 	if builder.state != expectCompareOperator {
 		return fmt.Errorf("was not expecting Compare operator chainBuilder.LessThan()")
 	}
@@ -146,9 +146,9 @@ func (builder *chainBuilder) GreaterThan() error {
 	return nil
 }
 
-func (builder *chainBuilder) GreaterOrEqual() error {
+func (builder *chainBuilder) GreaterOrEquals() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.GreaterOrEqual()")
+		return fmt.Errorf("was not expecting Compare operator chainBuilder.GreaterOrEquals()")
 	}
 
 	builder.tailCompareOperator = node.NewGreaterOrEquals(builder.nodeCompiler)
