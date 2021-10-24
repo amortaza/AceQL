@@ -62,6 +62,10 @@ func (lrnode *LRNode) IsOpsEmpty() bool {
 	return lrnode.ops == ""
 }
 
+func (lrnode *LRNode) IsEmpty() bool {
+	return lrnode.IsLeftEmpty() && lrnode.IsRightEmpty() && lrnode.IsOpsEmpty()
+}
+
 func (lrnode *LRNode) IsLeftEmpty() bool {
 	return lrnode.leftText == "" && lrnode.leftLRNode == nil
 }

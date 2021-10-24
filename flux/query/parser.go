@@ -2,7 +2,6 @@ package query
 
 import (
 	"errors"
-	"fmt"
 	"github.com/amortaza/aceql/flux/node"
 	"strings"
 )
@@ -19,6 +18,8 @@ func Parse( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
 
 	stack := newLRStack()
 
+	stack.Push("", nil, "", nil, "")
+
 	for _, token := range tokens {
 		lctoken := strings.ToLower(token)
 
@@ -28,17 +29,16 @@ func Parse( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
 		} else if lctoken == "and" || lctoken == "or" {
 			N := stack.Pop()
 			stack.Push(token, N, "", nil, "")
+			stack.Push("", nil, "", nil, "")
 
-		} else if IsEncodedOps( token ) {
+		} else if IsEncodedOps(token) {
 			if stack.top.ops == "" {
 				stack.top.ops = token
-			} else {
-				N := stack.Pop()
-				stack.Push( token, N, "", nil, "")
 			}
 		} else if token == ")" {
-			for stack.top.prev != nil {
-				if stack.top.prev.HasRight() {
+			for stack.top.prev != nil  {
+				if stack.top.prev.IsEmpty() {
+					stack.top.prev = stack.top.prev.prev
 					break
 				}
 
@@ -46,107 +46,13 @@ func Parse( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
 				newTop.rightLRNode = stack.top
 				stack.top = newTop
 				stack.size--
-
-				if stack.top.IsOpsEmpty() {
-					if stack.top.HasLeft() {
-						return nil, errors.New("(2) Parse() encoded query is malformed, see ---" + encodedQuery + "---")
-					} else {
-						stack.top.leftText = "true"
-						stack.top.ops = "AND"
-					}
-				}
 			}
-		} else {
-			if stack.IsEmpty() {
-				stack.Push("", nil, token, nil, "")
+		} else if stack.top.IsLeftEmpty() {
+			stack.top.SetLeftText(token)
 
-			} else {
-				if stack.top.IsOpsGroup() {
-					if !stack.top.IsRightEmpty() {
-						fmt.Println("I dont know what to do (1)") // debug
-						return nil, errors.New("(1) Parse() encoded query is malformed, see ---" + encodedQuery + "---")
-					}
+		} else if stack.top.IsRightEmpty() {
+			stack.top.SetRightText(token)
 
-					stack.Push("", nil, token, nil, "")
-
-				} else if stack.top.IsLeftEmpty() {
-					stack.top.SetLeftText( token )
-
-				} else if stack.top.IsRightEmpty() {
-					stack.top.SetRightText( token )
-
-				} else {
-					fmt.Println("I dont know what to do ") // debug
-					return nil, errors.New("(2) Parse() encoded query is malformed, see ---" + encodedQuery + "---")
-				}
-			}
-		}
-	}
-
-	lrnode, err := collapse(stack.top)
-	if err != nil {
-		return nil, err
-	}
-
-	return lrNodeToNode(lrnode, compiler)
-}
-
-func Parse2( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
-	tokens, err := tokenize(encodedQuery)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(tokens) == 0 {
-		return nil, nil
-	}
-
-	stack := newLRStack()
-
-	for _, token := range tokens {
-		lctoken := strings.ToLower(token)
-
-		if token == "(" {
-			stack.Push("", nil, "", nil, "")
-
-		} else if token == ")" {
-			if stack.IsEmpty() {
-				return nil, errors.New("encoded query is malformed (1), see ---" + encodedQuery + "---")
-			}
-
-			N := stack.Pop()
-			if stack.IsEmpty() {
-				stack.PushNode(N)
-			} else if stack.top.IsLeftEmpty() {
-				stack.top.leftLRNode = N
-			} else if stack.top.IsRightEmpty() {
-				stack.top.rightLRNode = N
-			} else {
-				return nil, errors.New("encoded query is malformed (2), see ---" + encodedQuery + "---")
-			}
-		} else if IsEncodedOps( token ) {
-			if stack.top.ops == "" {
-				stack.top.ops = token
-			} else {
-				N := stack.Pop()
-				stack.Push( token, N, "", nil, "")
-			}
-		} else if lctoken == "and" || lctoken == "or" {
-			N := stack.Pop()
-			stack.Push( token, N, "", nil, "")
-			stack.Push( "", nil, "", nil, "")
-		} else {
-			if stack.IsEmpty() {
-				stack.Push( "", nil, token, nil, "")
-			} else {
-				if stack.top.IsLeftEmpty() {
-					stack.top.SetLeftText( token )
-				} else if stack.top.IsRightEmpty() {
-					stack.top.SetRightText( token )
-				} else {
-					return nil, errors.New("encoded query is malformed (3), see ---" + encodedQuery + "---")
-				}
-			}
 		}
 	}
 
