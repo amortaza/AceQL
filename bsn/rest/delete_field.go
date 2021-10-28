@@ -20,6 +20,8 @@ func DeleteSchemaField(c echo.Context) error {
 
 	schema.DeleteField(table, fieldName)
 
+	schema.Close()
+
 	return c.JSON(200, "")
 }
 

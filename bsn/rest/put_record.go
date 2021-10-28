@@ -69,5 +69,9 @@ func updateRecord(name string, id string, m *echo.Map) error {
 		}
 	}
 
-	return rec.Update()
+	err := rec.Update()
+
+	rec.Close()
+
+	return err
 }

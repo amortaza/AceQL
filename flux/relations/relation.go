@@ -23,8 +23,8 @@ func (relation *Relation) Fields() []*Field {
 	return relation.fields
 }
 
-func (relation *Relation) AddField(name string, fieldtype FieldType) {
-	field := NewField(name, fieldtype)
+func (relation *Relation) AddField(name string, label string, fieldtype FieldType) {
+	field := NewField(name, label, fieldtype)
 
 	relation.fieldByName[ name ] = field
 

@@ -22,5 +22,7 @@ func GetRecordById(c echo.Context) error {
 
 	b, _ := json.Marshal(r)
 
+	r.Close()
+
 	return c.String(http.StatusOK, string(b))
 }

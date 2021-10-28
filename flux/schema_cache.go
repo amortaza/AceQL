@@ -8,21 +8,23 @@ import (
 	"github.com/amortaza/aceql/flux/schema_journalist"
 )
 
-var g_relation_cache = make( map[ string ] *relations.Relation )
+//var g_relation_cache = make( map[ string ] *relations.Relation )
 
 func GetRelation( name string, crud CRUD) *relations.Relation {
-	relation, ok := g_relation_cache[ name ]
-
-	if ok {
-		return relation
-	}
+	fmt.Println( "!!!!!!!!!!!!!!!! Caching opportunity for RELATION" ) // debug
+	//relation, ok := g_relation_cache[ name ]
+	//
+	//if ok {
+	//	return relation
+	//}
 
 	if name == "x_schema" {
-		g_relation_cache[ name ] = schema_journalist.Get_X_SCHEMA_relation()
-		return g_relation_cache[ name ]
+		return schema_journalist.Get_X_SCHEMA_relation()
+		//g_relation_cache[ name ] = schema_journalist.Get_X_SCHEMA_relation()
+		//return g_relation_cache[ name ]
 	}
 
-	relation = relations.NewRelation( name )
+	relation := relations.NewRelation( name )
 
 	r := NewRecord(GetRelation("x_schema", crud), crud)
 	r.Add( "x_table", query.Equals, name )
@@ -51,7 +53,7 @@ func GetRelation( name string, crud CRUD) *relations.Relation {
 		}
 	}
 
-	g_relation_cache[ name ] = relation
+	//g_relation_cache[ name ] = relation
 
 	return relation
 }
@@ -69,7 +71,7 @@ func addField(r *Record, relation *relations.Relation) error {
 			return err
 		}
 
-		relation.AddField( field, relations.String )
+		relation.AddField( field, "TODO", relations.String )
 
 		return nil
 
@@ -79,7 +81,7 @@ func addField(r *Record, relation *relations.Relation) error {
 			return err
 		}
 
-		relation.AddField( field, relations.Number )
+		relation.AddField( field, "TODO", relations.Number )
 
 		return nil
 
@@ -89,7 +91,7 @@ func addField(r *Record, relation *relations.Relation) error {
 			return err
 		}
 
-		relation.AddField( field, relations.Bool )
+		relation.AddField( field, "TODO", relations.Bool )
 
 		return nil
 	}

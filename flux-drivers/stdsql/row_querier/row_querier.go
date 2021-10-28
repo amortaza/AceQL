@@ -37,7 +37,16 @@ func (query *RowQuerier) Close() error {
 		return nil
 	}
 
-	return query.rows.Close()
+	err := query.rows.Close()
+
+	if err == nil {
+		logger.Log("Closing DB Connection - successful", "RowQuerier.Close()")
+	} else {
+		logger.Log("Closing DB Connection - UNSUCCESSFUL", "RowQuerier.Close()")
+		logger.Error(err, logger.ERROR)
+	}
+
+	return err
 }
 
 func (query *RowQuerier) Query(paginationIndex int, paginationSize int) (int, error) {
@@ -46,7 +55,7 @@ func (query *RowQuerier) Query(paginationIndex int, paginationSize int) (int, er
 		return -1, fmt.Errorf("%v", err)
 	}
 
-	logger.Log( sqlstr, "SQL:RowQuerier.Query()" )
+	//logger.Log( sqlstr, "SQL:RowQuerier.Query()" )
 
 	query.rows, err = query.sqlRunner.Query(sqlstr)
 	if err != nil {
@@ -64,14 +73,17 @@ func (query *RowQuerier) Query(paginationIndex int, paginationSize int) (int, er
 	if err3 != nil {
 		return -1, fmt.Errorf("%v", err3)
 	}
-	// fields should be known well before query is made
-	//query.fields, err = query.rows.Columns()
-	//if err != nil {
-	//	return fmt.Errorf("%v", err)
-	//}
+
+	rowcount.Close()
 
 	return count, nil
 }
+
+// fields should be known well before query is made
+//query.fields, err = query.rows.Columns()
+//if err != nil {
+//	return fmt.Errorf("%v", err)
+//}
 
 func readTotal( rows *sql.Rows ) (int, error) {
 	columnPointers := make( []interface{}, 1 )
@@ -121,6 +133,7 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 	for i, field := range query.fields {
 		value := columnPointers[ i ].(*interface{})
 
+		//f mt.Println( field.Name )
 		if field.IsString() {
 			valuesRecordMap.PutStringByteArray(field.Name, (*value).([]byte))
 

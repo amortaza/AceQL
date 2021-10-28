@@ -58,6 +58,8 @@ func GetRecordsByQuery(c echo.Context) error {
 
 	//size := strconv.Itoa(len(list))
 
+	r.Close()
+
 	c.Response().Header().Set("X-Total-Count", strconv.Itoa(total))
 	c.Response().Header().Set("Access-Control-Expose-Headers", "X-Total-Count")
 

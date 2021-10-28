@@ -4,11 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/amortaza/aceql/flux-drivers/logger"
+	"sync"
 	"time"
 
 	// need to have driver available otherwise sql.Open() fails
 	_ "github.com/go-sql-driver/mysql"
 )
+
+var lock sync.Mutex
 
 type SqlRunner struct {
 	db       *sql.DB
@@ -25,6 +28,9 @@ func NewSQLRunner(driverName string, dataSourceName string) *SqlRunner {
 }
 
 func (runner *SqlRunner) Run(sql string) error {
+	lock.Lock()
+	defer lock.Unlock()
+
 	if err := runner.ping(); err != nil {
 		return err
 	}
@@ -33,13 +39,19 @@ func (runner *SqlRunner) Run(sql string) error {
 
 	_, err := runner.db.Exec(sql)
 
+
 	return err
 }
 
 func (runner *SqlRunner) Query(sql string) (*sql.Rows, error) {
+	lock.Lock()
+	defer lock.Unlock()
+
 	if err := runner.ping(); err != nil {
 		return nil, err
 	}
+
+	logger.Log(sql, "SQL:SqlRunner.Query()")
 
 	return runner.db.Query(sql)
 }

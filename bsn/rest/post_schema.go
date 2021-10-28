@@ -24,6 +24,8 @@ func PostSchemaTable(c echo.Context) error {
 
 	schema.CreateRelation_withFields(relation, true)
 
+	schema.Close()
+
 	return c.JSON(200, "")
 }
 
@@ -33,15 +35,16 @@ func makeCollectionObject(name string, fields []interface{}) *relations.Relation
 	for _, v := range fields {
 		m := v.(map[string]interface{})
 
-		fieldname := m["field"].(string)
+		fieldName := m["field"].(string)
+		fieldLabel := m["label"].(string)
 
-		fieldtype, err := relations.GetFieldTypeByName(m["type"].(string))
+		fieldType, err := relations.GetFieldTypeByName(m["type"].(string))
 		if err != nil {
 			logger.Error(err, logger.Main)
 			continue
 		}
 
-		relation.AddField(fieldname, fieldtype)
+		relation.AddField(fieldName, fieldLabel, fieldType)
 	}
 
 	return relation

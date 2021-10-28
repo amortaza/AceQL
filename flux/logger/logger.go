@@ -10,7 +10,9 @@ const (
 )
 
 func Log(msg string, source Source) {
-	fmt.Println("(", source, ")", msg)
+	if source != JsonEncoding {
+		fmt.Println("(", source, ")", msg)
+	}
 }
 
 func Error(msg interface{}, source Source) {

@@ -18,8 +18,8 @@ type CRUD interface {
 	Delete(relationName string, id string) error
 
 	// schema crud operations
-	CreateRelation(name string) error
-	DeleteRelation(name string) error
+	CreateTable(name string) error
+	DeleteTable(name string) error
 	CreateField(relationName string, field *relations.Field) error
 	DeleteField(relationName string, fieldname string) error
 

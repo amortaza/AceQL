@@ -30,7 +30,7 @@ func (generator *FieldCreate_SqlGenerator) GenerateCreateFieldSQL(table string, 
 
 func (generator *FieldCreate_SqlGenerator) fieldTypeToDefaultValue(fieldType relations.FieldType) (string, error) {
 	if fieldType == relations.String {
-		return "NULL", nil
+		return "''", nil
 	}
 
 	if fieldType == relations.Bool {

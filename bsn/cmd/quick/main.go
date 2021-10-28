@@ -62,8 +62,8 @@ func main2() {
 		return
 	}
 
-	fmt.Println( a.Fields()[0].Name )
-	fmt.Println( a.Fields()[0].Type )
+	//f mt.Println( a.Fields()[0].Name )
+	//f mt.Println( a.Fields()[0].Type )
 }
 
 

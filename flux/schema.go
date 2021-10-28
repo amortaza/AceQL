@@ -19,6 +19,10 @@ func NewSchema(journalist schema_journalist.Journalist, crud CRUD) *Schema {
 	}
 }
 
+func (schema *Schema) Close() {
+	schema.crud.Close()
+}
+
 func (schema *Schema) CreateRelation_withFields(relation *relations.Relation, journal bool) error {
 	if err := schema.CreateRelation_withName(relation.Name(), journal); err != nil {
 		return err
@@ -38,7 +42,7 @@ func (schema *Schema) CreateRelation_withName(name string, journal bool) error {
 	// the order here is importan because if we are creating 'x_schema'
 	// we want to create the relations first THEN journal it
 
-	err := schema.crud.CreateRelation(name)
+	err := schema.crud.CreateTable(name)
 	if err != nil {
 		return err
 	}
@@ -47,14 +51,14 @@ func (schema *Schema) CreateRelation_withName(name string, journal bool) error {
 		return nil
 	}
 
-	return schema.journalist.CreateRelation(name)
+	return schema.journalist.CreateTable(name)
 }
 
 func (schema *Schema) DeleteRelation(name string) error {
 
-	_ = schema.journalist.DeleteRelation(name)
+	_ = schema.journalist.DeleteTable(name)
 
-	return schema.crud.DeleteRelation(name)
+	return schema.crud.DeleteTable(name)
 }
 
 func (schema *Schema) CreateField(relationName string, field *relations.Field, journal bool) error {

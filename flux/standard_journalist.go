@@ -9,7 +9,7 @@ type StandardJournalist struct {
 	crud CRUD
 }
 
-func (journalist *StandardJournalist) CreateRelation(relationName string) error {
+func (journalist *StandardJournalist) CreateTable(relationName string) error {
 	recordmap := NewRecordMap()
 
 	recordmap.PutString("x_type", "relation" )
@@ -22,7 +22,7 @@ func (journalist *StandardJournalist) CreateRelation(relationName string) error 
 	return err
 }
 
-func (journalist *StandardJournalist) DeleteRelation(relationName string) error {
+func (journalist *StandardJournalist) DeleteTable(relationName string) error {
 	record := NewRecord(GetRelation("x_schema", journalist.crud), journalist.crud)
 
 	_ = record.Add("x_table", query.Equals, relationName)
@@ -50,6 +50,7 @@ func (journalist *StandardJournalist) CreateField(relationName string, field *re
 	recordmap.PutString("x_table", relationName)
 	recordmap.PutString("x_field", field.Name)
 	recordmap.PutString("x_field_type", string(field.Type))
+	recordmap.PutString("x_label", string(field.Label))
 
 	_, err := journalist.crud.Create("x_schema", recordmap)
 

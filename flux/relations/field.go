@@ -2,12 +2,14 @@ package relations
 
 type Field struct {
 	Name string
+	Label string
 	Type FieldType
 }
 
-func NewField(name string, fieldtype FieldType) *Field {
+func NewField(name string, label string, fieldtype FieldType) *Field {
 	return &Field{
 		Name: name,
+		Label: label,
 		Type: fieldtype,
 	}
 }

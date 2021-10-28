@@ -26,5 +26,7 @@ func DeleteRecordById(c echo.Context) error {
 		}
 	}
 
+	r.Close()
+
 	return c.String(http.StatusOK, "")
 }

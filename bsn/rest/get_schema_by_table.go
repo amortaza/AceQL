@@ -31,6 +31,8 @@ func GetSchemaByTable(c echo.Context) error {
 		list = append(list, r.GetMap())
 	}
 
+	r.Close()
+
 	size := strconv.Itoa(len(list))
 
 	c.Response().Header().Set("X-Total-Count", size)

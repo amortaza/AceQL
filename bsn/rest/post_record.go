@@ -53,5 +53,9 @@ func createRecord(name string, m *echo.Map) (string, error) {
 		}
 	}
 
-	return rec.Insert()
+	id, err := rec.Insert()
+
+	rec.Close()
+
+	return id, err
 }

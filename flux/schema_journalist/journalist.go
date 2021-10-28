@@ -5,8 +5,8 @@ import (
 )
 
 type Journalist interface {
-	CreateRelation(relationName string) error
-	DeleteRelation(relationName string) error
+	CreateTable(relationName string) error
+	DeleteTable(relationName string) error
 
 	CreateField(relationName string, field *relations.Field) error
 	DeleteField(relationName string, fieldname string) error

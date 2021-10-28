@@ -75,7 +75,7 @@ func (crud *CRUD) Delete(table string, id string) error {
 	return crud.sqlRunner.Run( sql )
 }
 
-func (crud *CRUD) CreateRelation(name string) error {
+func (crud *CRUD) CreateTable(name string) error {
 	sqlGenerator := sql_generator.NewTableCreate_SqlGenerator()
 
 	sql := sqlGenerator.GenerateCreateTableSQL( name )
@@ -83,7 +83,7 @@ func (crud *CRUD) CreateRelation(name string) error {
 	return crud.sqlRunner.Run( sql )
 }
 
-func (crud *CRUD) DeleteRelation(name string) error {
+func (crud *CRUD) DeleteTable(name string) error {
 	sqlGenerator := sql_generator.NewTableDelete_SqlGenerator()
 
 	sql := sqlGenerator.GenerateDeleteTableSQL( name )
@@ -91,10 +91,10 @@ func (crud *CRUD) DeleteRelation(name string) error {
 	return crud.sqlRunner.Run( sql )
 }
 
-func (crud *CRUD) CreateField(relationName string, field *relations.Field) error {
+func (crud *CRUD) CreateField(tablename string, field *relations.Field) error {
 	sqlGenerator := sql_generator.NewFieldCreate_SqlGenerator()
 
-	sql, err := sqlGenerator.GenerateCreateFieldSQL( relationName, field )
+	sql, err := sqlGenerator.GenerateCreateFieldSQL(tablename, field )
 	if err != nil {
 		return err
 	}
@@ -102,10 +102,10 @@ func (crud *CRUD) CreateField(relationName string, field *relations.Field) error
 	return crud.sqlRunner.Run( sql )
 }
 
-func (crud *CRUD) DeleteField(relationName string, fieldname string) error {
+func (crud *CRUD) DeleteField(tablename string, fieldname string) error {
 	sqlGenerator := sql_generator.NewFieldDelete_SqlGenerator()
 
-	sql := sqlGenerator.GenerateDeleteFieldSQL( relationName, fieldname )
+	sql := sqlGenerator.GenerateDeleteFieldSQL(tablename, fieldname )
 
 	return crud.sqlRunner.Run( sql )
 }

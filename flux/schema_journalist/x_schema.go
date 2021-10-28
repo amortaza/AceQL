@@ -9,12 +9,12 @@ func Get_X_SCHEMA_relation() *relations.Relation {
 
 	stringType, _ := relations.GetFieldTypeByName( "String")
 
-	relation.AddField( "x_id", stringType )
-	relation.AddField( "x_type", stringType )
-	relation.AddField( "x_table", stringType )
-	relation.AddField( "x_field", stringType )
-	relation.AddField( "x_field_type", stringType )
-	relation.AddField( "x_label", stringType )
+	relation.AddField( "x_id", "ID", stringType )
+	relation.AddField( "x_type", "Type", stringType )
+	relation.AddField( "x_table", "Table", stringType )
+	relation.AddField( "x_field", "Field", stringType )
+	relation.AddField( "x_field_type", "Field Type", stringType )
+	relation.AddField( "x_label", "Label", stringType )
 
 	return relation
 }

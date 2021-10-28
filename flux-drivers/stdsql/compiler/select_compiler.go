@@ -38,6 +38,8 @@ func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int) (strin
 		}
 	}
 
+	q += " ORDER BY x_id ASC"
+
 	if paginationSize > -1 {
 		q += " LIMIT " + strconv.Itoa(paginationIndex) + ", " + strconv.Itoa(paginationSize)
 	}

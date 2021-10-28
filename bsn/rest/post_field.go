@@ -18,6 +18,11 @@ func PostSchemaField(c echo.Context) error {
 	}
 
 	fieldTypeAsString := (*m)["type"].(string)
+	fieldLabel := (*m)["label"].(string)
+
+	if fieldLabel == "" {
+		fieldLabel = fieldName
+	}
 
 	schema := stdsql.NewSchema()
 
@@ -27,9 +32,11 @@ func PostSchemaField(c echo.Context) error {
 		return err
 	}
 
-	field := &relations.Field{Name: fieldName, Type: fieldType}
+	field := &relations.Field{Name: fieldName, Label: fieldLabel, Type: fieldType}
 
 	schema.CreateField(table, field, true)
+
+	schema.Close()
 
 	return c.JSON(200, "")
 }
