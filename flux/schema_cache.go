@@ -11,7 +11,7 @@ import (
 //var g_relation_cache = make( map[ string ] *relations.Relation )
 
 func GetRelation( name string, crud CRUD) *relations.Relation {
-	fmt.Println( "!!!!!!!!!!!!!!!! Caching opportunity for RELATION" ) // debug
+	//f mt.Println( "!!!!!!!!!!!!!!!! Caching opportunity for RELATION" ) // debug
 	//relation, ok := g_relation_cache[ name ]
 	//
 	//if ok {
