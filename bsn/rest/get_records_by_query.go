@@ -24,6 +24,8 @@ func GetRecordsByQuery(c echo.Context) error {
 	crud := stdsql.NewCRUD()
 
 	r := flux.NewRecord( flux.GetRelation(name,crud), crud )
+	defer r.Close()
+
 	if encodedQuery != "" {
 		r.SetEncodedQuery(encodedQuery)
 	}
@@ -55,10 +57,6 @@ func GetRecordsByQuery(c echo.Context) error {
 
 		list = append(list, r.GetMap())
 	}
-
-	//size := strconv.Itoa(len(list))
-
-	r.Close()
 
 	c.Response().Header().Set("X-Total-Count", strconv.Itoa(total))
 	c.Response().Header().Set("Access-Control-Expose-Headers", "X-Total-Count")

@@ -74,6 +74,7 @@ func (query *RowQuerier) Query(paginationIndex int, paginationSize int) (int, er
 		return -1, fmt.Errorf("%v", err3)
 	}
 
+	logger.Log( "Closing DB Connection for COUNT(1)", "SQL:RowQuerier.Query()" )
 	rowcount.Close()
 
 	return count, nil

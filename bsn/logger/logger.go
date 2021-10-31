@@ -1,6 +1,9 @@
 package logger
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 type Source string
 
@@ -12,11 +15,11 @@ const (
 )
 
 func Log(msg string, source Source) {
-	fmt.Println("(", source, ")", msg)
+	fmt.Println(time.Now().Format(time.Kitchen), " (", source, ")", msg)
 }
 
 func Error(msg interface{}, source Source) {
 	fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-	fmt.Println("***** ( ERROR ) ", source, msg)
+	fmt.Println(time.Now().Format(time.Kitchen), " ***** ( ERROR ) ", source, msg)
 }
 

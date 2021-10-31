@@ -15,7 +15,7 @@ func GetSchemaByTable(c echo.Context) error {
 	table := c.Param("table")
 
 	r := stdsql.NewRecord("x_schema")
-	_ = r.Add("x_type", query.Equals, "field")
+	//_ = r.Add("x_type", query.Equals, "field")
 	_ = r.Add("x_table", query.Equals, table)
 	_, _ = r.Query()
 
