@@ -9,11 +9,12 @@ type StandardJournalist struct {
 	crud CRUD
 }
 
-func (journalist *StandardJournalist) CreateTable(relationName string) error {
+func (journalist *StandardJournalist) CreateTable(tableName string, tableLabel string) error {
 	recordmap := NewRecordMap()
 
 	recordmap.PutString("x_type", "relation" )
-	recordmap.PutString("x_table", relationName)
+	recordmap.PutString("x_table", tableName)
+	recordmap.PutString("x_label", tableLabel)
 	recordmap.PutString("x_field", "x_id")
 	recordmap.PutString("x_field_type", string(relations.String))
 

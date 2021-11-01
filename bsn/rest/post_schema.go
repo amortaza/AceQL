@@ -8,7 +8,7 @@ import (
 )
 
 func PostSchemaTable(c echo.Context) error {
-	name := c.Param("table")
+	tableName := c.Param("table")
 
 	m := &echo.Map{}
 
@@ -17,8 +17,9 @@ func PostSchemaTable(c echo.Context) error {
 	}
 
 	fields := (*m)["fields"].([]interface{})
+	tableLabel := (*m)["label"].(string)
 
-	relation := makeCollectionObject(name, fields)
+	relation := makeSchemaObject(tableName, tableLabel, fields)
 
 	schema := stdsql.NewSchema()
 
@@ -29,8 +30,10 @@ func PostSchemaTable(c echo.Context) error {
 	return c.JSON(200, "")
 }
 
-func makeCollectionObject(name string, fields []interface{}) *relations.Relation {
-	relation := relations.NewRelation(name)
+func makeSchemaObject(tableName string, tableLabel string, fields []interface{}) *relations.Relation {
+	relation := relations.NewRelation(tableName)
+
+	relation.SetLabel( tableLabel )
 
 	for _, v := range fields {
 		m := v.(map[string]interface{})

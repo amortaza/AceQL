@@ -25,7 +25,7 @@ func Run() error {
 func bootstrap(relation *relations.Relation, records []*flux.Record) error {
 	schema := stdsql.NewSchema()
 
-	if err := schema.CreateRelation_withName(relation.Name(), relation.Name() != "x_schema"); err != nil {
+	if err := schema.CreateRelation_withName(relation.Name(), relation.Label(), relation.Name() != "x_schema"); err != nil {
 		return err
 	}
 

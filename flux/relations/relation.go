@@ -2,6 +2,7 @@ package relations
 
 type Relation struct {
 	name   string
+	label   string
 	fields []*Field
 
 	fieldByName map[string] *Field
@@ -17,6 +18,14 @@ func NewRelation(name string) *Relation {
 
 func (relation *Relation) Name() string {
 	return relation.name
+}
+
+func (relation *Relation) Label() string {
+	return relation.label
+}
+
+func (relation *Relation) SetLabel( label string ) {
+	relation.label = label
 }
 
 func (relation *Relation) Fields() []*Field {

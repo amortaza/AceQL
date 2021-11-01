@@ -5,10 +5,10 @@ import (
 )
 
 type Journalist interface {
-	CreateTable(relationName string) error
-	DeleteTable(relationName string) error
+	CreateTable(tableName string, tableLabel string) error
+	DeleteTable(tableName string) error
 
-	CreateField(relationName string, field *relations.Field) error
-	DeleteField(relationName string, fieldname string) error
+	CreateField(tableName string, field *relations.Field) error
+	DeleteField(tableName string, fieldname string) error
 }
 
