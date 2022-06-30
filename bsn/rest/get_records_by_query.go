@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"fmt"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/labstack/echo"
@@ -12,6 +13,17 @@ func GetRecordsByQuery(c echo.Context) error {
 	name := c.Param("table")
 
 	encodedQuery := c.QueryParam("query")
+
+	if encodedQuery != "" {
+		fmt.Println( "query: " + encodedQuery ) // debug
+	}
+
+	orderByAscending := true
+	orderBy := c.QueryParam("order_by")
+	if orderBy == "" {
+		orderBy = c.QueryParam("order_by_desc")
+		orderByAscending = false
+	}
 
 	paginationIndex := c.QueryParam("index")
 	paginationSize := c.QueryParam("size")
@@ -30,19 +42,28 @@ func GetRecordsByQuery(c echo.Context) error {
 		r.SetEncodedQuery(encodedQuery)
 	}
 
-	index, err1 := strconv.Atoi(paginationIndex)
-	if err1 != nil {
-		return err1
+	index, err := strconv.Atoi(paginationIndex)
+	if err != nil {
+		return err
 	}
 
-	size, err2 := strconv.Atoi(paginationSize)
-	if err2 != nil {
-		return err2
+	size, err := strconv.Atoi(paginationSize)
+	if err != nil {
+		return err
 	}
 
 	r.Pagination(index, size)
 
-	total , _ := r.Query()
+	if orderByAscending {
+		r.SetOrderBy( orderBy )
+	} else {
+		r.SetOrderByDesc( orderBy )
+	}
+
+	total , err := r.Query()
+	if err != nil {
+		return err
+	}
 
 	list := make([]*flux.RecordMap, 0)
 
@@ -52,8 +73,6 @@ func GetRecordsByQuery(c echo.Context) error {
 		if !hasNext {
 			break
 		}
-
-		//fmt.Println( "x_id is " , r.Get("x_id") )
 
 		list = append(list, r.GetMap())
 	}

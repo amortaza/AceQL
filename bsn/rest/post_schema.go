@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
+// PostSchemaTable is where a Table is defined! We are creating a table here.
 func PostSchemaTable(c echo.Context) error {
 	tableName := c.Param("table")
 
@@ -33,7 +34,9 @@ func PostSchemaTable(c echo.Context) error {
 func makeSchemaObject(tableName string, tableLabel string, fields []interface{}) *relations.Relation {
 	relation := relations.NewRelation(tableName)
 
-	relation.SetLabel( tableLabel )
+	relation.SetLabel(tableLabel)
+
+	relation.AddField("x_id", "ID", relations.String)
 
 	for _, v := range fields {
 		m := v.(map[string]interface{})

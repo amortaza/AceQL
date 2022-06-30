@@ -1,11 +1,12 @@
 package rest
 
 import (
+	"github.com/amortaza/aceql/bsn/cache"
+	"github.com/amortaza/aceql/bsn/grpcclient"
 	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/labstack/echo"
-	"strconv"
 )
 
 func PutRecord(c echo.Context) error {
@@ -45,33 +46,50 @@ func updateRecord(name string, id string, m *echo.Map) error {
 	}
 
 	for key, value := range *m {
-		field := relation.GetField( key )
+		// for now assume everything is string
+		rec.Set(key, value)
 
 		//fmt.Println( "ace key ", key ) // debu
 
 		// todo make front end aware of field types
 		// 10/13/2021 - daddie
-		if field.IsNumber() {
-			v64, err := strconv.ParseFloat(value.(string), 32)
+		/*
+			field := relation.GetField( key )
 
-			if err != nil {
-				logger.Error("Will not set field " + key + " because cannot parse float, see " + value.(string), "rest.updateRecord()")
-				continue
+			if field.IsNumber() {
+				v64, err := strconv.ParseFloat(value.(string), 32)
+
+				if err != nil {
+					logger.Error("Will not set field " + key + " because cannot parse float, see " + value.(string), "rest.updateRecord()")
+					continue
+				}
+
+				rec.Set(key, float32(v64) )
+
+			} else if field.IsBool() {
+				rec.Set(key, value.(string) == "true" )
+
+			} else {
+				rec.Set(key, value)
 			}
-
-			rec.Set(key, float32(v64) )
-
-		} else if field.IsBool() {
-			rec.Set(key, value.(string) == "true" )
-
-		} else {
-			rec.Set(key, value)
-		}
+		*/
 	}
 
 	err := rec.Update()
 
 	rec.Close()
 
+	onAfterUpdate(rec)
+
 	return err
+}
+
+func onAfterUpdate(rec *flux.Record) {
+	grpcMap := rec.GetMapGRPC()
+
+	scriptnames := cache.GetOnAfterUpdate_ScriptNames(rec.GetTable())
+
+	for _, script := range scriptnames {
+		grpcclient.GRPC_OnRecordUpdate(script, grpcMap)
+	}
 }

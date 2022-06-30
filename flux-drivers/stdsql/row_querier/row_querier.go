@@ -14,14 +14,14 @@ import (
 
 type RowQuerier struct {
 	rows   *sql.Rows
-	fields [] *relations.Field
+	fields []*relations.Field
 
 	sqlRunner      *sql_runner.SqlRunner
 	selectCompiler *compiler.SelectCompiler
 }
 
-func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, table string, fields [] *relations.Field, root node.Node) *RowQuerier {
-	columns := relations.FieldsToNames( fields )
+func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, table string, fields []*relations.Field, root node.Node) *RowQuerier {
+	columns := relations.FieldsToNames(fields)
 	selectCompiler := compiler.NewSelectCompiler(table, columns, root)
 
 	return &RowQuerier{
@@ -40,17 +40,17 @@ func (query *RowQuerier) Close() error {
 	err := query.rows.Close()
 
 	if err == nil {
-		logger.Log("Closing DB Connection - successful", "RowQuerier.Close()")
+		//debug logger.Log("Closing DB Connection - successful", "RowQuerier.Close()")
 	} else {
-		logger.Log("Closing DB Connection - UNSUCCESSFUL", "RowQuerier.Close()")
+		//debug logger.Log("Closing DB Connection - UNSUCCESSFUL", "RowQuerier.Close()")
 		logger.Error(err, logger.ERROR)
 	}
 
 	return err
 }
 
-func (query *RowQuerier) Query(paginationIndex int, paginationSize int) (int, error) {
-	sqlstr, sqlstr_forCount, err := query.selectCompiler.Compile(paginationIndex, paginationSize)
+func (query *RowQuerier) Query(paginationIndex int, paginationSize int, orderBy string, orderByAscending bool) (int, error) {
+	sqlstr, sqlstr_forCount, err := query.selectCompiler.Compile(paginationIndex, paginationSize, orderBy, orderByAscending)
 	if err != nil {
 		return -1, fmt.Errorf("%v", err)
 	}
@@ -69,12 +69,12 @@ func (query *RowQuerier) Query(paginationIndex int, paginationSize int) (int, er
 
 	rowcount.Next()
 
-	count, err3 := readTotal( rowcount )
+	count, err3 := readTotal(rowcount)
 	if err3 != nil {
 		return -1, fmt.Errorf("%v", err3)
 	}
 
-	logger.Log( "Closing DB Connection for COUNT(1)", "SQL:RowQuerier.Query()" )
+	//debug logger.Log( "Closing DB Connection for COUNT(1)", "SQL:RowQuerier.Query()" )
 	rowcount.Close()
 
 	return count, nil
@@ -86,12 +86,12 @@ func (query *RowQuerier) Query(paginationIndex int, paginationSize int) (int, er
 //	return fmt.Errorf("%v", err)
 //}
 
-func readTotal( rows *sql.Rows ) (int, error) {
-	columnPointers := make( []interface{}, 1 )
+func readTotal(rows *sql.Rows) (int, error) {
+	columnPointers := make([]interface{}, 1)
 
 	columns := []string{"total"}
 
-	columnPointers[ 0 ] = &columns[ 0 ]
+	columnPointers[0] = &columns[0]
 
 	if err := rows.Scan(columnPointers...); err != nil {
 		logger.Error(err, "readTotal() could not scan")
@@ -100,7 +100,7 @@ func readTotal( rows *sql.Rows ) (int, error) {
 
 	value := columns[0]
 
-	total, err := strconv.ParseInt( value, 10, 32 )
+	total, err := strconv.ParseInt(value, 10, 32)
 	if err != nil {
 		logger.Error(err, "readTotal() could not parse answer")
 		return -1, err
@@ -117,7 +117,7 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 		return nil, nil
 	}
 
-	columns        := make([]interface{}, len(query.fields))
+	columns := make([]interface{}, len(query.fields))
 	columnPointers := make([]interface{}, len(query.fields))
 
 	for i := range columns {
@@ -132,7 +132,7 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 	valuesRecordMap := flux.NewRecordMap()
 
 	for i, field := range query.fields {
-		value := columnPointers[ i ].(*interface{})
+		value := columnPointers[i].(*interface{})
 
 		//f mt.Println( field.Name )
 		if field.IsString() {

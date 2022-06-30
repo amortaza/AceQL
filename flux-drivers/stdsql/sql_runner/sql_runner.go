@@ -39,7 +39,6 @@ func (runner *SqlRunner) Run(sql string) error {
 
 	_, err := runner.db.Exec(sql)
 
-
 	return err
 }
 

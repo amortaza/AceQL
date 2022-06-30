@@ -35,10 +35,13 @@ func (crud *CRUD) Compiler() node.Compiler {
 	return crud.compiler
 }
 
-func (crud *CRUD) Query(table string, fields []* relations.Field, root node.Node, paginationIndex int, paginationSize int) (int, error) {
+func (crud *CRUD) Query(table string, fields []* relations.Field, root node.Node,
+	paginationIndex int, paginationSize int,
+	orderBy string, orderByAscending bool ) (int, error) {
+
 	crud.querier = row_querier.NewRowQuerier( crud.sqlRunner, table, fields, root)
 
-	return crud.querier.Query(paginationIndex, paginationSize)
+	return crud.querier.Query(paginationIndex, paginationSize, orderBy, orderByAscending)
 }
 
 // Next returns nil if there are no records left

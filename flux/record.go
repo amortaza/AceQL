@@ -9,43 +9,46 @@ import (
 )
 
 type Record struct {
-	relationName string
-	fields [] *relations.Field
+	tableName string
+	fields    []*relations.Field
 
-	filterQuery  *query.FilterQuery
+	filterQuery *query.FilterQuery
 
 	values     *RecordMap
 	userValues *RecordMap
 
-	nameToType map[string] *relations.FieldType
+	nameToType map[string]*relations.FieldType
 
 	paginationIndex, paginationSize int
+
+	orderBy          string
+	orderByAscending bool
 
 	crud CRUD
 }
 
 func NewRecord(relation *relations.Relation, crud CRUD) *Record {
-	return NewRecord_withDefinition( relation.Name(), relation.Fields(), crud )
+	return NewRecord_withDefinition(relation.Name(), relation.Fields(), crud)
 }
 
 // beause this is low level, it cannot take "Relation" type
 // it must take table name and field list (so we can hard code it when bootstrapping)
-func NewRecord_withDefinition(relationName string, fields [] *relations.Field, crud CRUD) *Record {
+func NewRecord_withDefinition(relationName string, fields []*relations.Field, crud CRUD) *Record {
 	rec := &Record{
-		filterQuery:  query.NewFilterQuery(crud.Compiler()),
-		crud:         crud,
-		relationName: relationName,
-		fields: fields,
+		filterQuery:    query.NewFilterQuery(crud.Compiler()),
+		crud:           crud,
+		tableName:      relationName,
+		fields:         fields,
 		paginationSize: -1,
 	}
 
 	rec.values = NewRecordMap()
 	rec.userValues = NewRecordMap()
 
-	rec.nameToType = make(map[string] *relations.FieldType)
+	rec.nameToType = make(map[string]*relations.FieldType)
 
 	for _, field := range fields {
-		rec.nameToType[ field.Name ] = &field.Type
+		rec.nameToType[field.Name] = &field.Type
 	}
 
 	return rec
@@ -56,17 +59,48 @@ func (rec *Record) MarshalJSON() ([]byte, error) {
 }
 
 func (rec *Record) GetTable() string {
-	return rec.relationName
+	return rec.tableName
 }
 
 func (rec *Record) GetMap() *RecordMap {
 	return rec.values.Combine(rec.userValues)
 }
 
-func (rec *Record) Set( fieldname string, value interface{} ) {
-	fieldType, ok := rec.nameToType[ fieldname ]
+// GetMapGRPC : With GRPC we can only handle map[string]string hence this function.
+func (rec *Record) GetMapGRPC() map[string]string {
+	rmap := rec.GetMap()
+	m := make(map[string]string)
+
+	for key, typedValue := range rmap.Data {
+		// For now we are only going to handle strings.
+		if typedValue.IsString() {
+			m[key] = typedValue.valueAsString
+		} else if typedValue.IsNumber() {
+			m[key] = "Number NOT Supported yet!"
+		} else if typedValue.IsBool() {
+			m[key] = "Bool NOT Supported yet!"
+		} else {
+			m[key] = "This is impossible in record.go"
+		}
+	}
+
+	return m
+}
+
+func (rec *Record) SetOrderByDesc(fields string) {
+	rec.orderByAscending = false
+	rec.orderBy = fields
+}
+
+func (rec *Record) SetOrderBy(fields string) {
+	rec.orderByAscending = true
+	rec.orderBy = fields
+}
+
+func (rec *Record) Set(fieldname string, value interface{}) {
+	fieldType, ok := rec.nameToType[fieldname]
 	if !ok {
-		logger.Error("Field does not exist, see " + fieldname, "Record.Set()")
+		logger.Error("Field does not exist, see "+fieldname, "Record.Set()")
 		return
 	}
 
@@ -80,7 +114,7 @@ func (rec *Record) Set( fieldname string, value interface{} ) {
 		rec.userValues.PutBool(fieldname, value.(bool))
 
 	} else {
-		logger.Error("Field type unrecognized, see " + fieldname + " : " + string(*fieldType), "Record.Set()")
+		logger.Error("Field type unrecognized, see "+fieldname+" : "+string(*fieldType), "Record.Set()")
 	}
 }
 
@@ -89,7 +123,7 @@ func (rec *Record) Close() error {
 }
 
 func (rec *Record) Insert() (string, error) {
-	return rec.crud.Create(rec.relationName, rec.GetMap())
+	return rec.crud.Create(rec.tableName, rec.GetMap())
 }
 
 func (rec *Record) Update() error {
@@ -98,7 +132,7 @@ func (rec *Record) Update() error {
 		return err
 	}
 
-	return rec.crud.Update(rec.relationName, pk, rec.GetMap())
+	return rec.crud.Update(rec.tableName, pk, rec.GetMap())
 }
 
 func (rec *Record) Delete() error {
@@ -107,16 +141,16 @@ func (rec *Record) Delete() error {
 		return err
 	}
 
-	return rec.crud.Delete(rec.relationName, pk)
+	return rec.crud.Delete(rec.tableName, pk)
 }
 
-func (rec *Record) Query() (int,error) {
+func (rec *Record) Query() (int, error) {
 	root, err := rec.filterQuery.GetRoot()
 	if err != nil {
 		return -1, err
 	}
 
-	return rec.crud.Query(rec.relationName, rec.fields, root, rec.paginationIndex, rec.paginationSize)
+	return rec.crud.Query(rec.tableName, rec.fields, root, rec.paginationIndex, rec.paginationSize, rec.orderBy, rec.orderByAscending)
 }
 
 // Next will return false when no records left.

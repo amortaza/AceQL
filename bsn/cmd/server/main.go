@@ -8,7 +8,10 @@ import (
 )
 
 func main() {
-	stdsql.Init( "mysql", "clown:1844@/bsn")
+	stdsql.Init("mysql", "clown:1844@/bsn")
+
+	//debug
+	//scheduler.StartScheduler()
 
 	e := echo.New()
 
@@ -34,6 +37,11 @@ func main() {
 	// delete record
 	e.DELETE("/table/:table/id/:id", rest.DeleteRecordById)
 
+	// upload CSV
+	e.POST("/csv/:table", rest.PostCSV)
+
+	// get CSV
+	e.GET("/csv/:table", rest.GetRecordsByQuery_CSV)
+
 	e.Logger.Fatal(e.Start(":8000"))
 }
-

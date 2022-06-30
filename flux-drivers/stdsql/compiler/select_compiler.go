@@ -22,7 +22,7 @@ func NewSelectCompiler(table string, columns []string, where node.Node) *SelectC
 	return s
 }
 
-func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int) (string, string, error) {
+func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int, orderBy string, orderByAscending bool) (string, string, error) {
 
 	q := "SELECT "
 
@@ -33,7 +33,7 @@ func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int) (strin
 	}
 
 	q +=  " FROM " + s.From
-	
+
 	queryUsedForCount := "SELECT COUNT(1) AS total FROM " + s.From
 
 	if s.Where != nil {
@@ -48,7 +48,17 @@ func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int) (strin
 		}
 	}
 
-	q += " ORDER BY x_id ASC"
+	if orderBy == "" {
+		q += " ORDER BY x_id ASC"
+	} else {
+		q += " ORDER BY " + orderBy
+
+		if orderByAscending {
+			q += " ASC"
+		} else {
+			q += " DESC"
+		}
+	}
 
 	if paginationSize > -1 {
 		q += " LIMIT " + strconv.Itoa(paginationIndex) + ", " + strconv.Itoa(paginationSize)
