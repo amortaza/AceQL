@@ -3,14 +3,14 @@ package flux
 import (
 	"github.com/amortaza/aceql/flux/node"
 	"github.com/amortaza/aceql/flux/schema_journalist"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
 )
 
 type CRUD interface {
 	// Compiler is here for now for convenience, but it really doesn't belong here
 	Compiler() node.Compiler
 
-	Query(relationName string, fields []*table.Field, root node.Node, paginationIndex int, paginationSize int, orderBy string, orderByAscending bool) (int, error)
+	Query(relationName string, fields []*tableschema.Field, root node.Node, paginationIndex int, paginationSize int, orderBy string, orderByAscending bool) (int, error)
 	Next() (*RecordMap, error)
 
 	Create(relationName string, values *RecordMap) (string, error)
@@ -20,7 +20,7 @@ type CRUD interface {
 	// schema crud operations
 	CreateTable(name string) error
 	DeleteTable(name string) error
-	CreateField(relationName string, field *table.Field) error
+	CreateField(relationName string, field *tableschema.Field) error
 	DeleteField(relationName string, fieldname string) error
 
 	Close() error

@@ -2,13 +2,13 @@ package query
 
 import (
 	"errors"
-	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux/node"
+	"github.com/amortaza/aceql/logger"
 	"strconv"
 	"strings"
 )
 
-func Parse( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
+func Parse(encodedQuery string, compiler node.Compiler) (node.Node, error) {
 	tokens, err := tokenize(encodedQuery)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func Parse( encodedQuery string, compiler node.Compiler ) (node.Node, error) {
 				stack.top.ops = token
 			}
 		} else if token == ")" {
-			for stack.top.prev != nil  {
+			for stack.top.prev != nil {
 				if stack.top.prev.IsEmpty() {
 					stack.top.prev = stack.top.prev.prev
 					break
@@ -132,7 +132,7 @@ func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
 		if lrnode.leftLRNode == nil {
 			return nil, errors.New("(lrNodeToNode 2) left of LRNode MUST be a node, if right is empty")
 		}
-		return lrNodeToNode( lrnode.leftLRNode, compiler )
+		return lrNodeToNode(lrnode.leftLRNode, compiler)
 	}
 
 	parent, err := EncodedOpToNode(lrnode.ops, compiler)
@@ -141,19 +141,19 @@ func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
 	}
 
 	if lrnode.leftText != "" {
-		parent.Put( node.NewColumn( lrnode.leftText, compiler ) )
+		parent.Put(node.NewColumn(lrnode.leftText, compiler))
 	} else {
-		kid, err := lrNodeToNode( lrnode.leftLRNode, compiler )
+		kid, err := lrNodeToNode(lrnode.leftLRNode, compiler)
 		if err != nil {
 			return nil, err
 		}
-		parent.Put( kid )
+		parent.Put(kid)
 	}
 
 	if lrnode.rightText != "" {
 		if strings.Index(lrnode.rightText, "'") == 0 || strings.Index(lrnode.rightText, "\"") == 0 {
-			unquoted := lrnode.rightText[ 1 : len(lrnode.rightText) - 1 ]
-			parent.Put(node.NewString( unquoted, compiler))
+			unquoted := lrnode.rightText[1 : len(lrnode.rightText)-1]
+			parent.Put(node.NewString(unquoted, compiler))
 
 		} else if lrnode.rightText == "true" || lrnode.rightText == "false" {
 			parent.Put(node.NewBool(lrnode.rightText == "true", compiler))
@@ -163,18 +163,17 @@ func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
 			if err == nil {
 				parent.Put(node.NewNumber(float32(numberValue), compiler))
 			} else {
-				logger.Log("Dont know how to handle \"" + lrnode.rightText + "\"", "Parser")
+				logger.Log("Dont know how to handle \""+lrnode.rightText+"\"", "Parser")
 				return nil, errors.New("parser issue")
 			}
 		}
 	} else {
-		kid, err := lrNodeToNode( lrnode.rightLRNode, compiler )
+		kid, err := lrNodeToNode(lrnode.rightLRNode, compiler)
 		if err != nil {
 			return nil, err
 		}
-		parent.Put( kid )
+		parent.Put(kid)
 	}
 
 	return parent, nil
 }
-

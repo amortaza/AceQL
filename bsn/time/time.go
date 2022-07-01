@@ -12,7 +12,7 @@ got it?
 */
 import (
 	"fmt"
-	"github.com/amortaza/aceql/bsn/logger"
+	"github.com/amortaza/aceql/logger"
 	"strconv"
 	"strings"
 	"time"

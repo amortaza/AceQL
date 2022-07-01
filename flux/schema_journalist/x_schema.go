@@ -1,13 +1,13 @@
 package schema_journalist
 
 import (
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
 )
 
-func Get_X_SCHEMA_relation() *table.Relation {
-	relation := table.NewRelation("x_schema")
+func Get_X_SCHEMA_relation() *tableschema.Table {
+	relation := tableschema.NewTable("x_schema")
 
-	stringType, _ := table.GetFieldTypeByName("String")
+	stringType, _ := tableschema.GetFieldTypeByName("String")
 
 	relation.AddField("x_id", "ID", stringType)
 	relation.AddField("x_type", "Type", stringType)

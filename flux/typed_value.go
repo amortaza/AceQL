@@ -1,13 +1,13 @@
 package flux
 
 import (
-	"github.com/amortaza/aceql/flux/logger"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/logger"
 	"strconv"
 )
 
 type TypedValue struct {
-	fieldType table.FieldType
+	fieldType tableschema.FieldType
 
 	valueAsBool   bool
 	valueAsString string
@@ -15,12 +15,12 @@ type TypedValue struct {
 }
 
 func (t *TypedValue) SetStringByteArray(bytes []byte) {
-	t.fieldType = table.String
+	t.fieldType = tableschema.String
 	t.valueAsString = string(bytes)
 }
 
 func (t *TypedValue) SetString(value string) {
-	t.fieldType = table.String
+	t.fieldType = tableschema.String
 	t.valueAsString = value
 }
 
@@ -29,12 +29,12 @@ func (t *TypedValue) GetString() string {
 }
 
 func (t *TypedValue) SetBoolByteArray(bytes []byte) {
-	t.fieldType = table.Bool
+	t.fieldType = tableschema.Bool
 	t.valueAsBool = string(bytes) != "0"
 }
 
 func (t *TypedValue) SetBool(value bool) {
-	t.fieldType = table.Bool
+	t.fieldType = tableschema.Bool
 	t.valueAsBool = value
 }
 
@@ -43,7 +43,7 @@ func (t *TypedValue) GetBool() bool {
 }
 
 func (t *TypedValue) SetNumberByteArray(bytes []byte) {
-	t.fieldType = table.Number
+	t.fieldType = tableschema.Number
 
 	i, err := strconv.ParseFloat(string(bytes), 32)
 
@@ -56,7 +56,7 @@ func (t *TypedValue) SetNumberByteArray(bytes []byte) {
 }
 
 func (t *TypedValue) SetNumber(value float32) {
-	t.fieldType = table.Number
+	t.fieldType = tableschema.Number
 	t.valueAsNumber = value
 }
 
@@ -65,13 +65,13 @@ func (t *TypedValue) GetNumber() float32 {
 }
 
 func (t *TypedValue) IsString() bool {
-	return t.fieldType == table.String
+	return t.fieldType == tableschema.String
 }
 
 func (t *TypedValue) IsNumber() bool {
-	return t.fieldType == table.Number
+	return t.fieldType == tableschema.Number
 }
 
 func (t *TypedValue) IsBool() bool {
-	return t.fieldType == table.Bool
+	return t.fieldType == tableschema.Bool
 }

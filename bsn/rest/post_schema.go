@@ -1,9 +1,9 @@
 package rest
 
 import (
-	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
 )
 
@@ -31,12 +31,12 @@ func PostSchemaTable(c echo.Context) error {
 	return c.JSON(200, "")
 }
 
-func makeSchemaObject(tableName string, tableLabel string, fields []interface{}) *table.Relation {
-	relation := table.NewRelation(tableName)
+func makeSchemaObject(tableName string, tableLabel string, fields []interface{}) *tableschema.Table {
+	relation := tableschema.NewTable(tableName)
 
 	relation.SetLabel(tableLabel)
 
-	relation.AddField("x_id", "ID", table.String)
+	relation.AddField("x_id", "ID", tableschema.String)
 
 	for _, v := range fields {
 		m := v.(map[string]interface{})
@@ -44,7 +44,7 @@ func makeSchemaObject(tableName string, tableLabel string, fields []interface{})
 		fieldName := m["field"].(string)
 		fieldLabel := m["label"].(string)
 
-		fieldType, err := table.GetFieldTypeByName(m["type"].(string))
+		fieldType, err := tableschema.GetFieldTypeByName(m["type"].(string))
 		if err != nil {
 			logger.Error(err, logger.Main)
 			continue

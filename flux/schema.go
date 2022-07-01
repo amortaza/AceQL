@@ -2,9 +2,9 @@ package flux
 
 import (
 	"fmt"
-	"github.com/amortaza/aceql/flux/logger"
 	"github.com/amortaza/aceql/flux/schema_journalist"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/logger"
 )
 
 type Schema struct {
@@ -23,7 +23,7 @@ func (schema *Schema) Close() {
 	schema.crud.Close()
 }
 
-func (schema *Schema) CreateRelation_withFields(relation *table.Relation, journal bool) error {
+func (schema *Schema) CreateRelation_withFields(relation *tableschema.Table, journal bool) error {
 	if err := schema.CreateRelation_withName(relation.Name(), relation.Label(), journal); err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (schema *Schema) DeleteRelation(name string) error {
 	return schema.crud.DeleteTable(name)
 }
 
-func (schema *Schema) CreateField(relationName string, field *table.Field, journal bool) error {
+func (schema *Schema) CreateField(relationName string, field *tableschema.Field, journal bool) error {
 
 	if journal {
 		_ = schema.journalist.CreateField(relationName, field)

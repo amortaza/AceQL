@@ -1,4 +1,4 @@
-package table
+package tableschema
 
 type Field struct {
 	Name  string

@@ -2,15 +2,15 @@ package flux
 
 import (
 	"fmt"
-	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux/query"
 	"github.com/amortaza/aceql/flux/schema_journalist"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/logger"
 )
 
-//var g_relation_cache = make( map[ string ] *table.Relation )
+//var g_relation_cache = make( map[ string ] *table.Table )
 
-func GetRelation(name string, crud CRUD) *table.Relation {
+func GetRelation(name string, crud CRUD) *tableschema.Table {
 	//f mt.Println( "!!!!!!!!!!!!!!!! Caching opportunity for RELATION" ) // debug
 	//relation, ok := g_relation_cache[ name ]
 	//
@@ -24,7 +24,7 @@ func GetRelation(name string, crud CRUD) *table.Relation {
 		//return g_relation_cache[ name ]
 	}
 
-	relation := table.NewRelation(name)
+	relation := tableschema.NewTable(name)
 
 	r := NewRecord(GetRelation("x_schema", crud), crud)
 	r.Add("x_table", query.Equals, name)
@@ -58,40 +58,40 @@ func GetRelation(name string, crud CRUD) *table.Relation {
 	return relation
 }
 
-func addField(r *Record, relation *table.Relation) error {
+func addField(r *Record, relation *tableschema.Table) error {
 	fieldtype, err := r.Get("x_field_type")
 	//fmt.Println( "ft " , fieldtype )
 	if err != nil {
 		return err
 	}
 
-	if fieldtype == string(table.String) {
+	if fieldtype == string(tableschema.String) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField(field, "TODO", table.String)
+		relation.AddField(field, "TODO", tableschema.String)
 
 		return nil
 
-	} else if fieldtype == string(table.Number) {
+	} else if fieldtype == string(tableschema.Number) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField(field, "TODO", table.Number)
+		relation.AddField(field, "TODO", tableschema.Number)
 
 		return nil
 
-	} else if fieldtype == string(table.Bool) {
+	} else if fieldtype == string(tableschema.Bool) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField(field, "TODO", table.Bool)
+		relation.AddField(field, "TODO", tableschema.Bool)
 
 		return nil
 	}

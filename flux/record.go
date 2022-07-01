@@ -3,21 +3,21 @@ package flux
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/amortaza/aceql/flux/logger"
 	"github.com/amortaza/aceql/flux/query"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/logger"
 )
 
 type Record struct {
 	tableName string
-	fields    []*table.Field
+	fields    []*tableschema.Field
 
 	filterQuery *query.FilterQuery
 
 	values     *RecordMap
 	userValues *RecordMap
 
-	nameToType map[string]*table.FieldType
+	nameToType map[string]*tableschema.FieldType
 
 	paginationIndex, paginationSize int
 
@@ -27,13 +27,13 @@ type Record struct {
 	crud CRUD
 }
 
-func NewRecord(relation *table.Relation, crud CRUD) *Record {
+func NewRecord(relation *tableschema.Table, crud CRUD) *Record {
 	return NewRecord_withDefinition(relation.Name(), relation.Fields(), crud)
 }
 
-// beause this is low level, it cannot take "Relation" type
+// beause this is low level, it cannot take "Table" type
 // it must take table name and field list (so we can hard code it when bootstrapping)
-func NewRecord_withDefinition(relationName string, fields []*table.Field, crud CRUD) *Record {
+func NewRecord_withDefinition(relationName string, fields []*tableschema.Field, crud CRUD) *Record {
 	rec := &Record{
 		filterQuery:    query.NewFilterQuery(crud.Compiler()),
 		crud:           crud,
@@ -45,7 +45,7 @@ func NewRecord_withDefinition(relationName string, fields []*table.Field, crud C
 	rec.values = NewRecordMap()
 	rec.userValues = NewRecordMap()
 
-	rec.nameToType = make(map[string]*table.FieldType)
+	rec.nameToType = make(map[string]*tableschema.FieldType)
 
 	for _, field := range fields {
 		rec.nameToType[field.Name] = &field.Type
@@ -104,13 +104,13 @@ func (rec *Record) Set(fieldname string, value interface{}) {
 		return
 	}
 
-	if *fieldType == table.String {
+	if *fieldType == tableschema.String {
 		rec.userValues.PutString(fieldname, value.(string))
 
-	} else if *fieldType == table.Number {
+	} else if *fieldType == tableschema.Number {
 		rec.userValues.PutNumber(fieldname, value.(float32))
 
-	} else if *fieldType == table.Bool {
+	} else if *fieldType == tableschema.Bool {
 		rec.userValues.PutBool(fieldname, value.(bool))
 
 	} else {

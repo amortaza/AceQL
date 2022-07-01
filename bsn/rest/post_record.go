@@ -1,9 +1,9 @@
 package rest
 
 import (
-	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
+	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
 	"strconv"
 )
@@ -29,7 +29,7 @@ func createRecord(name string, m *echo.Map) (string, error) {
 	rec := flux.NewRecord(relation, crud)
 
 	for key, value := range *m {
-		field := relation.GetField( key )
+		field := relation.GetField(key)
 
 		//fmt.Println( "post field ", field.Name, field.SyntaxType, value ) // debug
 
@@ -39,14 +39,14 @@ func createRecord(name string, m *echo.Map) (string, error) {
 			v64, err := strconv.ParseFloat(value.(string), 32)
 
 			if err != nil {
-				logger.Error("Will not set field " + key + " because cannot parse float, see " + value.(string), "rest.updateRecord()")
+				logger.Error("Will not set field "+key+" because cannot parse float, see "+value.(string), "rest.updateRecord()")
 				continue
 			}
 
-			rec.Set(key, float32(v64) )
+			rec.Set(key, float32(v64))
 
 		} else if field.IsBool() {
-			rec.Set(key, value.(string) == "true" )
+			rec.Set(key, value.(string) == "true")
 
 		} else {
 			rec.Set(key, value)

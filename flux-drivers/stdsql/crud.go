@@ -7,7 +7,7 @@ import (
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_generator"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_runner"
 	"github.com/amortaza/aceql/flux/node"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
 	"github.com/amortaza/aceql/flux/utils"
 )
 
@@ -35,7 +35,7 @@ func (crud *CRUD) Compiler() node.Compiler {
 	return crud.compiler
 }
 
-func (crud *CRUD) Query(table string, fields []*table.Field, root node.Node,
+func (crud *CRUD) Query(table string, fields []*tableschema.Field, root node.Node,
 	paginationIndex int, paginationSize int,
 	orderBy string, orderByAscending bool) (int, error) {
 
@@ -94,7 +94,7 @@ func (crud *CRUD) DeleteTable(name string) error {
 	return crud.sqlRunner.Run(sql)
 }
 
-func (crud *CRUD) CreateField(tablename string, field *table.Field) error {
+func (crud *CRUD) CreateField(tablename string, field *tableschema.Field) error {
 	sqlGenerator := sql_generator.NewFieldCreate_SqlGenerator()
 
 	sql, err := sqlGenerator.GenerateCreateFieldSQL(tablename, field)

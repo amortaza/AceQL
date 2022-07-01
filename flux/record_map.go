@@ -3,8 +3,8 @@ package flux
 import (
 	"bytes"
 	"fmt"
-	"github.com/amortaza/aceql/flux/logger"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/logger"
 	"strconv"
 )
 
@@ -106,7 +106,7 @@ func (recmap *RecordMap) IsString(key string) (bool, error) {
 
 	typedValue, _ := recmap.Data[key]
 
-	return typedValue.fieldType == table.String, nil
+	return typedValue.fieldType == tableschema.String, nil
 }
 
 func (recmap *RecordMap) IsNumber(key string) (bool, error) {
@@ -116,7 +116,7 @@ func (recmap *RecordMap) IsNumber(key string) (bool, error) {
 
 	typedValue, _ := recmap.Data[key]
 
-	return typedValue.fieldType == table.Number, nil
+	return typedValue.fieldType == tableschema.Number, nil
 }
 
 func (recmap *RecordMap) IsBool(key string) (bool, error) {
@@ -126,7 +126,7 @@ func (recmap *RecordMap) IsBool(key string) (bool, error) {
 
 	typedValue, _ := recmap.Data[key]
 
-	return typedValue.fieldType == table.Bool, nil
+	return typedValue.fieldType == tableschema.Bool, nil
 }
 
 func (recmap *RecordMap) Get(key string) (string, error) {
@@ -138,7 +138,7 @@ func (recmap *RecordMap) Get(key string) (string, error) {
 
 	if !typedValue.IsString() {
 		err := fmt.Errorf("typed-value is a '%s' and not a string", typedValue.fieldType)
-		logger.Error(err, logger.MAIN)
+		logger.Error(err, logger.Main)
 
 		return "", err
 	}
@@ -156,7 +156,7 @@ func (recmap *RecordMap) GetNumber(key string) (float32, error) {
 
 	if !typedValue.IsNumber() {
 		err := fmt.Errorf("typed-value is a '%s' and not a number", typedValue.fieldType)
-		logger.Error(err, logger.MAIN)
+		logger.Error(err, logger.Main)
 
 		return 0, err
 	}
@@ -173,7 +173,7 @@ func (recmap *RecordMap) GetBool(key string) (bool, error) {
 
 	if !typedValue.IsBool() {
 		err := fmt.Errorf("typed-value is a '%s' and not a bool", typedValue.fieldType)
-		logger.Error(err, logger.MAIN)
+		logger.Error(err, logger.Main)
 
 		return false, err
 	}

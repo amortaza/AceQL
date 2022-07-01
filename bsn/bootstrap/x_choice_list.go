@@ -3,11 +3,11 @@ package bootstrap
 import (
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
 )
 
-func makeSpecificationFor_ChoiceList() *table.Relation {
-	relation := table.NewRelation("x_choice_list")
+func makeSpecificationFor_ChoiceList() *tableschema.Table {
+	relation := tableschema.NewTable("x_choice_list")
 
 	stringType, _ := relation.GetFieldTypeByName("String")
 	numberType, _ := relation.GetFieldTypeByName("Number")
@@ -30,7 +30,7 @@ func makeRecordsFor_ChoiceList() []*flux.Record {
 	rec := stdsql.NewRecord("x_choice_list")
 	rec.Set("x_table", "x_schema")
 	rec.Set("x_field", "x_type")
-	rec.Set("x_name", "Relation")
+	rec.Set("x_name", "Table")
 	rec.Set("x_value", "relation")
 	rec.Set("x_order", "1")
 	rec.Set("x_enabled", 1)

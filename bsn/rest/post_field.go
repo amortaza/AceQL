@@ -1,9 +1,9 @@
 package rest
 
 import (
-	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/table"
+	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
 )
 
@@ -26,13 +26,13 @@ func PostSchemaField(c echo.Context) error {
 
 	schema := stdsql.NewSchema()
 
-	fieldType, err := table.GetFieldTypeByName(fieldTypeAsString)
+	fieldType, err := tableschema.GetFieldTypeByName(fieldTypeAsString)
 	if err != nil {
 		logger.Error(err, "PostSchemaField()")
 		return err
 	}
 
-	field := &table.Field{Name: fieldName, Label: fieldLabel, Type: fieldType}
+	field := &tableschema.Field{Name: fieldName, Label: fieldLabel, Type: fieldType}
 
 	schema.CreateField(table, field, true)
 

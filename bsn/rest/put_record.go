@@ -3,9 +3,9 @@ package rest
 import (
 	"github.com/amortaza/aceql/bsn/cache"
 	"github.com/amortaza/aceql/bsn/grpcclient"
-	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
+	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
 )
 
