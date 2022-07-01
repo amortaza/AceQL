@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"github.com/amortaza/aceql/flux/logger"
 	"github.com/amortaza/aceql/flux/query"
-	"github.com/amortaza/aceql/flux/relations"
+	"github.com/amortaza/aceql/flux/table"
 )
 
 type Record struct {
 	tableName string
-	fields    []*relations.Field
+	fields    []*table.Field
 
 	filterQuery *query.FilterQuery
 
 	values     *RecordMap
 	userValues *RecordMap
 
-	nameToType map[string]*relations.FieldType
+	nameToType map[string]*table.FieldType
 
 	paginationIndex, paginationSize int
 
@@ -27,13 +27,13 @@ type Record struct {
 	crud CRUD
 }
 
-func NewRecord(relation *relations.Relation, crud CRUD) *Record {
+func NewRecord(relation *table.Relation, crud CRUD) *Record {
 	return NewRecord_withDefinition(relation.Name(), relation.Fields(), crud)
 }
 
 // beause this is low level, it cannot take "Relation" type
 // it must take table name and field list (so we can hard code it when bootstrapping)
-func NewRecord_withDefinition(relationName string, fields []*relations.Field, crud CRUD) *Record {
+func NewRecord_withDefinition(relationName string, fields []*table.Field, crud CRUD) *Record {
 	rec := &Record{
 		filterQuery:    query.NewFilterQuery(crud.Compiler()),
 		crud:           crud,
@@ -45,7 +45,7 @@ func NewRecord_withDefinition(relationName string, fields []*relations.Field, cr
 	rec.values = NewRecordMap()
 	rec.userValues = NewRecordMap()
 
-	rec.nameToType = make(map[string]*relations.FieldType)
+	rec.nameToType = make(map[string]*table.FieldType)
 
 	for _, field := range fields {
 		rec.nameToType[field.Name] = &field.Type
@@ -104,13 +104,13 @@ func (rec *Record) Set(fieldname string, value interface{}) {
 		return
 	}
 
-	if *fieldType == relations.String {
+	if *fieldType == table.String {
 		rec.userValues.PutString(fieldname, value.(string))
 
-	} else if *fieldType == relations.Number {
+	} else if *fieldType == table.Number {
 		rec.userValues.PutNumber(fieldname, value.(float32))
 
-	} else if *fieldType == relations.Bool {
+	} else if *fieldType == table.Bool {
 		rec.userValues.PutBool(fieldname, value.(bool))
 
 	} else {

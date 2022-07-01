@@ -3,8 +3,8 @@ package flux
 import (
 	"fmt"
 	"github.com/amortaza/aceql/flux/logger"
-	"github.com/amortaza/aceql/flux/relations"
 	"github.com/amortaza/aceql/flux/schema_journalist"
+	"github.com/amortaza/aceql/flux/table"
 )
 
 type Schema struct {
@@ -14,8 +14,8 @@ type Schema struct {
 
 func NewSchema(journalist schema_journalist.Journalist, crud CRUD) *Schema {
 	return &Schema{
-		journalist:   journalist,
-		crud: crud,
+		journalist: journalist,
+		crud:       crud,
 	}
 }
 
@@ -23,7 +23,7 @@ func (schema *Schema) Close() {
 	schema.crud.Close()
 }
 
-func (schema *Schema) CreateRelation_withFields(relation *relations.Relation, journal bool) error {
+func (schema *Schema) CreateRelation_withFields(relation *table.Relation, journal bool) error {
 	if err := schema.CreateRelation_withName(relation.Name(), relation.Label(), journal); err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func (schema *Schema) CreateRelation_withFields(relation *relations.Relation, jo
 func (schema *Schema) CreateRelation_withName(name string, label string, journal bool) error {
 
 	// the order here is importan because if we are creating 'x_schema'
-	// we want to create the relations first THEN journal it
+	// we want to create the table first THEN journal it
 
 	err := schema.crud.CreateTable(name)
 	if err != nil {
@@ -61,7 +61,7 @@ func (schema *Schema) DeleteRelation(name string) error {
 	return schema.crud.DeleteTable(name)
 }
 
-func (schema *Schema) CreateField(relationName string, field *relations.Field, journal bool) error {
+func (schema *Schema) CreateField(relationName string, field *table.Field, journal bool) error {
 
 	if journal {
 		_ = schema.journalist.CreateField(relationName, field)

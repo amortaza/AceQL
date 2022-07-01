@@ -3,23 +3,23 @@ package bootstrap
 import (
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/relations"
+	"github.com/amortaza/aceql/flux/table"
 )
 
-func makeSpecificationFor_ChoiceList() *relations.Relation {
-	relation := relations.NewRelation( "x_choice_list")
+func makeSpecificationFor_ChoiceList() *table.Relation {
+	relation := table.NewRelation("x_choice_list")
 
-	stringType, _ := relation.GetFieldTypeByName( "String")
-	numberType, _ := relation.GetFieldTypeByName( "Number")
-	boolType, _ := relation.GetFieldTypeByName( "Bool")
+	stringType, _ := relation.GetFieldTypeByName("String")
+	numberType, _ := relation.GetFieldTypeByName("Number")
+	boolType, _ := relation.GetFieldTypeByName("Bool")
 
-	relation.AddField( "x_id", stringType )
-	relation.AddField( "x_table", stringType )
-	relation.AddField( "x_field", stringType )
-	relation.AddField( "x_name", stringType )
-	relation.AddField( "x_value", stringType )
-	relation.AddField( "x_order", numberType )
-	relation.AddField( "x_enabled", boolType )
+	relation.AddField("x_id", stringType)
+	relation.AddField("x_table", stringType)
+	relation.AddField("x_field", stringType)
+	relation.AddField("x_name", stringType)
+	relation.AddField("x_value", stringType)
+	relation.AddField("x_order", numberType)
+	relation.AddField("x_enabled", boolType)
 
 	return relation
 }

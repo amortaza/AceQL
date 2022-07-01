@@ -1,16 +1,16 @@
-package relations
+package table
 
 type Field struct {
-	Name string
+	Name  string
 	Label string
-	Type FieldType
+	Type  FieldType
 }
 
 func NewField(name string, label string, fieldtype FieldType) *Field {
 	return &Field{
-		Name: name,
+		Name:  name,
 		Label: label,
-		Type: fieldtype,
+		Type:  fieldtype,
 	}
 }
 
@@ -26,11 +26,11 @@ func (field *Field) IsBool() bool {
 	return field.Type == Bool
 }
 
-func FieldsToNames( fields []*Field ) []string {
+func FieldsToNames(fields []*Field) []string {
 	names := make([]string, len(fields))
 
 	for i, field := range fields {
-		names[ i ] = field.Name
+		names[i] = field.Name
 	}
 
 	return names

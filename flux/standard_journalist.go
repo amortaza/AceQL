@@ -2,7 +2,7 @@ package flux
 
 import (
 	"github.com/amortaza/aceql/flux/query"
-	"github.com/amortaza/aceql/flux/relations"
+	"github.com/amortaza/aceql/flux/table"
 )
 
 type StandardJournalist struct {
@@ -12,11 +12,11 @@ type StandardJournalist struct {
 func (journalist *StandardJournalist) CreateTable(tableName string, tableLabel string) error {
 	recordmap := NewRecordMap()
 
-	recordmap.PutString("x_type", "relation" )
+	recordmap.PutString("x_type", "relation")
 	recordmap.PutString("x_table", tableName)
 	recordmap.PutString("x_label", tableLabel)
 	recordmap.PutString("x_field", "x_id")
-	recordmap.PutString("x_field_type", string(relations.String))
+	recordmap.PutString("x_field_type", string(table.String))
 
 	_, err := journalist.crud.Create("x_schema", recordmap)
 
@@ -44,7 +44,7 @@ func (journalist *StandardJournalist) DeleteTable(relationName string) error {
 	return nil
 }
 
-func (journalist *StandardJournalist) CreateField(relationName string, field *relations.Field) error {
+func (journalist *StandardJournalist) CreateField(relationName string, field *table.Field) error {
 	recordmap := NewRecordMap()
 
 	recordmap.PutString("x_type", "field")

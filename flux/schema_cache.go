@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"github.com/amortaza/aceql/bsn/logger"
 	"github.com/amortaza/aceql/flux/query"
-	"github.com/amortaza/aceql/flux/relations"
 	"github.com/amortaza/aceql/flux/schema_journalist"
+	"github.com/amortaza/aceql/flux/table"
 )
 
-//var g_relation_cache = make( map[ string ] *relations.Relation )
+//var g_relation_cache = make( map[ string ] *table.Relation )
 
-func GetRelation( name string, crud CRUD) *relations.Relation {
+func GetRelation(name string, crud CRUD) *table.Relation {
 	//f mt.Println( "!!!!!!!!!!!!!!!! Caching opportunity for RELATION" ) // debug
 	//relation, ok := g_relation_cache[ name ]
 	//
@@ -24,11 +24,11 @@ func GetRelation( name string, crud CRUD) *relations.Relation {
 		//return g_relation_cache[ name ]
 	}
 
-	relation := relations.NewRelation( name )
+	relation := table.NewRelation(name)
 
 	r := NewRecord(GetRelation("x_schema", crud), crud)
-	r.Add( "x_table", query.Equals, name )
-	r.Add( "x_type", query.Equals, "field" )
+	r.Add("x_table", query.Equals, name)
+	r.Add("x_type", query.Equals, "field")
 	_, err := r.Query()
 
 	if err != nil {
@@ -47,7 +47,7 @@ func GetRelation( name string, crud CRUD) *relations.Relation {
 			break
 		}
 
-		if err := addField( r, relation ); err != nil {
+		if err := addField(r, relation); err != nil {
 			logger.Error(err, logger.SQL)
 			return nil
 		}
@@ -58,43 +58,43 @@ func GetRelation( name string, crud CRUD) *relations.Relation {
 	return relation
 }
 
-func addField(r *Record, relation *relations.Relation) error {
+func addField(r *Record, relation *table.Relation) error {
 	fieldtype, err := r.Get("x_field_type")
 	//fmt.Println( "ft " , fieldtype )
 	if err != nil {
 		return err
 	}
 
-	if fieldtype == string( relations.String ) {
+	if fieldtype == string(table.String) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField( field, "TODO", relations.String )
+		relation.AddField(field, "TODO", table.String)
 
 		return nil
 
-	} else if fieldtype == string( relations.Number ) {
+	} else if fieldtype == string(table.Number) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField( field, "TODO", relations.Number )
+		relation.AddField(field, "TODO", table.Number)
 
 		return nil
 
-	} else if fieldtype == string( relations.Bool ) {
+	} else if fieldtype == string(table.Bool) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField( field, "TODO", relations.Bool )
+		relation.AddField(field, "TODO", table.Bool)
 
 		return nil
 	}
 
-	return fmt.Errorf("unrecognized fieldtype \"%s\" in bsn/schema/schema_cache.go", fieldtype )
+	return fmt.Errorf("unrecognized fieldtype \"%s\" in bsn/schema/schema_cache.go", fieldtype)
 }

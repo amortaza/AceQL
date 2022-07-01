@@ -8,20 +8,20 @@ import (
 	"github.com/amortaza/aceql/flux-drivers/stdsql/compiler"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_runner"
 	"github.com/amortaza/aceql/flux/node"
-	"github.com/amortaza/aceql/flux/relations"
+	"github.com/amortaza/aceql/flux/table"
 	"strconv"
 )
 
 type RowQuerier struct {
 	rows   *sql.Rows
-	fields []*relations.Field
+	fields []*table.Field
 
 	sqlRunner      *sql_runner.SqlRunner
 	selectCompiler *compiler.SelectCompiler
 }
 
-func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, table string, fields []*relations.Field, root node.Node) *RowQuerier {
-	columns := relations.FieldsToNames(fields)
+func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, table string, fields []*table.Field, root node.Node) *RowQuerier {
+	columns := table.FieldsToNames(fields)
 	selectCompiler := compiler.NewSelectCompiler(table, columns, root)
 
 	return &RowQuerier{

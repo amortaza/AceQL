@@ -3,16 +3,16 @@ package bootstrap
 import (
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/relations"
+	"github.com/amortaza/aceql/flux/table"
 )
 
 func Run() error {
-	var empty []*flux.Record
+	//var empty []*flux.Record
 
 	// schema
-	if err := bootstrap(makeSpecificationFor_Schema(), empty ); err != nil {
-		return err
-	}
+	//if err := bootstrap(makeSpecificationFor_Schema(), empty); err != nil {
+	//	return err
+	//}
 
 	// choice list
 	if err := bootstrap(makeSpecificationFor_ChoiceList(), makeRecordsFor_ChoiceList()); err != nil {
@@ -22,7 +22,7 @@ func Run() error {
 	return nil
 }
 
-func bootstrap(relation *relations.Relation, records []*flux.Record) error {
+func bootstrap(relation *table.Relation, records []*flux.Record) error {
 	schema := stdsql.NewSchema()
 
 	if err := schema.CreateRelation_withName(relation.Name(), relation.Label(), relation.Name() != "x_schema"); err != nil {
