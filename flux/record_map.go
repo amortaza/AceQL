@@ -5,19 +5,21 @@ import (
 	"fmt"
 	"github.com/amortaza/aceql/flux/tableschema"
 	"github.com/amortaza/aceql/logger"
-	"strconv"
 )
 
 type RecordMap struct {
 	Data map[string]*TypedValue
 }
 
+func NewRecordMap() *RecordMap {
+	return &RecordMap{
+		Data: make(map[string]*TypedValue),
+	}
+}
+
 func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
 	buffer := bytes.NewBufferString("{")
 	datamap := recmap.Data
-
-	// we sneak in "id" because React-Admin minimally requires "id"
-	//datamap["id"] = datamap["x_id"]
 
 	first := true
 	for key, typedValue := range datamap {
@@ -29,18 +31,19 @@ func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
 		}
 
 		if typedValue.IsString() {
-			asStr := fmt.Sprintf("\"%s\" : \"%s\"", key, typedValue.GetString())
+			asStr := fmt.Sprintf("\"%s\" : \"%s\"", key, typedValue.GetValue())
 			buffer.WriteString(asStr)
 
 		} else if typedValue.IsBool() {
-			asStr := fmt.Sprintf("\"%s\" : %s", key, strconv.FormatBool(typedValue.GetBool()))
+			asStr := fmt.Sprintf("\"%s\" : %s", key, typedValue.GetValue())
 			buffer.WriteString(asStr)
 
 		} else if typedValue.IsNumber() {
-			asStr := fmt.Sprintf("\"%s\" : %f", key, typedValue.GetNumber())
+			asStr := fmt.Sprintf("\"%s\" : %s", key, typedValue.GetValue())
 			buffer.WriteString(asStr)
 		} else {
-			logger.Error("Typed value type unrecognized", "MarshalJSON()")
+			logger.Error("typed value type unrecognized", "MarshalJSON()")
+			buffer.WriteString("typed value type unrecognized")
 		}
 	}
 
@@ -51,141 +54,50 @@ func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
-func NewRecordMap() *RecordMap {
-	return &RecordMap{
-		Data: make(map[string]*TypedValue),
+func (recmap *RecordMap) HasField(fieldName string) bool {
+	_, ok := recmap.Data[fieldName]
+
+	return ok
+}
+
+func (recmap *RecordMap) IsFieldString(fieldname string) (bool, error) {
+	typedValue, ok := recmap.Data[fieldname]
+	if !ok {
+		return false, logger.Error("field "+fieldname+" not found in recordMap", "RecordMap.IsFieldString()")
 	}
-}
-
-func (recmap *RecordMap) PutStringByteArray(key string, bytes []byte) {
-	typedValue := &TypedValue{}
-	typedValue.SetStringByteArray(bytes)
-
-	recmap.Data[key] = typedValue
-}
-
-func (recmap *RecordMap) PutString(key string, value string) {
-	typedValue := &TypedValue{}
-	typedValue.SetString(value)
-
-	recmap.Data[key] = typedValue
-}
-
-func (recmap *RecordMap) PutNumberByteArray(key string, bytes []byte) {
-	typedValue := &TypedValue{}
-	typedValue.SetNumberByteArray(bytes)
-
-	recmap.Data[key] = typedValue
-}
-
-func (recmap *RecordMap) PutNumber(key string, value float32) {
-	typedValue := &TypedValue{}
-	typedValue.SetNumber(value)
-
-	recmap.Data[key] = typedValue
-}
-
-func (recmap *RecordMap) PutBoolByteArray(key string, bytes []byte) {
-	typedValue := &TypedValue{}
-	typedValue.SetBoolByteArray(bytes)
-
-	recmap.Data[key] = typedValue
-}
-
-func (recmap *RecordMap) PutBool(key string, value bool) {
-	typedValue := &TypedValue{}
-	typedValue.SetBool(value)
-
-	recmap.Data[key] = typedValue
-}
-
-func (recmap *RecordMap) IsString(key string) (bool, error) {
-	if !recmap.Has(key) {
-		return false, fmt.Errorf("key not '%s' not found in map", key)
-	}
-
-	typedValue, _ := recmap.Data[key]
 
 	return typedValue.fieldType == tableschema.String, nil
 }
 
-func (recmap *RecordMap) IsNumber(key string) (bool, error) {
-	if !recmap.Has(key) {
-		return false, fmt.Errorf("key not '%s' not found in map", key)
+func (recmap *RecordMap) IsFieldNumber(fieldname string) (bool, error) {
+	typedValue, ok := recmap.Data[fieldname]
+	if !ok {
+		return false, logger.Error("field "+fieldname+" not found in recordMap", "RecordMap.IsFieldNumber()")
 	}
-
-	typedValue, _ := recmap.Data[key]
 
 	return typedValue.fieldType == tableschema.Number, nil
 }
 
-func (recmap *RecordMap) IsBool(key string) (bool, error) {
-	if !recmap.Has(key) {
-		return false, fmt.Errorf("key not '%s' not found in map", key)
+func (recmap *RecordMap) IsFieldBool(fieldname string) (bool, error) {
+	typedValue, ok := recmap.Data[fieldname]
+	if !ok {
+		return false, logger.Error("field "+fieldname+" not found in recordMap", "RecordMap.IsFieldBool()")
 	}
-
-	typedValue, _ := recmap.Data[key]
 
 	return typedValue.fieldType == tableschema.Bool, nil
 }
 
-func (recmap *RecordMap) Get(key string) (string, error) {
-	if !recmap.Has(key) {
-		return "", fmt.Errorf("key not '%s' not found in map", key)
+func (recmap *RecordMap) GetFieldValue(fieldname string) (string, error) {
+	typedValue, ok := recmap.Data[fieldname]
+	if !ok {
+		return "", logger.Error("field "+fieldname+" not found in recordMap", "RecordMap.GetFieldValue()")
 	}
 
-	typedValue := recmap.Data[key]
-
-	if !typedValue.IsString() {
-		err := fmt.Errorf("typed-value is a '%s' and not a string", typedValue.fieldType)
-		logger.Error(err, logger.Main)
-
-		return "", err
-	}
-
-	//fmt.Println( "attempting to get string ", key, typedValue.GetString() ) // debug
-	return typedValue.GetString(), nil
+	return typedValue.GetValue(), nil
 }
 
-func (recmap *RecordMap) GetNumber(key string) (float32, error) {
-	if !recmap.Has(key) {
-		return 0, fmt.Errorf("key not '%s' not found in map", key)
-	}
-
-	typedValue := recmap.Data[key]
-
-	if !typedValue.IsNumber() {
-		err := fmt.Errorf("typed-value is a '%s' and not a number", typedValue.fieldType)
-		logger.Error(err, logger.Main)
-
-		return 0, err
-	}
-
-	return typedValue.GetNumber(), nil
-}
-
-func (recmap *RecordMap) GetBool(key string) (bool, error) {
-	if !recmap.Has(key) {
-		return false, fmt.Errorf("key not '%s' not found in map", key)
-	}
-
-	typedValue := recmap.Data[key]
-
-	if !typedValue.IsBool() {
-		err := fmt.Errorf("typed-value is a '%s' and not a bool", typedValue.fieldType)
-		logger.Error(err, logger.Main)
-
-		return false, err
-	}
-
-	fmt.Println("attempting to get bool ", key, typedValue.GetBool()) // debug
-	return typedValue.GetBool(), nil
-}
-
-func (recmap *RecordMap) Has(key string) bool {
-	_, ok := recmap.Data[key]
-
-	return ok
+func (recmap *RecordMap) SetFieldValue(fieldname string, value string, fieldType tableschema.FieldType) {
+	recmap.Data[fieldname] = NewTypedValue(value, fieldType)
 }
 
 func (recmap *RecordMap) Combine(other *RecordMap) *RecordMap {

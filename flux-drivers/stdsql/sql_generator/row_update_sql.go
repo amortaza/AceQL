@@ -5,20 +5,20 @@ import (
 	"github.com/amortaza/aceql/flux"
 )
 
-type RowUpdate_SqlGenerator struct {}
+type RowUpdate_SqlGenerator struct{}
 
 func NewRowUpdate_SqlGenerator() *RowUpdate_SqlGenerator {
 	return &RowUpdate_SqlGenerator{}
 }
 
-func (generator *RowUpdate_SqlGenerator) GenerateSQL(table string, pk string, data *flux.RecordMap) (string, error) {
+func (generator *RowUpdate_SqlGenerator) GenerateSQL(table string, pk string, recordmap *flux.RecordMap) (string, error) {
 	sql := fmt.Sprintf("UPDATE `%s` SET ", table)
 	first := true
 
-	for key, _ := range data.Data {
+	for fieldname, _ := range recordmap.Data {
 
 		// skip primary key
-		if key == "x_id" {
+		if fieldname == "x_id" {
 			continue
 		}
 
@@ -26,61 +26,41 @@ func (generator *RowUpdate_SqlGenerator) GenerateSQL(table string, pk string, da
 		if first {
 			first = false
 		} else {
-			sql = fmt.Sprintf("%s, ", sql)
+			sql = fmt.Sprintf("%s,", sql)
 		}
 
-		var valueAsString string
-		var err error
-
-		isString, err := data.IsString(key)
+		fieldSQL, err := writeFieldUpdateSQL(fieldname, recordmap)
 		if err != nil {
 			return "", err
 		}
 
-		isNumber, err := data.IsNumber(key)
-		if err != nil {
-			return "", err
-		}
-
-		isBool, err := data.IsBool(key)
-		if err != nil {
-			return "", err
-		}
-
-		if isString {
-			valueAsString, err = data.Get(key)
-			if err != nil {
-				return "", err
-			}
-
-			sql = fmt.Sprintf("%s `%s` = '%s'", sql, key, valueAsString)
-
-		} else if isNumber {
-			valueAsFloat, err := data.GetNumber(key)
-			if err != nil {
-				return "", err
-			}
-
-			valueAsString = fmt.Sprintf("%f", valueAsFloat)
-
-			sql = fmt.Sprintf("%s `%s` = %s", sql, key, valueAsString)
-
-		} else if isBool {
-			valueAsBool, err := data.GetBool(key)
-			if err != nil {
-				return "", err
-			}
-
-			if valueAsBool {
-				valueAsString = "true"
-			} else {
-				valueAsString = "false"
-			}
-
-			sql = fmt.Sprintf("%s `%s` = %s", sql, key, valueAsString)
-		}
+		sql = fmt.Sprintf("%s %s", sql, fieldSQL)
 	}
 
 	return fmt.Sprintf("%s WHERE %s ='%s';", sql, "x_id", pk), nil
 }
 
+func writeFieldUpdateSQL(fieldname string, recordmap *flux.RecordMap) (string, error) {
+	var sql, valueAsString string
+	var err error
+
+	isString, err := recordmap.IsFieldString(fieldname)
+	if err != nil {
+		return "", err
+	}
+
+	valueAsString, err = recordmap.GetFieldValue(fieldname)
+	if err != nil {
+		return "", err
+	}
+
+	if isString {
+		// todo valueAsString should be encoded
+		sql = fmt.Sprintf("`%s` = '%s'", fieldname, valueAsString)
+
+	} else {
+		sql = fmt.Sprintf("`%s` = %s", fieldname, valueAsString)
+	}
+
+	return sql, nil
+}

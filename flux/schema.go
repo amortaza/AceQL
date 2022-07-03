@@ -61,27 +61,26 @@ func (schema *Schema) DeleteRelation(name string) error {
 	return schema.crud.DeleteTable(name)
 }
 
-func (schema *Schema) CreateField(relationName string, field *tableschema.Field, journal bool) error {
+func (schema *Schema) CreateField(tableName string, field *tableschema.Field, journal bool) error {
 
 	if journal {
-		_ = schema.journalist.CreateField(relationName, field)
+		_ = schema.journalist.CreateField(tableName, field)
 	}
 
 	if field.Name == "x_id" {
 		return nil
 	}
 
-	return schema.crud.CreateField(relationName, field)
+	return schema.crud.CreateField(tableName, field)
 }
 
-func (schema *Schema) DeleteField(relationName string, fieldname string) error {
+func (schema *Schema) DeleteField(tableName string, fieldname string) error {
 	if fieldname == "x_id" {
 		err := fmt.Errorf("field x_id cannot be deleted")
-		logger.Error(err, "Schema.DeleteField()")
-		return err
+		return logger.Error(err.Error(), "Schema.DeleteField()")
 	}
 
-	_ = schema.journalist.DeleteField(relationName, fieldname)
+	_ = schema.journalist.DeleteField(tableName, fieldname)
 
-	return schema.crud.DeleteField(relationName, fieldname)
+	return schema.crud.DeleteField(tableName, fieldname)
 }

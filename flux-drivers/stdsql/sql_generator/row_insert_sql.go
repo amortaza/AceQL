@@ -5,7 +5,7 @@ import (
 	"github.com/amortaza/aceql/flux"
 )
 
-type RowInsert_SqlGenerator struct {}
+type RowInsert_SqlGenerator struct{}
 
 func NewRowInsert_SqlGenerator() *RowInsert_SqlGenerator {
 	return &RowInsert_SqlGenerator{}
@@ -32,17 +32,14 @@ func (generator *RowInsert_SqlGenerator) GenerateInsertSQL(table string, newId s
 func (generator *RowInsert_SqlGenerator) typedValueToSQL(typedValue *flux.TypedValue) string {
 	sql := ""
 
+	value := typedValue.GetValue()
+
 	if typedValue.IsString() {
-		sql = fmt.Sprintf("'%s'", typedValue.GetString())
-
-	} else if typedValue.IsNumber() {
-		sql = fmt.Sprintf("%1.2f", typedValue.GetNumber())
-
-	} else if typedValue.IsBool() {
-		sql = fmt.Sprintf("%t", typedValue.GetBool())
+		// todo value should be escaped
+		sql = fmt.Sprintf("'%s'", value)
 
 	} else {
-		panic("TypedValue type is unrecognized in typedValueToSQL()")
+		sql = fmt.Sprintf("%s", value)
 	}
 
 	return sql

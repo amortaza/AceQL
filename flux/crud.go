@@ -10,18 +10,18 @@ type CRUD interface {
 	// Compiler is here for now for convenience, but it really doesn't belong here
 	Compiler() node.Compiler
 
-	Query(relationName string, fields []*tableschema.Field, root node.Node, paginationIndex int, paginationSize int, orderBy string, orderByAscending bool) (int, error)
+	Query(tableName string, fields []*tableschema.Field, root node.Node, paginationIndex int, paginationSize int, orderBy string, orderByAscending bool) (int, error)
 	Next() (*RecordMap, error)
 
-	Create(relationName string, values *RecordMap) (string, error)
-	Update(relationName string, id string, values *RecordMap) error
-	Delete(relationName string, id string) error
+	Create(tableName string, values *RecordMap) (string, error)
+	Update(tableName string, id string, values *RecordMap) error
+	Delete(tableName string, id string) error
 
 	// schema crud operations
 	CreateTable(name string) error
 	DeleteTable(name string) error
-	CreateField(relationName string, field *tableschema.Field) error
-	DeleteField(relationName string, fieldname string) error
+	CreateField(tableName string, field *tableschema.Field) error
+	DeleteField(tableName string, fieldname string) error
 
 	Close() error
 }

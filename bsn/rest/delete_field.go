@@ -13,7 +13,7 @@ func DeleteSchemaField(c echo.Context) error {
 	m := &echo.Map{}
 
 	if err := c.Bind(m); err != nil {
-		logger.Error(err, logger.Main)
+		logger.Err(err, logger.Main)
 	}
 
 	schema := stdsql.NewSchema()

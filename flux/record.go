@@ -17,7 +17,7 @@ type Record struct {
 	values     *RecordMap
 	userValues *RecordMap
 
-	nameToType map[string]*tableschema.FieldType
+	fieldnameToFieldType map[string]tableschema.FieldType
 
 	paginationIndex, paginationSize int
 
@@ -27,17 +27,17 @@ type Record struct {
 	crud CRUD
 }
 
-func NewRecord(relation *tableschema.Table, crud CRUD) *Record {
-	return NewRecord_withDefinition(relation.Name(), relation.Fields(), crud)
+func NewRecord(table *tableschema.Table, crud CRUD) *Record {
+	return NewRecord_withDefinition(table.Name(), table.Fields(), crud)
 }
 
-// beause this is low level, it cannot take "Table" type
+// NewRecord_withDefinition beause this is low level, it cannot take "Table" type
 // it must take table name and field list (so we can hard code it when bootstrapping)
-func NewRecord_withDefinition(relationName string, fields []*tableschema.Field, crud CRUD) *Record {
+func NewRecord_withDefinition(tableName string, fields []*tableschema.Field, crud CRUD) *Record {
 	rec := &Record{
 		filterQuery:    query.NewFilterQuery(crud.Compiler()),
 		crud:           crud,
-		tableName:      relationName,
+		tableName:      tableName,
 		fields:         fields,
 		paginationSize: -1,
 	}
@@ -45,10 +45,10 @@ func NewRecord_withDefinition(relationName string, fields []*tableschema.Field, 
 	rec.values = NewRecordMap()
 	rec.userValues = NewRecordMap()
 
-	rec.nameToType = make(map[string]*tableschema.FieldType)
+	rec.fieldnameToFieldType = make(map[string]tableschema.FieldType)
 
 	for _, field := range fields {
-		rec.nameToType[field.Name] = &field.Type
+		rec.fieldnameToFieldType[field.Name] = field.Type
 	}
 
 	return rec
@@ -72,16 +72,7 @@ func (rec *Record) GetMapGRPC() map[string]string {
 	m := make(map[string]string)
 
 	for key, typedValue := range rmap.Data {
-		// For now we are only going to handle strings.
-		if typedValue.IsString() {
-			m[key] = typedValue.valueAsString
-		} else if typedValue.IsNumber() {
-			m[key] = "Number NOT Supported yet!"
-		} else if typedValue.IsBool() {
-			m[key] = "Bool NOT Supported yet!"
-		} else {
-			m[key] = "This is impossible in record.go"
-		}
+		m[key] = typedValue.value
 	}
 
 	return m
@@ -97,25 +88,25 @@ func (rec *Record) SetOrderBy(fields string) {
 	rec.orderBy = fields
 }
 
-func (rec *Record) Set(fieldname string, value interface{}) {
-	fieldType, ok := rec.nameToType[fieldname]
+func (rec *Record) GetFieldType(fieldname string) (tableschema.FieldType, error) {
+	fieldType, ok := rec.fieldnameToFieldType[fieldname]
+
 	if !ok {
-		logger.Error("Field does not exist, see "+fieldname, "Record.Set()")
-		return
+		return "", logger.Error("Field does not exist, see "+fieldname, "Record.Set()")
 	}
 
-	if *fieldType == tableschema.String {
-		rec.userValues.PutString(fieldname, value.(string))
+	return fieldType, nil
+}
 
-	} else if *fieldType == tableschema.Number {
-		rec.userValues.PutNumber(fieldname, value.(float32))
-
-	} else if *fieldType == tableschema.Bool {
-		rec.userValues.PutBool(fieldname, value.(bool))
-
-	} else {
-		logger.Error("Field type unrecognized, see "+fieldname+" : "+string(*fieldType), "Record.Set()")
+func (rec *Record) Set(fieldname string, value string) error {
+	fieldType, ok := rec.fieldnameToFieldType[fieldname]
+	if !ok {
+		return logger.Error("field does not exist, see "+fieldname, "Record.Set()")
 	}
+
+	rec.userValues.SetFieldValue(fieldname, value, fieldType)
+
+	return nil
 }
 
 func (rec *Record) Close() error {
@@ -175,39 +166,15 @@ func (rec *Record) Pagination(index, size int) {
 }
 
 func (rec *Record) Get(field string) (string, error) {
-	if rec.userValues.Has(field) {
-		return rec.userValues.Get(field)
+	if rec.userValues.HasField(field) {
+		return rec.userValues.GetFieldValue(field)
 	}
 
-	if rec.values.Has(field) {
-		return rec.values.Get(field)
+	if rec.values.HasField(field) {
+		return rec.values.GetFieldValue(field)
 	}
 
 	return "", fmt.Errorf("field '%s' does not exist in record", field)
-}
-
-func (rec *Record) GetNumber(field string) (float32, error) {
-	if rec.userValues.Has(field) {
-		return rec.userValues.GetNumber(field)
-	}
-
-	if rec.values.Has(field) {
-		return rec.values.GetNumber(field)
-	}
-
-	return 0, fmt.Errorf("field '%s' does not exist in record", field)
-}
-
-func (rec *Record) GetBool(field string) (bool, error) {
-	if rec.userValues.Has(field) {
-		return rec.userValues.GetBool(field)
-	}
-
-	if rec.values.Has(field) {
-		return rec.values.GetBool(field)
-	}
-
-	return true, fmt.Errorf("field '%s' does not exist in record", field)
 }
 
 func (rec *Record) AddPK(id string) error {
@@ -222,16 +189,12 @@ func (rec *Record) Add(field string, op query.OpType, rhs string) error {
 	return rec.filterQuery.Add(field, op, rhs)
 }
 
-func (rec *Record) AddNumber(field string, op query.OpType, rhs float32) error {
-	return rec.filterQuery.AddNumber(field, op, rhs)
+func (rec *Record) AddEq(field string, rhs string) error {
+	return rec.filterQuery.Add(field, query.Equals, rhs)
 }
 
 func (rec *Record) AddOr(field string, op query.OpType, rhs string) error {
 	return rec.filterQuery.AddOr(field, op, rhs)
-}
-
-func (rec *Record) AddOrNumber(field string, op query.OpType, rhs float32) error {
-	return rec.filterQuery.AddOrNumber(field, op, rhs)
 }
 
 func (rec *Record) AndGroup() error {

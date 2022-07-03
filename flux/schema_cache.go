@@ -2,7 +2,6 @@ package flux
 
 import (
 	"fmt"
-	"github.com/amortaza/aceql/flux/query"
 	"github.com/amortaza/aceql/flux/schema_journalist"
 	"github.com/amortaza/aceql/flux/tableschema"
 	"github.com/amortaza/aceql/logger"
@@ -10,8 +9,9 @@ import (
 
 //var g_relation_cache = make( map[ string ] *table.Table )
 
-func GetRelation(name string, crud CRUD) *tableschema.Table {
-	//f mt.Println( "!!!!!!!!!!!!!!!! Caching opportunity for RELATION" ) // debug
+// GetTableSchema used to return error, but changed my mind
+func GetTableSchema(name string, crud CRUD) *tableschema.Table {
+	//todo
 	//relation, ok := g_relation_cache[ name ]
 	//
 	//if ok {
@@ -19,27 +19,29 @@ func GetRelation(name string, crud CRUD) *tableschema.Table {
 	//}
 
 	if name == "x_schema" {
-		return schema_journalist.Get_X_SCHEMA_relation()
-		//g_relation_cache[ name ] = schema_journalist.Get_X_SCHEMA_relation()
+		return schema_journalist.Get_X_SCHEMA_schema()
+		//g_relation_cache[ name ] = schema_journalist.Get_X_SCHEMA_schema()
 		//return g_relation_cache[ name ]
 	}
 
-	relation := tableschema.NewTable(name)
+	table := tableschema.NewTable(name)
 
-	r := NewRecord(GetRelation("x_schema", crud), crud)
-	r.Add("x_table", query.Equals, name)
-	r.Add("x_type", query.Equals, "field")
+	x_schema := GetTableSchema("x_schema", crud)
+
+	r := NewRecord(x_schema, crud)
+	r.AddEq("x_table", name)
+	r.AddEq("x_type", "field")
 	_, err := r.Query()
 
 	if err != nil {
-		logger.Error(err, logger.SQL)
+		logger.Err(err, logger.SQL)
 		return nil
 	}
 
 	for {
 		ok, err := r.Next()
 		if err != nil {
-			logger.Error(err, logger.SQL)
+			logger.Error(err.Error(), logger.SQL)
 			return nil
 		}
 
@@ -47,15 +49,15 @@ func GetRelation(name string, crud CRUD) *tableschema.Table {
 			break
 		}
 
-		if err := addField(r, relation); err != nil {
-			logger.Error(err, logger.SQL)
+		if err := addField(r, table); err != nil {
+			logger.Error(err.Error(), logger.SQL)
 			return nil
 		}
 	}
 
 	//g_relation_cache[ name ] = relation
 
-	return relation
+	return table
 }
 
 func addField(r *Record, relation *tableschema.Table) error {

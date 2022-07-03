@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// http://localhost:8000/table/x_schema/id/0
+// DeleteRecordById http://localhost:8000/table/x_schema/id/0
 func DeleteRecordById(c echo.Context) error {
 
 	name := c.Param("table")
@@ -15,14 +15,14 @@ func DeleteRecordById(c echo.Context) error {
 
 	r := stdsql.NewRecord(name)
 	_ = r.Add("x_id", query.Equals, id)
-	_ , _= r.Query()
+	_, _ = r.Query()
 
 	ok, _ := r.Next()
 
 	if ok {
 		err := r.Delete()
 		if err != nil {
-			return c.String(500, "something wrong in DeleteRecordById")
+			return c.String(500, err.Error())
 		}
 	}
 

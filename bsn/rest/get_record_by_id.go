@@ -2,9 +2,9 @@ package rest
 
 import (
 	"encoding/json"
-	"github.com/amortaza/aceql/flux-drivers/logger"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/flux/query"
+	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
 	"net/http"
 	"strconv"
@@ -20,9 +20,9 @@ func GetRecordById(c echo.Context) error {
 	defer r.Close()
 
 	_ = r.Add("x_id", query.Equals, id)
-	total , err := r.Query()
+	total, err := r.Query()
 	if err != nil {
-		logger.Error(err, "GetRecordById()")
+		logger.Err(err, "REST:GetRecordById()")
 		return c.String(http.StatusInternalServerError, "")
 	}
 
@@ -35,13 +35,13 @@ func GetRecordById(c echo.Context) error {
 
 	_, err = r.Next()
 	if err != nil {
-		logger.Error(err, "GetRecordById()")
+		logger.Err(err, "REST:GetRecordById()")
 		return c.String(http.StatusInternalServerError, "")
 	}
 
 	b, err := json.Marshal(r)
 	if err != nil {
-		logger.Error(err, "GetRecordById()")
+		logger.Err(err, "REST:GetRecordById()")
 		return c.String(http.StatusInternalServerError, "")
 	}
 

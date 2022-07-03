@@ -4,8 +4,10 @@ import (
 	"github.com/amortaza/aceql/flux"
 )
 
-func NewRecord(relationName string) *flux.Record {
+func NewRecord(tableName string) *flux.Record {
 	crud := NewCRUD()
 
-	return flux.NewRecord(flux.GetRelation(relationName, crud), crud)
+	tableSchema := flux.GetTableSchema(tableName, crud)
+
+	return flux.NewRecord(tableSchema, crud)
 }

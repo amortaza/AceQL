@@ -15,7 +15,7 @@ func GetRecordsByQuery(c echo.Context) error {
 	encodedQuery := c.QueryParam("query")
 
 	if encodedQuery != "" {
-		fmt.Println( "query: " + encodedQuery ) // debug
+		fmt.Println("query: " + encodedQuery) // debug
 	}
 
 	orderByAscending := true
@@ -35,7 +35,7 @@ func GetRecordsByQuery(c echo.Context) error {
 
 	crud := stdsql.NewCRUD()
 
-	r := flux.NewRecord( flux.GetRelation(name,crud), crud )
+	r := flux.NewRecord(flux.GetTableSchema(name, crud), crud)
 	defer r.Close()
 
 	if encodedQuery != "" {
@@ -55,12 +55,12 @@ func GetRecordsByQuery(c echo.Context) error {
 	r.Pagination(index, size)
 
 	if orderByAscending {
-		r.SetOrderBy( orderBy )
+		r.SetOrderBy(orderBy)
 	} else {
-		r.SetOrderByDesc( orderBy )
+		r.SetOrderByDesc(orderBy)
 	}
 
-	total , err := r.Query()
+	total, err := r.Query()
 	if err != nil {
 		return err
 	}

@@ -10,21 +10,21 @@ import (
 )
 
 func PutRecord(c echo.Context) error {
-
 	name := c.Param("table")
 	id := c.Param("id")
 
 	m := &echo.Map{}
 
 	if err := c.Bind(m); err != nil {
-		logger.Error(err, logger.Main)
+		c.JSON(500, err.Error())
+		return logger.Err(err, logger.Main)
 	}
 
-	e := updateRecord(name, id, m)
+	err2 := updateRecord(name, id, m)
 
-	if e != nil {
-		c.JSON(500, e.Error())
-		return e
+	if err2 != nil {
+		c.JSON(500, err2.Error())
+		return logger.Err(err2, logger.Main)
 	}
 
 	c.JSON(200, nil)
@@ -34,7 +34,7 @@ func PutRecord(c echo.Context) error {
 
 func updateRecord(name string, id string, m *echo.Map) error {
 	crud := stdsql.NewCRUD()
-	relation := flux.GetRelation(name, crud)
+	relation := flux.GetTableSchema(name, crud)
 	rec := flux.NewRecord(relation, crud)
 	_ = rec.AddPK(id)
 	_, _ = rec.Query()
@@ -47,7 +47,7 @@ func updateRecord(name string, id string, m *echo.Map) error {
 
 	for key, value := range *m {
 		// for now assume everything is string
-		rec.Set(key, value)
+		rec.Set(key, value.(string))
 
 		//fmt.Println( "ace key ", key ) // debu
 

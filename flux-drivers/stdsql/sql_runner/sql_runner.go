@@ -3,7 +3,7 @@ package sql_runner
 import (
 	"database/sql"
 	"fmt"
-	"github.com/amortaza/aceql/flux-drivers/logger"
+	"github.com/amortaza/aceql/logger"
 	"sync"
 	"time"
 

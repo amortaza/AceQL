@@ -12,21 +12,23 @@ type StandardJournalist struct {
 func (journalist *StandardJournalist) CreateTable(tableName string, tableLabel string) error {
 	recordmap := NewRecordMap()
 
-	recordmap.PutString("x_type", "relation")
-	recordmap.PutString("x_table", tableName)
-	recordmap.PutString("x_label", tableLabel)
-	recordmap.PutString("x_field", "x_id")
-	recordmap.PutString("x_field_type", string(tableschema.String))
+	recordmap.SetFieldValue("x_type", "relation", tableschema.String)
+	recordmap.SetFieldValue("x_table", tableName, tableschema.String)
+	recordmap.SetFieldValue("x_label", tableLabel, tableschema.String)
+	recordmap.SetFieldValue("x_field", "x_id", tableschema.String)
+	recordmap.SetFieldValue("x_field_type", string(tableschema.String), tableschema.String)
 
 	_, err := journalist.crud.Create("x_schema", recordmap)
 
 	return err
 }
 
-func (journalist *StandardJournalist) DeleteTable(relationName string) error {
-	record := NewRecord(GetRelation("x_schema", journalist.crud), journalist.crud)
+func (journalist *StandardJournalist) DeleteTable(tableName string) error {
+	x_schema := GetTableSchema("x_schema", journalist.crud)
 
-	_ = record.Add("x_table", query.Equals, relationName)
+	record := NewRecord(x_schema, journalist.crud)
+
+	_ = record.Add("x_table", query.Equals, tableName)
 
 	_, _ = record.Query()
 
@@ -44,24 +46,26 @@ func (journalist *StandardJournalist) DeleteTable(relationName string) error {
 	return nil
 }
 
-func (journalist *StandardJournalist) CreateField(relationName string, field *tableschema.Field) error {
+func (journalist *StandardJournalist) CreateField(tableName string, field *tableschema.Field) error {
 	recordmap := NewRecordMap()
 
-	recordmap.PutString("x_type", "field")
-	recordmap.PutString("x_table", relationName)
-	recordmap.PutString("x_field", field.Name)
-	recordmap.PutString("x_field_type", string(field.Type))
-	recordmap.PutString("x_label", string(field.Label))
+	recordmap.SetFieldValue("x_type", "field", tableschema.String)
+	recordmap.SetFieldValue("x_table", tableName, tableschema.String)
+	recordmap.SetFieldValue("x_field", field.Name, tableschema.String)
+	recordmap.SetFieldValue("x_field_type", string(field.Type), tableschema.String)
+	recordmap.SetFieldValue("x_label", field.Label, tableschema.String)
 
 	_, err := journalist.crud.Create("x_schema", recordmap)
 
 	return err
 }
 
-func (journalist *StandardJournalist) DeleteField(relationName string, fieldname string) error {
-	record := NewRecord(GetRelation("x_schema", journalist.crud), journalist.crud)
+func (journalist *StandardJournalist) DeleteField(tableName string, fieldname string) error {
+	x_schema := GetTableSchema("x_schema", journalist.crud)
 
-	_ = record.Add("x_table", query.Equals, relationName)
+	record := NewRecord(x_schema, journalist.crud)
+
+	_ = record.Add("x_table", query.Equals, tableName)
 	_ = record.Add("x_field", query.Equals, fieldname)
 
 	_, _ = record.Query()

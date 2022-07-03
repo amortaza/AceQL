@@ -14,7 +14,7 @@ func PostSchemaField(c echo.Context) error {
 	m := &echo.Map{}
 
 	if err := c.Bind(m); err != nil {
-		logger.Error(err, logger.Main)
+		logger.Err(err, logger.Main)
 	}
 
 	fieldTypeAsString := (*m)["type"].(string)
@@ -28,7 +28,7 @@ func PostSchemaField(c echo.Context) error {
 
 	fieldType, err := tableschema.GetFieldTypeByName(fieldTypeAsString)
 	if err != nil {
-		logger.Error(err, "PostSchemaField()")
+		logger.Err(err, "PostSchemaField()")
 		return err
 	}
 

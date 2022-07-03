@@ -14,7 +14,8 @@ func PostSchemaTable(c echo.Context) error {
 	m := &echo.Map{}
 
 	if err := c.Bind(m); err != nil {
-		logger.Error(err, logger.Main)
+		c.JSON(500, err.Error())
+		return logger.Err(err, logger.Main)
 	}
 
 	fields := (*m)["fields"].([]interface{})
@@ -46,7 +47,7 @@ func makeSchemaObject(tableName string, tableLabel string, fields []interface{})
 
 		fieldType, err := tableschema.GetFieldTypeByName(m["type"].(string))
 		if err != nil {
-			logger.Error(err, logger.Main)
+			logger.Err(err, logger.Main)
 			continue
 		}
 

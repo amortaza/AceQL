@@ -28,7 +28,7 @@ func main4() {
 }
 func main3() {
 	//crud := stdsql.NewCRUD()
-	//r := flux.NewRecord(flux.GetRelation("x_choice_list", crud), crud)
+	//r := flux.NewRecord(flux.GetTableSchema("x_choice_list", crud), crud)
 	//_ = r.Query()
 	//
 	//for {
@@ -53,7 +53,7 @@ func main3() {
 }
 
 func main2() {
-	a := flux.GetRelation("x_user", stdsql.NewCRUD())
+	a := flux.GetTableSchema("x_user", stdsql.NewCRUD())
 	if a == nil {
 		fmt.Println("no table found")
 		return

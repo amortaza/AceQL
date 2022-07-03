@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/amortaza/aceql/flux"
-	"github.com/amortaza/aceql/flux-drivers/logger"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/compiler"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_runner"
 	"github.com/amortaza/aceql/flux/node"
 	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/logger"
 	"strconv"
 )
 
@@ -40,10 +40,10 @@ func (query *RowQuerier) Close() error {
 	err := query.rows.Close()
 
 	if err == nil {
-		//debug logger.Log("Closing DB Connection - successful", "RowQuerier.Close()")
+		logger.Log("Closing DB Connection - successful", "RowQuerier.Close()")
 	} else {
-		//debug logger.Log("Closing DB Connection - UNSUCCESSFUL", "RowQuerier.Close()")
-		logger.Error(err, logger.ERROR)
+		logger.Log("Closing DB Connection - UNSUCCESSFUL", "RowQuerier.Close()")
+		logger.Error(err.Error(), logger.ERROR)
 	}
 
 	return err
@@ -94,7 +94,7 @@ func readTotal(rows *sql.Rows) (int, error) {
 	columnPointers[0] = &columns[0]
 
 	if err := rows.Scan(columnPointers...); err != nil {
-		logger.Error(err, "readTotal() could not scan")
+		logger.Error(err.Error(), "readTotal() could not scan")
 		return -1, err
 	}
 
@@ -102,7 +102,7 @@ func readTotal(rows *sql.Rows) (int, error) {
 
 	total, err := strconv.ParseInt(value, 10, 32)
 	if err != nil {
-		logger.Error(err, "readTotal() could not parse answer")
+		logger.Error(err.Error(), "readTotal() could not parse answer")
 		return -1, err
 	}
 
@@ -125,8 +125,7 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 	}
 
 	if err := query.rows.Scan(columnPointers...); err != nil {
-		logger.Error(err, "RowQuerier.Next() rows.Scan")
-		return nil, err
+		return nil, logger.Error(err.Error(), "RowQuerier.Next() rows.Scan")
 	}
 
 	valuesRecordMap := flux.NewRecordMap()
@@ -134,21 +133,12 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 	for i, field := range query.fields {
 		value := columnPointers[i].(*interface{})
 
-		//f mt.Println( field.Name )
-		if field.IsString() {
-			valuesRecordMap.PutStringByteArray(field.Name, (*value).([]byte))
+		// the value that is set will *always* be string,
+		// but the field-type as defined in the schema is respected.
+		bytes := (*value).([]byte)
+		stringValue := string(bytes)
 
-		} else if field.IsNumber() {
-			valuesRecordMap.PutNumberByteArray(field.Name, (*value).([]byte))
-
-		} else if field.IsBool() {
-			valuesRecordMap.PutBoolByteArray(field.Name, (*value).([]byte))
-
-		} else {
-			err := fmt.Errorf("\"in Next(), field type is unknown, see\"%s : %s\"", field.Name, field.Type)
-			logger.Error(err, "RowQuerier.Next()")
-			return nil, err
-		}
+		valuesRecordMap.SetFieldValue(field.Name, stringValue, field.Type)
 	}
 
 	return valuesRecordMap, nil

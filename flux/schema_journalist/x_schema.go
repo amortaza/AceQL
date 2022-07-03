@@ -4,7 +4,7 @@ import (
 	"github.com/amortaza/aceql/flux/tableschema"
 )
 
-func Get_X_SCHEMA_relation() *tableschema.Table {
+func Get_X_SCHEMA_schema() *tableschema.Table {
 	relation := tableschema.NewTable("x_schema")
 
 	stringType, _ := tableschema.GetFieldTypeByName("String")
