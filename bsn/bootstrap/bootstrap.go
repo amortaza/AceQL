@@ -7,12 +7,8 @@ import (
 )
 
 func Run() error {
-	//var empty []*flux.Record
-
 	// schema
-	//if err := bootstrap(makeSpecificationFor_Schema(), empty); err != nil {
-	//	return err
-	//}
+	// we do not need to bootstrap schema, because it is hard-coded in code!
 
 	// choice list
 	if err := bootstrap(makeSpecificationFor_ChoiceList(), makeRecordsFor_ChoiceList()); err != nil {

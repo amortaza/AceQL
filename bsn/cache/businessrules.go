@@ -15,11 +15,14 @@ func ClearAll() {
 }
 
 func GetOnAfterUpdate_ScriptNames(tablename string) []string {
-
 	if _, ok := gOnAfterUpdateScriptNames[tablename]; !ok {
 		names := make([]string, 0)
 
 		gr := stdsql.NewRecord("x_business_rule")
+		if gr == nil {
+			return nil
+		}
+
 		gr.Add("x_table_name", query.Equals, tablename)
 		gr.Query()
 

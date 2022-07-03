@@ -5,16 +5,19 @@ import (
 )
 
 func Get_X_SCHEMA_schema() *tableschema.Table {
-	relation := tableschema.NewTable("x_schema")
+	tableSchema := tableschema.NewTable("x_schema")
 
-	stringType, _ := tableschema.GetFieldTypeByName("String")
+	stringType, err := tableschema.GetFieldTypeByName("String")
+	if err != nil {
+		return nil
+	}
 
-	relation.AddField("x_id", "ID", stringType)
-	relation.AddField("x_type", "Type", stringType)
-	relation.AddField("x_table", "Table", stringType)
-	relation.AddField("x_field", "Field", stringType)
-	relation.AddField("x_field_type", "Field Type", stringType)
-	relation.AddField("x_label", "Label", stringType)
+	tableSchema.AddField("x_id", "ID", stringType)
+	tableSchema.AddField("x_type", "Type", stringType)
+	tableSchema.AddField("x_table", "Table", stringType)
+	tableSchema.AddField("x_field", "Field", stringType)
+	tableSchema.AddField("x_field_type", "Field Type", stringType)
+	tableSchema.AddField("x_label", "Label", stringType)
 
-	return relation
+	return tableSchema
 }

@@ -2,22 +2,24 @@ package rest
 
 import (
 	"encoding/csv"
-	"fmt"
+	"errors"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
+	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
-	"net/http"
 	"strconv"
 )
 
 func GetRecordsByQuery_CSV(c echo.Context) error {
-
-	r, _ := lookupRecords(c)
+	r, err := lookupRecords(c)
+	if err != nil {
+		return c.String(500, err.Error())
+	}
 	defer r.Close()
 
 	total, err := r.Query()
 	if err != nil {
-		return err
+		return c.String(500, err.Error())
 	}
 
 	//
@@ -29,40 +31,56 @@ func GetRecordsByQuery_CSV(c echo.Context) error {
 	c.Response().Header().Set("Access-Control-Expose-Headers", "X-Total-Count")
 	c.Response().Header().Set("X-Total-Count", strconv.Itoa(total))
 
-	c.String(http.StatusOK, "")
+	// this has to come BEFORE the writers
+	c.String(200, "")
 
 	writer := csv.NewWriter(c.Response())
+	defer writer.Flush()
 
 	writeRecords(writer, r)
-
-	writer.Flush()
 
 	return nil
 }
 
-func writeRecords(writer *csv.Writer, r *flux.Record) {
-	hasNext, _ := r.Next()
+func writeRecords(writer *csv.Writer, r *flux.Record) error {
+	hasNext, err := r.Next()
+	if err != nil {
+		return err
+	}
 
 	if !hasNext {
 		//todo at least return the headers
-		return
+		return nil
 	}
 
-	keys := writeHeader(writer, r)
-	writeRecord(writer, r, keys)
+	keys, err := writeHeader(writer, r)
+	if err != nil {
+		return err
+	}
+
+	if err := writeRecord(writer, r, keys); err != nil {
+		return err
+	}
 
 	for {
-		hasNext, _ := r.Next()
+		hasNext, err := r.Next()
+		if err != nil {
+			return err
+		}
 
 		if !hasNext {
 			break
 		}
 
-		writeRecord(writer, r, keys)
+		if err := writeRecord(writer, r, keys); err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
-func writeHeader(writer *csv.Writer, r *flux.Record) []string {
+func writeHeader(writer *csv.Writer, r *flux.Record) ([]string, error) {
 	data := r.GetMap().Data
 	keys := make([]string, 0)
 
@@ -70,12 +88,14 @@ func writeHeader(writer *csv.Writer, r *flux.Record) []string {
 		keys = append(keys, key)
 	}
 
-	writer.Write(keys)
+	if err := writer.Write(keys); err != nil {
+		return nil, logger.Error(err.Error(), "CSV Export")
+	}
 
-	return keys
+	return keys, nil
 }
 
-func writeRecord(writer *csv.Writer, r *flux.Record, keys []string) {
+func writeRecord(writer *csv.Writer, r *flux.Record, keys []string) error {
 	values := make([]string, 0)
 
 	for _, key := range keys {
@@ -83,7 +103,11 @@ func writeRecord(writer *csv.Writer, r *flux.Record, keys []string) {
 		values = append(values, v)
 	}
 
-	writer.Write(values)
+	if err := writer.Write(values); err != nil {
+		return logger.Error(err.Error(), "CSV Export")
+	}
+
+	return nil
 }
 
 func lookupRecords(c echo.Context) (*flux.Record, error) {
@@ -91,7 +115,7 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 	encodedQuery := c.QueryParam("query")
 
 	if encodedQuery != "" {
-		fmt.Println("query: " + encodedQuery) // debug
+		logger.Log("query: "+encodedQuery, "CSV Export")
 	}
 
 	orderByAscending := true
@@ -110,6 +134,9 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 	}
 
 	r := stdsql.NewRecord(name)
+	if r == nil {
+		return nil, errors.New("see logs")
+	}
 
 	if encodedQuery != "" {
 		r.SetEncodedQuery(encodedQuery)
@@ -117,12 +144,12 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 
 	index, err := strconv.Atoi(paginationIndex)
 	if err != nil {
-		return nil, err
+		return nil, logger.Error(err.Error(), "CSV Export")
 	}
 
 	size, err := strconv.Atoi(paginationSize)
 	if err != nil {
-		return nil, err
+		return nil, logger.Error(err.Error(), "CSV Export")
 	}
 
 	r.Pagination(index, size)

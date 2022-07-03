@@ -50,11 +50,13 @@ func (generator *FieldCreate_SqlGenerator) fieldTypeToSQLType(fieldType tablesch
 	}
 
 	if fieldType == tableschema.Bool {
-		return "TINYINT", nil
+		return "VARCHAR(15)", nil
+		//return "TINYINT", nil
 	}
 
 	if fieldType == tableschema.Number {
-		return "FLOAT", nil
+		return "VARCHAR(31)", nil
+		//return "FLOAT", nil
 	}
 
 	return "", fmt.Errorf("unrecognized fieldtype %s", fieldType)

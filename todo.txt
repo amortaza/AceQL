@@ -1,3 +1,7 @@
+bootstrap sch
+does x_choice match bootstrap?
+lookupRecords is duplicated
+
 record.Initialize()
 add "upload" to the list views
 add "upload" to the form views

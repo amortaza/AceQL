@@ -6,6 +6,7 @@ import (
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/flux/query"
+	"github.com/amortaza/aceql/logger"
 	"time"
 )
 
@@ -18,64 +19,114 @@ func StartScheduler() {
 			time.Sleep(CADENCE_SECONDS * time.Second)
 
 			r := stdsql.NewRecord("x_jobs")
-			r.Add("x_active", query.Equals, "true")
-			r.Query()
+			if r == nil {
+				logger.Log("Stopping Scheduler, see logs", "Scheduler")
+				return
+			}
+
+			if err := r.Add("x_active", query.Equals, "true"); err != nil {
+				logger.Log("Stopping Scheduler, see logs", "Scheduler")
+				return
+			}
+
+			if _, err := r.Query(); err != nil {
+				logger.Log("Stopping Scheduler, see logs", "Scheduler")
+				return
+			}
 
 			for {
-				hasNext, _ := r.Next()
+				hasNext, err := r.Next()
+				if err != nil {
+					break
+				}
 
 				if !hasNext {
 					break
 				}
 
-				if !atCadence(r) {
+				at, err := atCadence(r)
+				if err != nil {
 					continue
 				}
 
-				v, _ := r.Get("x_script_name")
-				grpcclient.GRPC_CallScript(v)
+				if !at {
+					continue
+				}
 
-				setLastRun(r)
+				v, err := r.Get("x_script_name")
+				if err != nil {
+					break
+				}
+
+				if err := grpcclient.GRPC_CallScript(v); err != nil {
+					continue
+				}
+
+				if err := setLastRun(r); err != nil {
+					continue
+				}
 			}
 		}
 	}()
 }
 
-func atCadence(r *flux.Record) bool {
+func atCadence(r *flux.Record) (bool, error) {
 	//todo add .nil()
 	//todo give error and return nil when field does not exist
 	//todo is this prepending a space !??
-	starting, _ := r.Get("x_starting_datetime")
+	starting, err := r.Get("x_starting_datetime")
+	if err != nil {
+		return false, err
+	}
+
 	starting = bsntime.Normalize(starting)
 	if starting == "" {
-		return false
+		return false, nil
 	}
 
 	if bsntime.IsAfter(starting, bsntime.Now()) {
-		return false
+		return false, nil
 	}
 
-	lastRun, _ := r.Get("x_last_run")
+	lastRun, err := r.Get("x_last_run")
+	if err != nil {
+		return false, err
+	}
+
 	lastRun = bsntime.Normalize(lastRun)
 	if lastRun == "" {
-		return true
+		return true, nil
 	}
 
-	seconds, _ := r.Get("x_seconds")
+	seconds, err := r.Get("x_seconds")
+	if err != nil {
+		return false, err
+	}
+
 	if seconds == "" {
-		return false
+		return false, nil
 	}
 
-	nextRun := bsntime.AddSeconds(lastRun, seconds)
+	nextRun, err := bsntime.AddSeconds(lastRun, seconds)
+	if err != nil {
+		return false, err
+	}
 
 	if bsntime.IsAfter(bsntime.Now(), nextRun) {
-		return true
+		return true, nil
 	}
 
-	return false
+	return false, nil
 }
 
-func setLastRun(r *flux.Record) {
-	r.Set("x_last_run", bsntime.Now())
-	r.Update()
+func setLastRun(r *flux.Record) error {
+	if err := r.Set("x_last_run", bsntime.Now()); err != nil {
+		return err
+	}
+
+	if err := r.Update(); err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -18,7 +18,7 @@ func main() {
 
 func main4() {
 	/*
-		r := stdsql.NewRecord("x_choice_list")
+		r := stdsql.New Record("x_choice_list")
 		_ = r.Add("x_type", query.Equals, "field")
 		_ = r.Add("x_table", query.Equals, table)
 		_ = r.Query()
@@ -28,7 +28,7 @@ func main4() {
 }
 func main3() {
 	//crud := stdsql.NewCRUD()
-	//r := flux.NewRecord(flux.GetTableSchema("x_choice_list", crud), crud)
+	//r := flux.New Record(flux.GetTableSchema("x_choice_list", crud), crud)
 	//_ = r.Query()
 	//
 	//for {
@@ -67,7 +67,7 @@ func main1() {
 	/*
 		stdsql.Init( "mysql", "clown:1844@/bsn")
 
-		rec := flux.NewRecord("x_choice_list", stdsql.NewCRUD())
+		rec := flux.New Record("x_choice_list", stdsql.NewCRUD())
 		_ = rec.AddPK("0c8e07932620473ab290b781911dbe9f")
 		_ = rec.Query()
 

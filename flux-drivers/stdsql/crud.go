@@ -24,6 +24,7 @@ type CRUD struct {
 	sqlRunner *sql_runner.SqlRunner
 }
 
+// NewCRUD never returns nil
 func NewCRUD() flux.CRUD {
 	return &CRUD{
 		sqlRunner: global_sqlRunner,

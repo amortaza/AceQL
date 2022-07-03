@@ -1,11 +1,11 @@
 package rest
 
 import (
-	"fmt"
+	"errors"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
+	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
-	"net/http"
 	"strconv"
 )
 
@@ -15,7 +15,7 @@ func GetRecordsByQuery(c echo.Context) error {
 	encodedQuery := c.QueryParam("query")
 
 	if encodedQuery != "" {
-		fmt.Println("query: " + encodedQuery) // debug
+		logger.Log("query: "+encodedQuery, "REST:GetRecordsByQuery()")
 	}
 
 	orderByAscending := true
@@ -36,6 +36,10 @@ func GetRecordsByQuery(c echo.Context) error {
 	crud := stdsql.NewCRUD()
 
 	r := flux.NewRecord(flux.GetTableSchema(name, crud), crud)
+	if r == nil {
+		return errors.New("see logs")
+	}
+
 	defer r.Close()
 
 	if encodedQuery != "" {
@@ -80,5 +84,5 @@ func GetRecordsByQuery(c echo.Context) error {
 	c.Response().Header().Set("X-Total-Count", strconv.Itoa(total))
 	c.Response().Header().Set("Access-Control-Expose-Headers", "X-Total-Count")
 
-	return c.JSON(http.StatusOK, list)
+	return c.JSON(200, list)
 }

@@ -14,7 +14,8 @@ func PostSchemaField(c echo.Context) error {
 	m := &echo.Map{}
 
 	if err := c.Bind(m); err != nil {
-		logger.Err(err, logger.Main)
+		c.JSON(500, err.Error())
+		return logger.Err(err, "REST:PostSchemaField()")
 	}
 
 	fieldTypeAsString := (*m)["type"].(string)
@@ -24,19 +25,26 @@ func PostSchemaField(c echo.Context) error {
 		fieldLabel = fieldName
 	}
 
+	// never nil
 	schema := stdsql.NewSchema()
 
 	fieldType, err := tableschema.GetFieldTypeByName(fieldTypeAsString)
 	if err != nil {
-		logger.Err(err, "PostSchemaField()")
-		return err
+		c.JSON(500, err.Error())
+		return logger.Err(err, "PostSchemaField()")
 	}
 
 	field := &tableschema.Field{Name: fieldName, Label: fieldLabel, Type: fieldType}
 
-	schema.CreateField(table, field, true)
+	if err := schema.CreateField(table, field, true); err != nil {
+		c.JSON(500, err.Error())
+		return err
+	}
 
-	schema.Close()
+	if err := schema.Close(); err != nil {
+		c.JSON(500, err.Error())
+		return err
+	}
 
 	return c.JSON(200, "")
 }

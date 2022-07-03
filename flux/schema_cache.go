@@ -9,7 +9,7 @@ import (
 
 //var g_relation_cache = make( map[ string ] *table.Table )
 
-// GetTableSchema used to return error, but changed my mind
+// GetTableSchema will return nil on error
 func GetTableSchema(name string, crud CRUD) *tableschema.Table {
 	//todo
 	//relation, ok := g_relation_cache[ name ]
@@ -29,6 +29,10 @@ func GetTableSchema(name string, crud CRUD) *tableschema.Table {
 	x_schema := GetTableSchema("x_schema", crud)
 
 	r := NewRecord(x_schema, crud)
+	if r == nil {
+		return nil
+	}
+
 	r.AddEq("x_table", name)
 	r.AddEq("x_type", "field")
 	_, err := r.Query()

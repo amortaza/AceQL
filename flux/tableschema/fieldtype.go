@@ -2,6 +2,7 @@ package tableschema
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type FieldType string
@@ -25,5 +26,6 @@ func GetFieldTypeByName(name string) (FieldType, error) {
 		return Bool, nil
 	}
 
-	return "", fmt.Errorf("no field-type has been defined for '%s'", name)
+	err := fmt.Errorf("no field-type has been defined for '%s'", name)
+	return "", logger.Err(err, "fieldtype.GetFieldTypeByName")
 }

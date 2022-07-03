@@ -1,5 +1,10 @@
 package tableschema
 
+import (
+	"fmt"
+	"github.com/amortaza/aceql/logger"
+)
+
 type Table struct {
 	name   string
 	label  string
@@ -8,6 +13,7 @@ type Table struct {
 	fieldByName map[string]*Field
 }
 
+// NewTable never nil
 func NewTable(name string) *Table {
 	return &Table{
 		name:        name,
@@ -40,6 +46,11 @@ func (table *Table) AddField(name string, label string, fieldtype FieldType) {
 	table.fields = append(table.fields, field)
 }
 
-func (table *Table) GetField(name string) *Field {
-	return table.fieldByName[name]
+func (table *Table) GetField(fieldname string) *Field {
+	v, ok := table.fieldByName[fieldname]
+	if !ok {
+		logger.Error(fmt.Sprintf("field not found, see \"%s\"", fieldname), "table.GetField")
+	}
+
+	return v
 }

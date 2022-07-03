@@ -1,7 +1,9 @@
 package grpcclient
 
 import (
+	"fmt"
 	"github.com/amortaza/aceql/bsn/hook"
+	"github.com/amortaza/aceql/logger"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
@@ -20,7 +22,7 @@ func init() {
 	//defer conn.Close()
 }
 
-func GRPC_CallScript(scriptName string) {
+func GRPC_CallScript(scriptName string) error {
 	c := hook.NewHookServiceClient(gGRPC_Connection)
 
 	params := map[string]string{"": ""}
@@ -32,13 +34,17 @@ func GRPC_CallScript(scriptName string) {
 
 	response, err := c.OnRecordUpdate(context.Background(), &message)
 	if err != nil {
-		log.Fatalf("error when calling : %s", err)
+		return logger.Err(err, logger.GRPC)
 	}
 
-	log.Printf("Response from Server: %s", response.Result)
+	if response != nil {
+		return logger.Error(fmt.Sprintf("Response from Server: %s", response.Result), logger.GRPC)
+	}
+
+	return nil
 }
 
-func GRPC_OnRecordUpdate(scriptName string, grpcMap map[string]string) {
+func GRPC_OnRecordUpdate(scriptName string, grpcMap map[string]string) error {
 	c := hook.NewHookServiceClient(gGRPC_Connection)
 
 	params := grpcMap
@@ -50,8 +56,12 @@ func GRPC_OnRecordUpdate(scriptName string, grpcMap map[string]string) {
 
 	response, err := c.OnRecordUpdate(context.Background(), &message)
 	if err != nil {
-		log.Fatalf("error when calling : %s", err)
+		return logger.Err(err, logger.GRPC)
 	}
 
-	log.Printf("Response from Server: %s", response.Result)
+	if response != nil {
+		return logger.Error(fmt.Sprintf("Response from Server: %s", response.Result), logger.GRPC)
+	}
+
+	return nil
 }

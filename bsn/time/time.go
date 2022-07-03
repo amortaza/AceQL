@@ -35,32 +35,26 @@ func Normalize(s string) string {
 
 	return strings.ReplaceAll(s, "/", "-")
 }
+
 func IsAfter(d1, d2 string) bool {
 	return d1 >= d2
 }
 
-func AddSeconds(timeAsStr, secAsStr string) string {
+func AddSeconds(timeAsStr, secAsStr string) (string, error) {
 	timeAsStr = strings.Trim(timeAsStr, " ")
 	secAsStr = strings.Trim(secAsStr, " ")
 
 	seconds, err := strconv.Atoi(secAsStr)
 	if err != nil {
-		logger.Error("Cannot parse seconds", "bsntime")
-		fmt.Println("seconds ", seconds)
-
-		//todo give good error msg
-		return "1970-01-01 00:00:00"
+		return "", logger.Error(fmt.Sprintf("Cannot parse seconds, see \"%s\"", secAsStr), "bsntime.AddSeconds")
 	}
 
-	t, err2 := time.Parse("2006-01-02 15:04:05", timeAsStr)
-	if err2 != nil {
-		logger.Error("Cannot parse timeAsStr", "bsntime")
-		fmt.Println("timeAsStr ", timeAsStr)
-		//todo give good error msg
-		return "1970-01-01 00:00:00"
+	t, err := time.Parse("2006-01-02 15:04:05", timeAsStr)
+	if err != nil {
+		return "", logger.Error(fmt.Sprintf("Cannot parse time, see \"%s\"", timeAsStr), "bsntime.AddSeconds")
 	}
 
 	next := t.Add(time.Duration(seconds) * time.Second)
 
-	return Format(next)
+	return Format(next), nil
 }

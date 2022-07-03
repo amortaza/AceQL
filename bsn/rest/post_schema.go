@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"errors"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/flux/tableschema"
 	"github.com/amortaza/aceql/logger"
@@ -15,24 +16,34 @@ func PostSchemaTable(c echo.Context) error {
 
 	if err := c.Bind(m); err != nil {
 		c.JSON(500, err.Error())
-		return logger.Err(err, logger.Main)
+		return logger.Err(err, "REST:PostSchemaTable()")
 	}
 
 	fields := (*m)["fields"].([]interface{})
 	tableLabel := (*m)["label"].(string)
 
-	relation := makeSchemaObject(tableName, tableLabel, fields)
+	relation := makeTableSchema(tableName, tableLabel, fields)
+	if relation == nil {
+		c.JSON(500, "see logs")
+		return errors.New("see logs")
+	}
 
 	schema := stdsql.NewSchema()
 
-	schema.CreateRelation_withFields(relation, true)
+	if err := schema.CreateRelation_withFields(relation, true); err != nil {
+		c.JSON(500, err.Error())
+		return err
+	}
 
-	schema.Close()
+	if err := schema.Close(); err != nil {
+		c.JSON(500, err.Error())
+		return err
+	}
 
 	return c.JSON(200, "")
 }
 
-func makeSchemaObject(tableName string, tableLabel string, fields []interface{}) *tableschema.Table {
+func makeTableSchema(tableName string, tableLabel string, fields []interface{}) *tableschema.Table {
 	relation := tableschema.NewTable(tableName)
 
 	relation.SetLabel(tableLabel)
@@ -47,7 +58,7 @@ func makeSchemaObject(tableName string, tableLabel string, fields []interface{})
 
 		fieldType, err := tableschema.GetFieldTypeByName(m["type"].(string))
 		if err != nil {
-			logger.Err(err, logger.Main)
+			logger.Err(err, "REST:makeTableSchema()")
 			continue
 		}
 

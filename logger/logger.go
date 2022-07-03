@@ -11,6 +11,7 @@ type Source string
 const (
 	Bootstrap    Source = "Bootstrap"
 	ERROR               = "ERROR"
+	GRPC                = "GRPC"
 	JsonEncoding        = "JSON-ENCODING"
 	Main                = "Main"
 	REST                = "REST"
@@ -21,7 +22,8 @@ func Log(msg string, source Source) {
 	fmt.Println(time.Now().Format(time.Kitchen), " (", source, ")", msg)
 }
 func Err(err error, source Source) error {
-	return Error(err.Error(), source)
+	Error(err.Error(), source)
+	return err
 }
 
 func Error(msg string, source Source) error {

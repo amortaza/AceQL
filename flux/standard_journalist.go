@@ -1,6 +1,7 @@
 package flux
 
 import (
+	"errors"
 	"github.com/amortaza/aceql/flux/query"
 	"github.com/amortaza/aceql/flux/tableschema"
 )
@@ -27,6 +28,9 @@ func (journalist *StandardJournalist) DeleteTable(tableName string) error {
 	x_schema := GetTableSchema("x_schema", journalist.crud)
 
 	record := NewRecord(x_schema, journalist.crud)
+	if record == nil {
+		return errors.New("see logs")
+	}
 
 	_ = record.Add("x_table", query.Equals, tableName)
 
@@ -64,6 +68,9 @@ func (journalist *StandardJournalist) DeleteField(tableName string, fieldname st
 	x_schema := GetTableSchema("x_schema", journalist.crud)
 
 	record := NewRecord(x_schema, journalist.crud)
+	if record == nil {
+		return errors.New("see logs")
+	}
 
 	_ = record.Add("x_table", query.Equals, tableName)
 	_ = record.Add("x_field", query.Equals, fieldname)

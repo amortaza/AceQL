@@ -19,8 +19,8 @@ func NewSchema(journalist schema_journalist.Journalist, crud CRUD) *Schema {
 	}
 }
 
-func (schema *Schema) Close() {
-	schema.crud.Close()
+func (schema *Schema) Close() error {
+	return schema.crud.Close()
 }
 
 func (schema *Schema) CreateRelation_withFields(relation *tableschema.Table, journal bool) error {
