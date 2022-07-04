@@ -2,7 +2,8 @@ package sql_generator
 
 import (
 	"fmt"
-	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/flux/dbschema"
+	"github.com/amortaza/aceql/logger"
 )
 
 type FieldCreate_SqlGenerator struct{}
@@ -11,7 +12,7 @@ func NewFieldCreate_SqlGenerator() *FieldCreate_SqlGenerator {
 	return &FieldCreate_SqlGenerator{}
 }
 
-func (generator *FieldCreate_SqlGenerator) GenerateCreateFieldSQL(table string, field *tableschema.Field) (string, error) {
+func (generator *FieldCreate_SqlGenerator) GenerateCreateFieldSQL(table string, field *dbschema.Field) (string, error) {
 	sqlType, err := generator.fieldTypeToSQLType(field.Type)
 	if err != nil {
 		return "", err
@@ -28,36 +29,35 @@ func (generator *FieldCreate_SqlGenerator) GenerateCreateFieldSQL(table string, 
 	return sql, nil
 }
 
-func (generator *FieldCreate_SqlGenerator) fieldTypeToDefaultValue(fieldType tableschema.FieldType) (string, error) {
-	if fieldType == tableschema.String {
+func (generator *FieldCreate_SqlGenerator) fieldTypeToDefaultValue(fieldType dbschema.FieldType) (string, error) {
+	if fieldType == dbschema.String {
 		return "''", nil
 	}
 
-	if fieldType == tableschema.Bool {
+	if fieldType == dbschema.Bool {
 		return "0", nil
 	}
 
-	if fieldType == tableschema.Number {
+	if fieldType == dbschema.Number {
 		return "0", nil
 	}
 
-	return "", fmt.Errorf("unrecognized fieldtype `%s`", fieldType)
+	err := logger.Error(fmt.Sprintf("unrecognized fieldtype `%s`", fieldType), "FieldCreate_SqlGenerator.fieldTypeToDefaultValue")
+	return "", err
 }
 
-func (generator *FieldCreate_SqlGenerator) fieldTypeToSQLType(fieldType tableschema.FieldType) (string, error) {
-	if fieldType == tableschema.String {
+func (generator *FieldCreate_SqlGenerator) fieldTypeToSQLType(fieldType dbschema.FieldType) (string, error) {
+	if fieldType == dbschema.String {
 		return "VARCHAR(255)", nil
 	}
 
-	if fieldType == tableschema.Bool {
+	if fieldType == dbschema.Bool {
 		return "VARCHAR(15)", nil
-		//return "TINYINT", nil
 	}
 
-	if fieldType == tableschema.Number {
+	if fieldType == dbschema.Number {
 		return "VARCHAR(31)", nil
-		//return "FLOAT", nil
 	}
 
-	return "", fmt.Errorf("unrecognized fieldtype %s", fieldType)
+	return "", logger.Error(fmt.Sprintf("unrecognized fieldtype %s", fieldType), "FieldCreate_SqlGenerator.fieldTypeToSQLType")
 }

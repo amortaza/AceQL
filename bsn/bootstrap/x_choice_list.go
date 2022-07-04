@@ -3,29 +3,29 @@ package bootstrap
 import (
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/flux/dbschema"
 )
 
-func makeSpecificationFor_ChoiceList() *tableschema.Table {
-	table := tableschema.NewTable("x_choice_list")
+func makeSpecificationFor_ChoiceList() *dbschema.Table {
+	table := dbschema.NewTable("x_choice_list")
 
-	table.AddField("x_id", "ID", tableschema.String)
-	table.AddField("x_table", "Table", tableschema.String)
-	table.AddField("x_field", "Field", tableschema.String)
-	table.AddField("x_name", "Name", tableschema.String)
-	table.AddField("x_value", "Value", tableschema.String)
-	table.AddField("x_order", "Order", tableschema.Number)
-	table.AddField("x_active", "Active", tableschema.Bool)
+	table.AddField("x_id", "ID", dbschema.String)
+	table.AddField("x_table", "Table", dbschema.String)
+	table.AddField("x_field", "Field", dbschema.String)
+	table.AddField("x_name", "Name", dbschema.String)
+	table.AddField("x_value", "Value", dbschema.String)
+	table.AddField("x_order", "Order", dbschema.Number)
+	table.AddField("x_active", "Active", dbschema.Bool)
 
 	return table
 }
 
-func makeRecordsFor_ChoiceList() []*flux.Record {
+func makeRecordsFor_ChoiceList() ([]*flux.Record, error) {
 	var records []*flux.Record
 
-	rec := stdsql.NewRecord("x_choice_list")
-	if rec == nil {
-		return nil
+	rec, err := stdsql.NewRecord("x_choice_list")
+	if err != nil {
+		return nil, err
 	}
 
 	rec.Set("x_table", "x_schema")
@@ -36,9 +36,9 @@ func makeRecordsFor_ChoiceList() []*flux.Record {
 	rec.Set("x_active", "true")
 	records = append(records, rec)
 
-	rec = stdsql.NewRecord("x_choice_list")
-	if rec == nil {
-		return nil
+	rec, err = stdsql.NewRecord("x_choice_list")
+	if err != nil {
+		return nil, err
 	}
 
 	rec.Set("x_table", "x_schema")
@@ -49,9 +49,9 @@ func makeRecordsFor_ChoiceList() []*flux.Record {
 	rec.Set("x_active", "true")
 	records = append(records, rec)
 
-	rec = stdsql.NewRecord("x_choice_list")
-	if rec == nil {
-		return nil
+	rec, err = stdsql.NewRecord("x_choice_list")
+	if err != nil {
+		return nil, err
 	}
 
 	rec.Set("x_table", "x_schema")
@@ -62,9 +62,9 @@ func makeRecordsFor_ChoiceList() []*flux.Record {
 	rec.Set("x_active", "true")
 	records = append(records, rec)
 
-	rec = stdsql.NewRecord("x_choice_list")
-	if rec == nil {
-		return nil
+	rec, err = stdsql.NewRecord("x_choice_list")
+	if err != nil {
+		return nil, err
 	}
 
 	rec.Set("x_table", "x_schema")
@@ -75,5 +75,5 @@ func makeRecordsFor_ChoiceList() []*flux.Record {
 	rec.Set("x_active", "true")
 	records = append(records, rec)
 
-	return records
+	return records, nil
 }

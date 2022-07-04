@@ -3,21 +3,21 @@ package flux
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/amortaza/aceql/flux/dbschema"
 	"github.com/amortaza/aceql/flux/query"
-	"github.com/amortaza/aceql/flux/tableschema"
 	"github.com/amortaza/aceql/logger"
 )
 
 type Record struct {
 	tableName string
-	fields    []*tableschema.Field
+	fields    []*dbschema.Field
 
 	filterQuery *query.FilterQuery
 
 	values     *RecordMap
 	userValues *RecordMap
 
-	fieldnameToFieldType map[string]tableschema.FieldType
+	fieldnameToFieldType map[string]dbschema.FieldType
 
 	paginationIndex, paginationSize int
 
@@ -27,13 +27,15 @@ type Record struct {
 	crud CRUD
 }
 
-func NewRecord(table *tableschema.Table, crud CRUD) *Record {
+// NewRecord NEVER FAILS (0)
+func NewRecord(table *dbschema.Table, crud CRUD) *Record {
 	return NewRecord_withDefinition(table.Name(), table.Fields(), crud)
 }
 
-// NewRecord_withDefinition beause this is low level, it cannot take "Table" type
+// NewRecord_withDefinition NEVER FAILS (0)
+// beause this is low level, it cannot take "Table" type
 // it must take table name and field list (so we can hard code it when bootstrapping)
-func NewRecord_withDefinition(tableName string, fields []*tableschema.Field, crud CRUD) *Record {
+func NewRecord_withDefinition(tableName string, fields []*dbschema.Field, crud CRUD) *Record {
 	rec := &Record{
 		filterQuery:    query.NewFilterQuery(crud.Compiler()),
 		crud:           crud,
@@ -45,7 +47,7 @@ func NewRecord_withDefinition(tableName string, fields []*tableschema.Field, cru
 	rec.values = NewRecordMap()
 	rec.userValues = NewRecordMap()
 
-	rec.fieldnameToFieldType = make(map[string]tableschema.FieldType)
+	rec.fieldnameToFieldType = make(map[string]dbschema.FieldType)
 
 	for _, field := range fields {
 		rec.fieldnameToFieldType[field.Name] = field.Type
@@ -55,7 +57,14 @@ func NewRecord_withDefinition(tableName string, fields []*tableschema.Field, cru
 }
 
 func (rec *Record) MarshalJSON() ([]byte, error) {
-	return json.Marshal(rec.GetMap())
+	var bytes []byte
+	var err error
+
+	if bytes, err = json.Marshal(rec.GetMap()); err != nil {
+		return nil, logger.Err(err, "record.MarshalJSON")
+	}
+
+	return bytes, nil
 }
 
 func (rec *Record) GetTable() string {
@@ -88,11 +97,11 @@ func (rec *Record) SetOrderBy(fields string) {
 	rec.orderBy = fields
 }
 
-func (rec *Record) GetFieldType(fieldname string) (tableschema.FieldType, error) {
+func (rec *Record) GetFieldType(fieldname string) (dbschema.FieldType, error) {
 	fieldType, ok := rec.fieldnameToFieldType[fieldname]
 
 	if !ok {
-		return "", logger.Error("Field does not exist, see "+fieldname, "Record.Set()")
+		return "", logger.Error("Field does not exist, see "+fieldname, "Record.GetFieldType")
 	}
 
 	return fieldType, nil
@@ -101,7 +110,7 @@ func (rec *Record) GetFieldType(fieldname string) (tableschema.FieldType, error)
 func (rec *Record) Set(fieldname string, value string) error {
 	fieldType, ok := rec.fieldnameToFieldType[fieldname]
 	if !ok {
-		return logger.Error("field does not exist, see "+fieldname, "Record.Set()")
+		return logger.Error("field does not exist, see "+fieldname, "Record.Set")
 	}
 
 	rec.userValues.SetFieldValue(fieldname, value, fieldType)
@@ -110,29 +119,48 @@ func (rec *Record) Set(fieldname string, value string) error {
 }
 
 func (rec *Record) Close() error {
-	return rec.crud.Close()
+	if err := rec.crud.Close(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rec *Record) Insert() (string, error) {
-	return rec.crud.Create(rec.tableName, rec.GetMap())
+	var id string
+	var err error
+
+	if id, err = rec.crud.Create(rec.tableName, rec.GetMap()); err != nil {
+		return "", err
+	}
+
+	return id, nil
 }
 
 func (rec *Record) Update() error {
-	pk, err := rec.Get("x_id")
+	id, err := rec.Get("x_id")
 	if err != nil {
 		return err
 	}
 
-	return rec.crud.Update(rec.tableName, pk, rec.GetMap())
+	if err := rec.crud.Update(rec.tableName, id, rec.GetMap()); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rec *Record) Delete() error {
-	pk, err := rec.Get("x_id")
+	id, err := rec.Get("x_id")
 	if err != nil {
 		return err
 	}
 
-	return rec.crud.Delete(rec.tableName, pk)
+	if err := rec.crud.Delete(rec.tableName, id); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rec *Record) Query() (int, error) {
@@ -141,7 +169,12 @@ func (rec *Record) Query() (int, error) {
 		return -1, err
 	}
 
-	return rec.crud.Query(rec.tableName, rec.fields, root, rec.paginationIndex, rec.paginationSize, rec.orderBy, rec.orderByAscending)
+	var count int
+	if count, err = rec.crud.Query(rec.tableName, rec.fields, root, rec.paginationIndex, rec.paginationSize, rec.orderBy, rec.orderByAscending); err != nil {
+		return -1, err
+	}
+
+	return count, err
 }
 
 // Next will return false when no records left.
@@ -149,8 +182,14 @@ func (rec *Record) Next() (bool, error) {
 	rec.userValues = NewRecordMap()
 
 	var err error
+	var temp *RecordMap
 
-	rec.values, err = rec.crud.Next()
+	temp, err = rec.crud.Next()
+	if err != nil {
+		return false, err
+	}
+
+	rec.values = temp
 
 	if rec.values == nil {
 		rec.userValues = nil
@@ -174,35 +213,60 @@ func (rec *Record) Get(field string) (string, error) {
 		return rec.values.GetFieldValue(field)
 	}
 
-	return "", fmt.Errorf("field '%s' does not exist in record", field)
+	return "", logger.Error(fmt.Sprintf("field '%s' does not exist in record", field), "Record.Get")
 }
 
 func (rec *Record) AddPK(id string) error {
-	return rec.filterQuery.Add("x_id", query.Equals, id)
+	if err := rec.filterQuery.Add("x_id", query.Equals, id); err != nil {
+		return logger.Err(err, "Record.AddPK")
+	}
+
+	return nil
 }
 
+//todo validate encoded query
 func (rec *Record) SetEncodedQuery(encodedQuery string) {
 	rec.filterQuery.SetEncodedQuery(encodedQuery)
 }
 
 func (rec *Record) Add(field string, op query.OpType, rhs string) error {
-	return rec.filterQuery.Add(field, op, rhs)
+	if err := rec.filterQuery.Add(field, op, rhs); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rec *Record) AddEq(field string, rhs string) error {
-	return rec.filterQuery.Add(field, query.Equals, rhs)
+	if err := rec.filterQuery.Add(field, query.Equals, rhs); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rec *Record) AddOr(field string, op query.OpType, rhs string) error {
-	return rec.filterQuery.AddOr(field, op, rhs)
+	if err := rec.filterQuery.AddOr(field, op, rhs); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rec *Record) AndGroup() error {
-	return rec.filterQuery.AndGroup()
+	if err := rec.filterQuery.AndGroup(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rec *Record) OrGroup() error {
-	return rec.filterQuery.OrGroup()
+	if err := rec.filterQuery.OrGroup(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (rec *Record) Not() {

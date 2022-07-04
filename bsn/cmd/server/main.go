@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/amortaza/aceql/bsn/rest"
+	"github.com/amortaza/aceql/bsn/scheduler"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -10,8 +11,7 @@ import (
 func main() {
 	stdsql.Init("mysql", "clown:1844@/bsn")
 
-	//debug
-	//scheduler.StartScheduler()
+	scheduler.StartScheduler()
 
 	e := echo.New()
 

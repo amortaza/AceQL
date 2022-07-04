@@ -2,7 +2,6 @@ package rest
 
 import (
 	"encoding/csv"
-	"errors"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/logger"
@@ -17,13 +16,13 @@ func PostCSV(c echo.Context) error {
 	file, err := c.FormFile("myfile")
 	if err != nil {
 		c.JSON(500, err.Error())
-		return logger.Error(err.Error(), "PostCSV")
+		return logger.Err(err, "PostCSV")
 	}
 
 	src, err := file.Open()
 	if err != nil {
 		c.JSON(500, err.Error())
-		return logger.Error(err.Error(), "PostCSV")
+		return logger.Err(err, "PostCSV")
 	}
 
 	defer src.Close()
@@ -44,12 +43,12 @@ func importCSV(table string, src multipart.File) error {
 		if err == io.EOF {
 			return nil
 		}
-		return logger.Error(err.Error(), "Import CSV")
+		return logger.Err(err, "Import CSV")
 	}
 
-	record := stdsql.NewRecord(table)
-	if record == nil {
-		return errors.New("see logs")
+	record, err := stdsql.NewRecord(table)
+	if err != nil {
+		return err
 	}
 
 	defer record.Close()
@@ -60,7 +59,7 @@ func importCSV(table string, src multipart.File) error {
 			if err == io.EOF {
 				break
 			}
-			return logger.Error(err.Error(), "Import CSV")
+			return logger.Err(err, "Import CSV")
 		}
 
 		if err := importRow(record, headers, values); err != nil {

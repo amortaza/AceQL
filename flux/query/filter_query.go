@@ -3,6 +3,7 @@ package query
 import (
 	"fmt"
 	"github.com/amortaza/aceql/flux/node"
+	"github.com/amortaza/aceql/logger"
 )
 
 type FilterQuery struct {
@@ -114,6 +115,7 @@ func (query *FilterQuery) compareStringOp(op OpType) error {
 		err = query.b1.NotContains()
 	} else {
 		err = fmt.Errorf("filterQuery.compareOp does not recognize OpType")
+		logger.Err(err, "???")
 	}
 
 	return err
@@ -254,7 +256,7 @@ func (query *FilterQuery) GetRoot() (node.Node, error) {
 		return query.getRoot()
 	}
 
-	return Parse( query.encodedQuery, query.compiler )
+	return Parse(query.encodedQuery, query.compiler)
 }
 
 func (query *FilterQuery) getRoot() (node.Node, error) {

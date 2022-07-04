@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type Or struct {
@@ -20,7 +21,6 @@ func (orNode *Or) Compile() (string, error) {
 }
 
 func (orNode *Or) Put(kid Node) error {
-
 	if orNode.Left == nil {
 		orNode.Left = kid
 		return nil
@@ -31,5 +31,6 @@ func (orNode *Or) Put(kid Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside an OR node")
+	err := fmt.Errorf("no capacity to Put() a node inside an OR node")
+	return logger.Err(err, "???")
 }

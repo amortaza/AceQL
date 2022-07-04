@@ -1,7 +1,7 @@
 package query
 
 import (
-	"errors"
+	"github.com/amortaza/aceql/logger"
 )
 
 func tokenize(s string) ([]string, error) {
@@ -34,7 +34,7 @@ func tokenize(s string) ([]string, error) {
 				tokens = append(tokens, string(cur))
 				token = ""
 				state = 0
-			} else if cur == '"'{
+			} else if cur == '"' {
 				tokens = append(tokens, token)
 				token = "\""
 				state = 2
@@ -66,7 +66,8 @@ func tokenize(s string) ([]string, error) {
 	}
 
 	if state != 0 && state != 1 && state != 3 {
-		return nil, errors.New("(6) failed to parse encoded query, see ---" + s + "--- tokenize.Parser()")
+		err := logger.Error("(6) failed to parse encoded query, see ---\" + s + \"--- tokenize.Parser()", "???")
+		return nil, err
 	}
 
 	return tokens, nil
@@ -76,5 +77,3 @@ func isUniToken(t rune) bool {
 	result := t == '.' || t == '(' || t == ')'
 	return result
 }
-
-

@@ -2,15 +2,13 @@ package flux
 
 import (
 	"fmt"
-	"github.com/amortaza/aceql/flux/schema_journalist"
-	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/flux/dbschema"
 	"github.com/amortaza/aceql/logger"
 )
 
 //var g_relation_cache = make( map[ string ] *table.Table )
 
-// GetTableSchema will return nil on error
-func GetTableSchema(name string, crud CRUD) *tableschema.Table {
+func GetTableSchema(name string, crud CRUD) (*dbschema.Table, error) {
 	//todo
 	//relation, ok := g_relation_cache[ name ]
 	//
@@ -19,85 +17,85 @@ func GetTableSchema(name string, crud CRUD) *tableschema.Table {
 	//}
 
 	if name == "x_schema" {
-		return schema_journalist.Get_X_SCHEMA_schema()
-		//g_relation_cache[ name ] = schema_journalist.Get_X_SCHEMA_schema()
+		return dbschema.Get_X_SCHEMA_schema(), nil
+		//g_relation_cache[ name ] = dbschema.Get_X_SCHEMA_schema()
 		//return g_relation_cache[ name ]
 	}
 
-	table := tableschema.NewTable(name)
+	table := dbschema.NewTable(name)
 
-	x_schema := GetTableSchema("x_schema", crud)
+	// will never error
+	x_schema, _ := GetTableSchema("x_schema", crud)
 
 	r := NewRecord(x_schema, crud)
-	if r == nil {
-		return nil
+
+	if err := r.AddEq("x_table", name); err != nil {
+		return nil, err
 	}
 
-	r.AddEq("x_table", name)
-	r.AddEq("x_type", "field")
-	_, err := r.Query()
+	if err := r.AddEq("x_type", "field"); err != nil {
+		return nil, err
+	}
 
-	if err != nil {
-		logger.Err(err, logger.SQL)
-		return nil
+	if _, err := r.Query(); err != nil {
+		return nil, err
 	}
 
 	for {
-		ok, err := r.Next()
+		hasNext, err := r.Next()
+
 		if err != nil {
-			logger.Error(err.Error(), logger.SQL)
-			return nil
+			return nil, logger.Err(err, logger.SQL)
 		}
 
-		if !ok {
+		if !hasNext {
 			break
 		}
 
 		if err := addField(r, table); err != nil {
-			logger.Error(err.Error(), logger.SQL)
-			return nil
+			return nil, logger.Err(err, logger.SQL)
 		}
 	}
 
 	//g_relation_cache[ name ] = relation
 
-	return table
+	return table, nil
 }
 
-func addField(r *Record, relation *tableschema.Table) error {
+func addField(r *Record, relation *dbschema.Table) error {
 	fieldtype, err := r.Get("x_field_type")
-	//fmt.Println( "ft " , fieldtype )
+
 	if err != nil {
 		return err
 	}
 
-	if fieldtype == string(tableschema.String) {
+	if fieldtype == string(dbschema.String) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField(field, "TODO", tableschema.String)
+		relation.AddField(field, "TODO", dbschema.String)
 
 		return nil
 
-	} else if fieldtype == string(tableschema.Number) {
+	} else if fieldtype == string(dbschema.Number) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField(field, "TODO", tableschema.Number)
+		relation.AddField(field, "TODO", dbschema.Number)
 
 		return nil
 
-	} else if fieldtype == string(tableschema.Bool) {
+	} else if fieldtype == string(dbschema.Bool) {
 		field, err := r.Get("x_field")
 		if err != nil {
 			return err
 		}
 
-		relation.AddField(field, "TODO", tableschema.Bool)
+		relation.AddField(field, "TODO", dbschema.Bool)
 
 		return nil
 	}

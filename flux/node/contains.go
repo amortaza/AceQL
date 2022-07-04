@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type Contains struct {
@@ -31,7 +32,6 @@ func (contains *Contains) Compile() (string, error) {
 }
 
 func (contains *Contains) Put(kid Node) error {
-
 	if contains.Left == nil {
 		contains.Left = kid
 		return nil
@@ -42,5 +42,6 @@ func (contains *Contains) Put(kid Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside a CONTAINS node")
+	err := fmt.Errorf("no capacity to Put() a node inside a CONTAINS node")
+	return logger.Err(err, "???")
 }

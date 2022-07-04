@@ -14,43 +14,41 @@ func PostRecord(c echo.Context) error {
 
 	if err := c.Bind(m); err != nil {
 		c.JSON(500, err.Error())
-		return logger.Err(err, logger.Main)
+		return logger.Err(err, "???")
 	}
 
-	id := createRecord(name, m)
-
-	if id == "" {
-		return c.JSON(500, "see logs")
+	id, err := createRecord(name, m)
+	if err != nil {
+		c.String(500, err.Error())
+		return err
 	}
 
 	return c.JSON(200, id)
 }
 
-func createRecord(name string, m *echo.Map) string {
+func createRecord(name string, m *echo.Map) (string, error) {
 	crud := stdsql.NewCRUD()
-	tableschema := flux.GetTableSchema(name, crud)
-	if tableschema == nil {
-		return ""
+
+	tableschema, err := flux.GetTableSchema(name, crud)
+	if err != nil {
+		return "", err
 	}
 
 	rec := flux.NewRecord(tableschema, crud)
-	if rec == nil {
-		return ""
-	}
-
 	defer rec.Close()
 
 	for fieldname, value := range *m {
 		valueAsString := value.(string)
 
-		rec.Set(fieldname, valueAsString)
+		if err := rec.Set(fieldname, valueAsString); err != nil {
+			return "", err
+		}
 	}
 
 	id, err := rec.Insert()
 	if err != nil {
-		logger.Err(err, "post_record.createRecord()")
-		return ""
+		return "", err
 	}
 
-	return id
+	return id, nil
 }

@@ -2,9 +2,9 @@ package rest
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/flux/query"
+	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
 	"strconv"
 )
@@ -14,19 +14,22 @@ func GetRecordById(c echo.Context) error {
 	name := c.Param("table")
 	id := c.Param("id")
 
-	r := stdsql.NewRecord(name)
-	if r == nil {
-		return errors.New("see logs")
+	r, err := stdsql.NewRecord(name)
+	if err != nil {
+		c.String(500, err.Error())
+		return err
 	}
 	defer r.Close()
 
 	if err := r.Add("x_id", query.Equals, id); err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return err
 	}
 
 	total, err := r.Query()
 	if err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return err
 	}
 
 	if total == 0 {
@@ -38,12 +41,14 @@ func GetRecordById(c echo.Context) error {
 
 	_, err = r.Next()
 	if err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return err
 	}
 
 	b, err := json.Marshal(r)
 	if err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return logger.Err(err, "???")
 	}
 
 	c.Response().Header().Set("X-Total-Count", strconv.Itoa(total))

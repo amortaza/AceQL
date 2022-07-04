@@ -2,6 +2,7 @@ package query
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 
 	"github.com/amortaza/aceql/flux/node"
 )
@@ -60,7 +61,8 @@ func (builder *chainBuilder) Root() (node.Node, error) {
 
 func (builder *chainBuilder) Column(name string) error {
 	if builder.state != expectLHS {
-		return fmt.Errorf("was not expecting LHS")
+		err := fmt.Errorf("was not expecting LHS")
+		return logger.Err(err, "???")
 	}
 
 	builder.lhs = node.NewColumn(name, builder.nodeCompiler)
@@ -71,7 +73,8 @@ func (builder *chainBuilder) Column(name string) error {
 
 func (builder *chainBuilder) StringValue(value string) error {
 	if builder.state != expectRHS {
-		return fmt.Errorf("was not expecting RHS")
+		err := fmt.Errorf("was not expecting RHS")
+		return logger.Err(err, "???")
 	}
 
 	builder.rhs = node.NewString(value, builder.nodeCompiler)
@@ -82,7 +85,8 @@ func (builder *chainBuilder) StringValue(value string) error {
 
 func (builder *chainBuilder) NumberValue(value float32) error {
 	if builder.state != expectRHS {
-		return fmt.Errorf("was not expecting RHS")
+		err := fmt.Errorf("was not expecting RHS")
+		return logger.Err(err, "???")
 	}
 
 	builder.rhs = node.NewNumber(value, builder.nodeCompiler)
@@ -93,7 +97,8 @@ func (builder *chainBuilder) NumberValue(value float32) error {
 
 func (builder *chainBuilder) Equals() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.Equals()")
+		err := fmt.Errorf("was not expecting Compare operator chainBuilder.Equals()")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewEquals(builder.nodeCompiler)
@@ -104,7 +109,8 @@ func (builder *chainBuilder) Equals() error {
 
 func (builder *chainBuilder) NotEquals() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.NotEquals()")
+		err := fmt.Errorf("was not expecting Compare operator chainBuilder.NotEquals()")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewNotEquals(builder.nodeCompiler)
@@ -115,7 +121,8 @@ func (builder *chainBuilder) NotEquals() error {
 
 func (builder *chainBuilder) LessThan() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.LessThan()")
+		err := fmt.Errorf("was not expecting Compare operator chainBuilder.LessThan()")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewLessThan(builder.nodeCompiler)
@@ -126,7 +133,8 @@ func (builder *chainBuilder) LessThan() error {
 
 func (builder *chainBuilder) LessOrEquals() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.LessThan()")
+		err := fmt.Errorf("was not expecting Compare operator chainBuilder.LessThan()")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewLessOrEquals(builder.nodeCompiler)
@@ -137,7 +145,8 @@ func (builder *chainBuilder) LessOrEquals() error {
 
 func (builder *chainBuilder) GreaterThan() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.GreaterThan()")
+		err := fmt.Errorf("was not expecting Compare operator chainBuilder.GreaterThan()")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewGreaterThan(builder.nodeCompiler)
@@ -148,7 +157,8 @@ func (builder *chainBuilder) GreaterThan() error {
 
 func (builder *chainBuilder) GreaterOrEquals() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.GreaterOrEquals()")
+		err := fmt.Errorf("was not expecting Compare operator chainBuilder.GreaterOrEquals()")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewGreaterOrEquals(builder.nodeCompiler)
@@ -159,7 +169,8 @@ func (builder *chainBuilder) GreaterOrEquals() error {
 
 func (builder *chainBuilder) StartsWith() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.StartsWith()")
+		err := fmt.Errorf("was not expecting Compare operator chainBuilder.StartsWith()")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewStartsWith(builder.nodeCompiler)
@@ -170,7 +181,8 @@ func (builder *chainBuilder) StartsWith() error {
 
 func (builder *chainBuilder) NotStartsWith() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator chainBuilder.NotStartsWith()")
+		err := fmt.Errorf("was not expecting Compare operator chainBuilder.NotStartsWith()")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewNotStartsWith(builder.nodeCompiler)
@@ -181,7 +193,8 @@ func (builder *chainBuilder) NotStartsWith() error {
 
 func (builder *chainBuilder) EndsWith() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator")
+		err := fmt.Errorf("was not expecting Compare operator")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewEndsWith(builder.nodeCompiler)
@@ -192,7 +205,8 @@ func (builder *chainBuilder) EndsWith() error {
 
 func (builder *chainBuilder) NotEndsWith() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator")
+		err := fmt.Errorf("was not expecting Compare operator")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewNotEndsWith(builder.nodeCompiler)
@@ -203,7 +217,8 @@ func (builder *chainBuilder) NotEndsWith() error {
 
 func (builder *chainBuilder) Contains() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator")
+		err := fmt.Errorf("was not expecting Compare operator")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewContains(builder.nodeCompiler)
@@ -214,7 +229,8 @@ func (builder *chainBuilder) Contains() error {
 
 func (builder *chainBuilder) NotContains() error {
 	if builder.state != expectCompareOperator {
-		return fmt.Errorf("was not expecting Compare operator")
+		err := fmt.Errorf("was not expecting Compare operator")
+		return logger.Err(err, "???")
 	}
 
 	builder.tailCompareOperator = node.NewNotContains(builder.nodeCompiler)
@@ -282,7 +298,8 @@ func (builder *chainBuilder) closeCompare() error {
 
 func (builder *chainBuilder) And() error {
 	if builder.state != expectBooleanOperator {
-		return fmt.Errorf("was not expecting Boolean operator in chainBuilder.And()")
+		err := fmt.Errorf("was not expecting Boolean operator in chainBuilder.And()")
+		return logger.Err(err, "???")
 	}
 
 	and := node.NewAnd(builder.nodeCompiler)
@@ -309,7 +326,8 @@ func (builder *chainBuilder) And() error {
 
 func (builder *chainBuilder) Or() error {
 	if builder.state != expectBooleanOperator {
-		return fmt.Errorf("was not expecting Boolean operator in chainBuilder.Or()")
+		err := fmt.Errorf("was not expecting Boolean operator in chainBuilder.Or()")
+		return logger.Err(err, "???")
 	}
 
 	or := node.NewOr(builder.nodeCompiler)

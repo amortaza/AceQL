@@ -2,10 +2,11 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type GreaterThan struct {
-	Left    Node
+	Left     Node
 	Right    Node
 	OrEquals bool
 
@@ -31,7 +32,6 @@ func (greaterThan *GreaterThan) Compile() (string, error) {
 }
 
 func (greaterThan *GreaterThan) Put(kid Node) error {
-
 	if greaterThan.Left == nil {
 		greaterThan.Left = kid
 		return nil
@@ -42,5 +42,6 @@ func (greaterThan *GreaterThan) Put(kid Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside a GREATHER THAN node")
+	err := fmt.Errorf("no capacity to Put() a node inside a GREATHER THAN node")
+	return logger.Err(err, "???")
 }

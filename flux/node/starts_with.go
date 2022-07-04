@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type StartsWith struct {
@@ -31,7 +32,6 @@ func (startsWith *StartsWith) Compile() (string, error) {
 }
 
 func (startsWith *StartsWith) Put(kid Node) error {
-
 	if startsWith.Left == nil {
 		startsWith.Left = kid
 		return nil
@@ -42,5 +42,6 @@ func (startsWith *StartsWith) Put(kid Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside a STARTS WITH node")
+	err := fmt.Errorf("no capacity to Put() a node inside a STARTS WITH node")
+	return logger.Err(err, "???")
 }

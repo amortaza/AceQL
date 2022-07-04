@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"errors"
 	"github.com/amortaza/aceql/bsn/cache"
 	"github.com/amortaza/aceql/bsn/grpcclient"
 	"github.com/amortaza/aceql/flux"
@@ -33,16 +32,13 @@ func PutRecord(c echo.Context) error {
 
 func updateRecord(name string, id string, m *echo.Map) error {
 	crud := stdsql.NewCRUD()
-	relation := flux.GetTableSchema(name, crud)
-	if relation == nil {
-		return errors.New("see logs")
+
+	tableschema, err := flux.GetTableSchema(name, crud)
+	if err != nil {
+		return err
 	}
 
-	rec := flux.NewRecord(relation, crud)
-	if rec == nil {
-		return errors.New("see logs")
-	}
-
+	rec := flux.NewRecord(tableschema, crud)
 	defer rec.Close()
 
 	if err := rec.AddPK(id); err != nil {
@@ -65,7 +61,7 @@ func updateRecord(name string, id string, m *echo.Map) error {
 	for fieldname, value := range *m {
 		// for now assume everything is string
 		if err := rec.Set(fieldname, value.(string)); err != nil {
-			continue
+			return err
 		}
 
 		// todo make front end aware of field types
@@ -85,9 +81,9 @@ func updateRecord(name string, id string, m *echo.Map) error {
 func onAfterUpdate(rec *flux.Record) error {
 	grpcMap := rec.GetMapGRPC()
 
-	scriptnames := cache.GetOnAfterUpdate_ScriptNames(rec.GetTable())
-	if scriptnames == nil {
-		return errors.New("see logs")
+	scriptnames, err := cache.GetOnAfterUpdate_ScriptNames(rec.GetTable())
+	if err != nil {
+		return err
 	}
 
 	for _, script := range scriptnames {

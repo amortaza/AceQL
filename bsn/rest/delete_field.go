@@ -18,13 +18,12 @@ func DeleteSchemaField(c echo.Context) error {
 	}
 
 	schema := stdsql.NewSchema()
+	defer schema.Close()
 
 	if err := schema.DeleteField(table, fieldName); err != nil {
 		c.JSON(500, err.Error())
-		return logger.Err(err, logger.REST)
+		return err
 	}
-
-	schema.Close()
 
 	return c.JSON(200, "")
 }

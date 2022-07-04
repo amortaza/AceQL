@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type In struct {
@@ -28,7 +29,6 @@ func (inNode *In) Compile() (string, error) {
 }
 
 func (inNode *In) Put(kid Node) error {
-
 	if inNode.Left == nil {
 		inNode.Left = kid
 		return nil
@@ -39,5 +39,6 @@ func (inNode *In) Put(kid Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside an IN node")
+	err := fmt.Errorf("no capacity to Put() a node inside an IN node")
+	return logger.Err(err, "???")
 }

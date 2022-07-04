@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type Equals struct {
@@ -38,5 +39,6 @@ func (equal *Equals) Put(kid Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside an EQUALS node")
+	err := fmt.Errorf("no capacity to Put() a node inside an EQUALS node")
+	return logger.Err(err, "???")
 }

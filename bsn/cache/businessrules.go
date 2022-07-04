@@ -8,39 +8,53 @@ import (
 //todo: if gliderecord query is referencing a column that does not exist, do a nice comment and exit
 //todo: if gliderecord Get is referencing a column that does not exist, do a nice comment and exit
 
-var gOnAfterUpdateScriptNames = make(map[string][]string)
+var gCache_onAfterUpdateScriptNames = make(map[string][]string)
 
 func ClearAll() {
-	gOnAfterUpdateScriptNames = make(map[string][]string)
+	gCache_onAfterUpdateScriptNames = make(map[string][]string)
 }
 
-func GetOnAfterUpdate_ScriptNames(tablename string) []string {
-	if _, ok := gOnAfterUpdateScriptNames[tablename]; !ok {
+func GetOnAfterUpdate_ScriptNames(tablename string) ([]string, error) {
+	if _, ok := gCache_onAfterUpdateScriptNames[tablename]; !ok {
 		names := make([]string, 0)
 
-		gr := stdsql.NewRecord("x_business_rule")
-		if gr == nil {
-			return nil
+		gr, err := stdsql.NewRecord("x_business_rule")
+		if err != nil {
+			return nil, err
 		}
 
-		gr.Add("x_table_name", query.Equals, tablename)
-		gr.Query()
+		if err := gr.Add("x_table_name", query.Equals, tablename); err != nil {
+			return nil, err
+		}
+
+		if _, err := gr.Query(); err != nil {
+			return nil, err
+		}
 
 		for {
-			hasNext, _ := gr.Next()
+			hasNext, err := gr.Next()
+
+			if err != nil {
+				return nil, err
+			}
+
 			if !hasNext {
 				break
 			}
 
-			name, _ := gr.Get("x_script_name")
+			name, err := gr.Get("x_script_name")
+			if err != nil {
+				return nil, err
+			}
+
 			names = append(names, name)
 		}
 
-		gOnAfterUpdateScriptNames[tablename] = names
+		gCache_onAfterUpdateScriptNames[tablename] = names
 	}
 
-	if val, ok := gOnAfterUpdateScriptNames[tablename]; ok {
-		return val
+	if val, ok := gCache_onAfterUpdateScriptNames[tablename]; ok {
+		return val, nil
 	}
 
 	panic("This can't happen in cache")

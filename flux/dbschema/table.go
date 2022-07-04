@@ -1,4 +1,4 @@
-package tableschema
+package dbschema
 
 import (
 	"fmt"
@@ -46,11 +46,11 @@ func (table *Table) AddField(name string, label string, fieldtype FieldType) {
 	table.fields = append(table.fields, field)
 }
 
-func (table *Table) GetField(fieldname string) *Field {
+func (table *Table) GetField(fieldname string) (*Field, error) {
 	v, ok := table.fieldByName[fieldname]
 	if !ok {
-		logger.Error(fmt.Sprintf("field not found, see \"%s\"", fieldname), "table.GetField")
+		return nil, logger.Error(fmt.Sprintf("field not found, see \"%s\"", fieldname), "table.GetField")
 	}
 
-	return v
+	return v, nil
 }

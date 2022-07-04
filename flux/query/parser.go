@@ -54,7 +54,6 @@ func Parse(encodedQuery string, compiler node.Compiler) (node.Node, error) {
 
 		} else if stack.top.IsRightEmpty() {
 			stack.top.SetRightText(token)
-
 		}
 	}
 
@@ -103,7 +102,8 @@ func collapse(top *LRNode) (*LRNode, error) {
 	}
 
 	if newTop.HasRight() {
-		return nil, errors.New("expected new top to be empty when collapsing")
+		err := logger.Error("expected new top to be empty when collapsing", "???")
+		return nil, err
 	}
 
 	newTop.rightLRNode = top
@@ -115,7 +115,8 @@ func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
 	if lrnode.ops == "" {
 		if lrnode.HasLeft() {
 			if lrnode.leftLRNode == nil {
-				return nil, errors.New("when ops is empty and there is a left node, it MUST be a node")
+				err := logger.Error("when ops is empty and there is a left node, it MUST be a node", "???")
+				return nil, err
 			}
 			return lrNodeToNode(lrnode.leftLRNode, compiler)
 		}
@@ -123,14 +124,16 @@ func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
 	}
 
 	if lrnode.IsLeftEmpty() {
-		return nil, errors.New("(lrNodeToNode 1) left of LRNode cannot be empty when ops is not empty")
+		err := logger.Error("(lrNodeToNode 1) left of LRNode cannot be empty when ops is not empty", "???")
+		return nil, err
 	}
 
 	if lrnode.IsRightEmpty() {
 		// if right is empty, then left MUST be a node - it cannot be a text because "a" is not
 		// an expression requires an ops - like "a = 5"
 		if lrnode.leftLRNode == nil {
-			return nil, errors.New("(lrNodeToNode 2) left of LRNode MUST be a node, if right is empty")
+			err := logger.Error("(lrNodeToNode 2) left of LRNode MUST be a node, if right is empty", "???")
+			return nil, err
 		}
 		return lrNodeToNode(lrnode.leftLRNode, compiler)
 	}
@@ -163,8 +166,8 @@ func lrNodeToNode(lrnode *LRNode, compiler node.Compiler) (node.Node, error) {
 			if err == nil {
 				parent.Put(node.NewNumber(float32(numberValue), compiler))
 			} else {
-				logger.Log("Dont know how to handle \""+lrnode.rightText+"\"", "Parser")
-				return nil, errors.New("parser issue")
+				err := logger.Error("Dont know how to handle \""+lrnode.rightText+"\" in parser", "???")
+				return nil, err
 			}
 		}
 	} else {

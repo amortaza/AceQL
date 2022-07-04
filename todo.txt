@@ -5,6 +5,6 @@ lookupRecords is duplicated
 record.Initialize()
 add "upload" to the list views
 add "upload" to the form views
-//todo add created on
-//todo what happens when script does not exist
-// todo make front end aware of field types
+add created on
+what happens when script does not exist
+make front end aware of field types

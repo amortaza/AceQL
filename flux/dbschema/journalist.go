@@ -1,13 +1,9 @@
-package schema_journalist
-
-import (
-	"github.com/amortaza/aceql/flux/tableschema"
-)
+package dbschema
 
 type Journalist interface {
 	CreateTable(tableName string, tableLabel string) error
 	DeleteTable(tableName string) error
 
-	CreateField(tableName string, field *tableschema.Field) error
+	CreateField(tableName string, field *Field) error
 	DeleteField(tableName string, fieldname string) error
 }

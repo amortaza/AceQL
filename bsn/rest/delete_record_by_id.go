@@ -11,32 +11,34 @@ func DeleteRecordById(c echo.Context) error {
 	tablename := c.Param("table")
 	id := c.Param("id")
 
-	r := stdsql.NewRecord(tablename)
-	if r == nil {
-		return c.String(500, "see logs")
+	r, err := stdsql.NewRecord(tablename)
+	if err != nil {
+		c.String(500, err.Error())
+		return err
 	}
+	defer r.Close()
 
 	if err := r.Add("x_id", query.Equals, id); err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return err
 	}
 
 	if _, err := r.Query(); err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return err
 	}
 
 	ok, err := r.Next()
 	if err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return err
 	}
 
 	if ok {
 		if err := r.Delete(); err != nil {
-			return c.String(500, err.Error())
+			c.String(500, err.Error())
+			return err
 		}
-	}
-
-	if err := r.Close(); err != nil {
-		return c.String(500, err.Error())
 	}
 
 	return c.String(200, "")

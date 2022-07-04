@@ -2,11 +2,12 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type IsNull struct {
 	ColumnNode *Column
-	Not bool
+	Not        bool
 
 	nodeCompiler Compiler
 }
@@ -31,5 +32,6 @@ func (isNull *IsNull) Compile() (string, error) {
 }
 
 func (isNull *IsNull) Put(kid Node) error {
-	return fmt.Errorf("no capacity to Put() a node inside an IS NULL node")
+	err := fmt.Errorf("no capacity to Put() a node inside an IS NULL node")
+	return logger.Err(err, "???")
 }

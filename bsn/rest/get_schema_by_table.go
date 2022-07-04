@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"errors"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/flux/query"
@@ -13,16 +12,20 @@ import (
 func GetSchemaByTable(c echo.Context) error {
 	table := c.Param("table")
 
-	r := stdsql.NewRecord("x_schema")
-	if r == nil {
-		return errors.New("see logs")
+	r, err := stdsql.NewRecord("x_schema")
+	if err != nil {
+		c.String(500, err.Error())
+		return nil
 	}
+	defer r.Close()
 
 	if err := r.Add("x_table", query.Equals, table); err != nil {
+		c.String(500, err.Error())
 		return err
 	}
 
 	if _, err := r.Query(); err != nil {
+		c.String(500, err.Error())
 		return err
 	}
 
@@ -31,6 +34,7 @@ func GetSchemaByTable(c echo.Context) error {
 	for {
 		hasNext, err := r.Next()
 		if err != nil {
+			c.String(500, err.Error())
 			return err
 		}
 
@@ -39,10 +43,6 @@ func GetSchemaByTable(c echo.Context) error {
 		}
 
 		list = append(list, r.GetMap())
-	}
-
-	if err := r.Close(); err != nil {
-		return err
 	}
 
 	size := strconv.Itoa(len(list))

@@ -6,8 +6,8 @@ import (
 	"github.com/amortaza/aceql/flux-drivers/stdsql/row_querier"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_generator"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_runner"
+	"github.com/amortaza/aceql/flux/dbschema"
 	"github.com/amortaza/aceql/flux/node"
-	"github.com/amortaza/aceql/flux/tableschema"
 	"github.com/amortaza/aceql/flux/utils"
 )
 
@@ -36,7 +36,7 @@ func (crud *CRUD) Compiler() node.Compiler {
 	return crud.compiler
 }
 
-func (crud *CRUD) Query(table string, fields []*tableschema.Field, root node.Node,
+func (crud *CRUD) Query(table string, fields []*dbschema.Field, root node.Node,
 	paginationIndex int, paginationSize int,
 	orderBy string, orderByAscending bool) (int, error) {
 
@@ -55,7 +55,11 @@ func (crud *CRUD) Create(table string, values *flux.RecordMap) (string, error) {
 
 	newId := utils.NewUUID()
 
-	sql := sqlGenerator.GenerateInsertSQL(table, newId, values)
+	var sql string
+	var err error
+	if sql, err = sqlGenerator.GenerateInsertSQL(table, newId, values); err != nil {
+		return "invalid sql", err
+	}
 
 	return newId, crud.sqlRunner.Run(sql)
 }
@@ -95,7 +99,7 @@ func (crud *CRUD) DeleteTable(name string) error {
 	return crud.sqlRunner.Run(sql)
 }
 
-func (crud *CRUD) CreateField(tablename string, field *tableschema.Field) error {
+func (crud *CRUD) CreateField(tablename string, field *dbschema.Field) error {
 	sqlGenerator := sql_generator.NewFieldCreate_SqlGenerator()
 
 	sql, err := sqlGenerator.GenerateCreateFieldSQL(tablename, field)

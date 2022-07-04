@@ -2,7 +2,6 @@ package rest
 
 import (
 	"encoding/csv"
-	"errors"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/logger"
@@ -13,16 +12,17 @@ import (
 func GetRecordsByQuery_CSV(c echo.Context) error {
 	r, err := lookupRecords(c)
 	if err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return err
 	}
 	defer r.Close()
 
 	total, err := r.Query()
 	if err != nil {
-		return c.String(500, err.Error())
+		c.String(500, err.Error())
+		return err
 	}
 
-	//
 	name := c.Param("table")
 
 	c.Response().Header().Set("Content-Type", "text-csv")
@@ -37,13 +37,16 @@ func GetRecordsByQuery_CSV(c echo.Context) error {
 	writer := csv.NewWriter(c.Response())
 	defer writer.Flush()
 
-	writeRecords(writer, r)
+	if err := writeRecords(writer, r); err != nil {
+		return err
+	}
 
 	return nil
 }
 
 func writeRecords(writer *csv.Writer, r *flux.Record) error {
 	hasNext, err := r.Next()
+
 	if err != nil {
 		return err
 	}
@@ -64,6 +67,7 @@ func writeRecords(writer *csv.Writer, r *flux.Record) error {
 
 	for {
 		hasNext, err := r.Next()
+
 		if err != nil {
 			return err
 		}
@@ -89,7 +93,7 @@ func writeHeader(writer *csv.Writer, r *flux.Record) ([]string, error) {
 	}
 
 	if err := writer.Write(keys); err != nil {
-		return nil, logger.Error(err.Error(), "CSV Export")
+		return nil, logger.Err(err, "CSV Export")
 	}
 
 	return keys, nil
@@ -98,13 +102,18 @@ func writeHeader(writer *csv.Writer, r *flux.Record) ([]string, error) {
 func writeRecord(writer *csv.Writer, r *flux.Record, keys []string) error {
 	values := make([]string, 0)
 
+	var v string
+	var err error
+
 	for _, key := range keys {
-		v, _ := r.Get(key)
+		if v, err = r.Get(key); err != nil {
+			return err
+		}
 		values = append(values, v)
 	}
 
 	if err := writer.Write(values); err != nil {
-		return logger.Error(err.Error(), "CSV Export")
+		return logger.Err(err, "CSV Export")
 	}
 
 	return nil
@@ -133,9 +142,9 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 		paginationSize = "100"
 	}
 
-	r := stdsql.NewRecord(name)
-	if r == nil {
-		return nil, errors.New("see logs")
+	r, err := stdsql.NewRecord(name)
+	if err != nil {
+		return nil, err
 	}
 
 	if encodedQuery != "" {
@@ -144,12 +153,12 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 
 	index, err := strconv.Atoi(paginationIndex)
 	if err != nil {
-		return nil, logger.Error(err.Error(), "CSV Export")
+		return nil, logger.Err(err, "CSV Export")
 	}
 
 	size, err := strconv.Atoi(paginationSize)
 	if err != nil {
-		return nil, logger.Error(err.Error(), "CSV Export")
+		return nil, logger.Err(err, "CSV Export")
 	}
 
 	r.Pagination(index, size)

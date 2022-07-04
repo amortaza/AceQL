@@ -3,6 +3,7 @@ package sql_generator
 import (
 	"fmt"
 	"github.com/amortaza/aceql/flux"
+	"github.com/amortaza/aceql/logger"
 )
 
 type RowUpdate_SqlGenerator struct{}
@@ -49,6 +50,16 @@ func writeFieldUpdateSQL(fieldname string, recordmap *flux.RecordMap) (string, e
 		return "", err
 	}
 
+	isNumber, err := recordmap.IsFieldNumber(fieldname)
+	if err != nil {
+		return "", err
+	}
+
+	isBool, err := recordmap.IsFieldBool(fieldname)
+	if err != nil {
+		return "", err
+	}
+
 	valueAsString, err = recordmap.GetFieldValue(fieldname)
 	if err != nil {
 		return "", err
@@ -58,8 +69,14 @@ func writeFieldUpdateSQL(fieldname string, recordmap *flux.RecordMap) (string, e
 		// todo valueAsString should be encoded
 		sql = fmt.Sprintf("`%s` = '%s'", fieldname, valueAsString)
 
-	} else {
+	} else if isNumber {
 		sql = fmt.Sprintf("`%s` = %s", fieldname, valueAsString)
+
+	} else if isBool {
+		sql = fmt.Sprintf("`%s` = %s", fieldname, valueAsString)
+
+	} else {
+		return "invalid sql", logger.Error("unrecognized type, cant even see it", "???")
 	}
 
 	return sql, nil

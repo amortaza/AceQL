@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type Bool struct {
@@ -23,5 +24,6 @@ func (b *Bool) Compile() (string, error) {
 }
 
 func (b *Bool) Put(kid Node) error {
-	return fmt.Errorf("no capacity to Put() a node inside a BOOL node")
+	err := fmt.Errorf("no capacity to Put() a node inside a BOOL node")
+	return logger.Err(err, "???")
 }

@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type StringList struct {
@@ -22,5 +23,6 @@ func (stringList *StringList) Compile() (string, error) {
 }
 
 func (stringList *StringList) Put(kid Node) error {
-	return fmt.Errorf("no capacity to Put() a node inside a LIST OF STRINGS node")
+	err := fmt.Errorf("no capacity to Put() a node inside a LIST OF STRINGS node")
+	return logger.Err(err, "???")
 }

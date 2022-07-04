@@ -13,7 +13,6 @@ const (
 	ERROR               = "ERROR"
 	GRPC                = "GRPC"
 	JsonEncoding        = "JSON-ENCODING"
-	Main                = "Main"
 	REST                = "REST"
 	SQL                 = "SQL"
 )

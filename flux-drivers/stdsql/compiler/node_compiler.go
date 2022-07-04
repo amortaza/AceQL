@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 	"strconv"
 
 	"github.com/amortaza/aceql/flux/node"
@@ -15,17 +16,17 @@ func NewNodeCompiler() *nodeCompiler {
 
 func (compiler *nodeCompiler) AndCompile(and *node.And) (string, error) {
 	if and.Left == nil || and.Right == nil {
-		return "", fmt.Errorf("both the left and right of an AND expression must have a value")
+		return "", logger.Error("both the left and right of an AND expression must have a value", "compiler.AndCompile")
 	}
 
 	leftSQL, err1 := and.Left.Compile()
 	if err1 != nil {
-		return "", err1
+		return "", logger.Err(err1, "compiler.AndCompile")
 	}
 
 	rightSQL, err2 := and.Right.Compile()
 	if err2 != nil {
-		return "", err2
+		return "", logger.Err(err2, "compiler.AndCompile")
 	}
 
 	return "( " + leftSQL + " AND " + rightSQL + " )", nil
@@ -33,7 +34,7 @@ func (compiler *nodeCompiler) AndCompile(and *node.And) (string, error) {
 
 func (compiler *nodeCompiler) ColumnCompile(column *node.Column) (string, error) {
 	if column.Name == "" {
-		return "", fmt.Errorf("column name cannot be blank")
+		return "", logger.Error("column name cannot be blank", "compiler.ColumnCompile")
 	}
 
 	return column.Name, nil
@@ -41,17 +42,17 @@ func (compiler *nodeCompiler) ColumnCompile(column *node.Column) (string, error)
 
 func (compiler *nodeCompiler) ContainsCompile(contains *node.Contains) (string, error) {
 	if contains.Left == nil || contains.Right == nil {
-		return "", fmt.Errorf("both left and right sides of a CONTAINS expression must have values")
+		return "", logger.Error("both left and right sides of a CONTAINS expression must have values", "compiler.ContainsCompile")
 	}
 
 	leftSQL, err1 := contains.Left.Compile()
 	if err1 != nil {
-		return "", err1
+		return "", logger.Err(err1, "compiler.ContainsCompile")
 	}
 
 	rightSQL, err2 := contains.Right.Compile()
 	if err2 != nil {
-		return "", err1
+		return "", logger.Err(err2, "compiler.ContainsCompile")
 	}
 
 	not := ""
@@ -70,17 +71,17 @@ func (compiler *nodeCompiler) ContainsCompile(contains *node.Contains) (string, 
 
 func (compiler *nodeCompiler) EndsWithCompile(endsWith *node.EndsWith) (string, error) {
 	if endsWith.Left == nil || endsWith.Right == nil {
-		return "", fmt.Errorf("both left and right sides of an ENDS WITH expression must have values")
+		return "", logger.Error("both left and right sides of an ENDS WITH expression must have values", "compiler.EndsWithCompile")
 	}
 
 	leftSQL, err1 := endsWith.Left.Compile()
 	if err1 != nil {
-		return "", err1
+		return "", logger.Err(err1, "compiler.EndsWithCompile")
 	}
 
 	rightSQL, err2 := endsWith.Right.Compile()
 	if err2 != nil {
-		return "", err2
+		return "", logger.Err(err2, "compiler.EndsWithCompile")
 	}
 
 	not := ""
@@ -99,17 +100,17 @@ func (compiler *nodeCompiler) EndsWithCompile(endsWith *node.EndsWith) (string, 
 
 func (compiler *nodeCompiler) EqualCompile(equal *node.Equals) (string, error) {
 	if equal.Left == nil || equal.Right == nil {
-		return "", fmt.Errorf("both left and right sides of an EQUAL expression must have values")
+		return "", logger.Error("both left and right sides of an EQUAL expression must have values", "compiler.EqualCompile")
 	}
 
 	leftSQL, err1 := equal.Left.Compile()
 	if err1 != nil {
-		return "", err1
+		return "", logger.Err(err1, "compiler.EqualCompile")
 	}
 
 	rightSQL, err2 := equal.Right.Compile()
 	if err2 != nil {
-		return "", err1
+		return "", logger.Err(err2, "compiler.EqualCompile")
 	}
 
 	if equal.Not {
@@ -121,17 +122,17 @@ func (compiler *nodeCompiler) EqualCompile(equal *node.Equals) (string, error) {
 
 func (compiler *nodeCompiler) GreaterThanCompile(greaterThan *node.GreaterThan) (string, error) {
 	if greaterThan.Left == nil || greaterThan.Right == nil {
-		return "", fmt.Errorf("both left and right sides of a GREATER THAN expression must have values")
+		return "", logger.Error("both left and right sides of a GREATER THAN expression must have values", "compiler.GreaterThanCompile")
 	}
 
 	leftSQL, err1 := greaterThan.Left.Compile()
 	if err1 != nil {
-		return "", err1
+		return "", logger.Err(err1, "compiler.GreaterThanCompile")
 	}
 
 	rightSQL, err2 := greaterThan.Right.Compile()
 	if err2 != nil {
-		return "", err1
+		return "", logger.Err(err2, "compiler.GreaterThanCompile")
 	}
 
 	op := " > "
@@ -145,17 +146,17 @@ func (compiler *nodeCompiler) GreaterThanCompile(greaterThan *node.GreaterThan) 
 
 func (compiler *nodeCompiler) InCompile(inNode *node.In) (string, error) {
 	if inNode.Left == nil || inNode.Right == nil {
-		return "", fmt.Errorf("both left and right sides of an IN expression must have values")
+		return "", logger.Error("both left and right sides of an IN expression must have values", "compiler.InCompile")
 	}
 
 	leftSQL, err1 := inNode.Left.Compile()
 	if err1 != nil {
-		return "", err1
+		return "", logger.Err(err1, "compiler.InCompile")
 	}
 
 	rightSQL, err2 := inNode.Right.Compile()
 	if err2 != nil {
-		return "", err1
+		return "", logger.Err(err2, "compiler.InCompile")
 	}
 
 	if inNode.Not {
@@ -168,7 +169,7 @@ func (compiler *nodeCompiler) InCompile(inNode *node.In) (string, error) {
 func (compiler *nodeCompiler) IsNullCompile(isNull *node.IsNull) (string, error) {
 	sql, err := isNull.ColumnNode.Compile()
 	if err != nil {
-		return "", err
+		return "", logger.Err(err, "compiler.IsNullCompile")
 	}
 
 	if isNull.Not {
@@ -180,7 +181,7 @@ func (compiler *nodeCompiler) IsNullCompile(isNull *node.IsNull) (string, error)
 
 func (compiler *nodeCompiler) LessThanCompile(lessThan *node.LessThan) (string, error) {
 	if lessThan.Left == nil || lessThan.Right == nil {
-		return "", fmt.Errorf("both left and right sides of a LESS THAN expression must have values")
+		return "", logger.Error("both left and right sides of a LESS THAN expression must have values", "compiler.LessThanCompile")
 	}
 
 	leftSQL, err1 := lessThan.Left.Compile()
@@ -204,11 +205,10 @@ func (compiler *nodeCompiler) LessThanCompile(lessThan *node.LessThan) (string, 
 
 func (compiler *nodeCompiler) NotCompile(notNode *node.Not) (string, error) {
 	if notNode.Left == nil {
-		return "", fmt.Errorf("left side of a NOT expression must have a value")
+		return "", logger.Error("left side of a NOT expression must have a value", "compiler.NotCompile")
 	}
 
 	leftSQL, err := notNode.Left.Compile()
-
 	if err != nil {
 		return "", err
 	}
@@ -218,7 +218,7 @@ func (compiler *nodeCompiler) NotCompile(notNode *node.Not) (string, error) {
 
 func (compiler *nodeCompiler) NumberCompile(number *node.Number) (string, error) {
 	if number.Text == "" {
-		return "", fmt.Errorf("number literal cannot be blank")
+		return "", logger.Error("number literal cannot be blank", "compiler.NumberCompile")
 	}
 
 	return number.Text, nil
@@ -245,7 +245,7 @@ func (compiler *nodeCompiler) NumberListCompile(numberList *node.NumberList) (st
 
 func (compiler *nodeCompiler) OrCompile(orNode *node.Or) (string, error) {
 	if orNode.Left == nil || orNode.Right == nil {
-		return "", fmt.Errorf("both left and right sides of an OR expression must have values")
+		return "", logger.Error("both left and right sides of an OR expression must have values", "compiler.OrCompile")
 	}
 
 	leftSQL, err1 := orNode.Left.Compile()
@@ -263,7 +263,7 @@ func (compiler *nodeCompiler) OrCompile(orNode *node.Or) (string, error) {
 
 func (compiler *nodeCompiler) StartsWithCompile(startsWith *node.StartsWith) (string, error) {
 	if startsWith.Left == nil || startsWith.Right == nil {
-		return "", fmt.Errorf("both left and right sides of a STARTS WITH expression must have values")
+		return "", logger.Error("both left and right sides of a STARTS WITH expression must have values", "compiler.StartsWithCompile")
 	}
 
 	leftSQL, err1 := startsWith.Left.Compile()
@@ -291,6 +291,7 @@ func (compiler *nodeCompiler) StartsWithCompile(startsWith *node.StartsWith) (st
 }
 
 func (compiler *nodeCompiler) StringCompile(stringNode *node.String) (string, error) {
+	//todo escape it
 	return "'" + stringNode.Text + "'", nil
 }
 
@@ -300,7 +301,6 @@ func (compiler *nodeCompiler) StringListCompile(stringList *node.StringList) (st
 	last := len(stringList.Strings) - 1
 
 	for i, s := range stringList.Strings {
-
 		if i == last {
 			sql += fmt.Sprintf("'%v'", s)
 		} else {

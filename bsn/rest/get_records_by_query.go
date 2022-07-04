@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"errors"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/logger"
@@ -35,11 +34,13 @@ func GetRecordsByQuery(c echo.Context) error {
 
 	crud := stdsql.NewCRUD()
 
-	r := flux.NewRecord(flux.GetTableSchema(name, crud), crud)
-	if r == nil {
-		return errors.New("see logs")
+	tableschema, err := flux.GetTableSchema(name, crud)
+	if err != nil {
+		c.String(500, err.Error())
+		return err
 	}
 
+	r := flux.NewRecord(tableschema, crud)
 	defer r.Close()
 
 	if encodedQuery != "" {
@@ -48,12 +49,14 @@ func GetRecordsByQuery(c echo.Context) error {
 
 	index, err := strconv.Atoi(paginationIndex)
 	if err != nil {
-		return err
+		c.String(500, err.Error())
+		return logger.Err(err, "???")
 	}
 
 	size, err := strconv.Atoi(paginationSize)
 	if err != nil {
-		return err
+		c.String(500, err.Error())
+		return logger.Err(err, "???")
 	}
 
 	r.Pagination(index, size)
@@ -66,13 +69,19 @@ func GetRecordsByQuery(c echo.Context) error {
 
 	total, err := r.Query()
 	if err != nil {
+		c.String(500, err.Error())
 		return err
 	}
 
 	list := make([]*flux.RecordMap, 0)
 
 	for {
-		hasNext, _ := r.Next()
+		hasNext, err := r.Next()
+
+		if err != nil {
+			c.String(500, err.Error())
+			return err
+		}
 
 		if !hasNext {
 			break

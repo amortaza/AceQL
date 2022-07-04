@@ -4,13 +4,13 @@ import (
 	"github.com/amortaza/aceql/flux"
 )
 
-func NewRecord(tableName string) *flux.Record {
+func NewRecord(tableName string) (*flux.Record, error) {
 	crud := NewCRUD()
 
-	tableSchema := flux.GetTableSchema(tableName, crud)
-	if tableSchema == nil {
-		return nil
+	tableschema, err := flux.GetTableSchema(tableName, crud)
+	if err != nil {
+		return nil, err
 	}
 
-	return flux.NewRecord(tableSchema, crud)
+	return flux.NewRecord(tableschema, crud), nil
 }

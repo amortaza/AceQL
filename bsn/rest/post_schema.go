@@ -1,9 +1,8 @@
 package rest
 
 import (
-	"errors"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/flux/dbschema"
 	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
 )
@@ -22,20 +21,18 @@ func PostSchemaTable(c echo.Context) error {
 	fields := (*m)["fields"].([]interface{})
 	tableLabel := (*m)["label"].(string)
 
-	relation := makeTableSchema(tableName, tableLabel, fields)
-	if relation == nil {
-		c.JSON(500, "see logs")
-		return errors.New("see logs")
-	}
-
-	schema := stdsql.NewSchema()
-
-	if err := schema.CreateRelation_withFields(relation, true); err != nil {
+	var tableschema *dbschema.Table
+	var err error
+	tableschema, err = makeTableSchema(tableName, tableLabel, fields)
+	if err != nil {
 		c.JSON(500, err.Error())
 		return err
 	}
 
-	if err := schema.Close(); err != nil {
+	schema := stdsql.NewSchema()
+	defer schema.Close()
+
+	if err := schema.CreateRelation_withFields(tableschema, true); err != nil {
 		c.JSON(500, err.Error())
 		return err
 	}
@@ -43,12 +40,12 @@ func PostSchemaTable(c echo.Context) error {
 	return c.JSON(200, "")
 }
 
-func makeTableSchema(tableName string, tableLabel string, fields []interface{}) *tableschema.Table {
-	relation := tableschema.NewTable(tableName)
+func makeTableSchema(tableName string, tableLabel string, fields []interface{}) (*dbschema.Table, error) {
+	relation := dbschema.NewTable(tableName)
 
 	relation.SetLabel(tableLabel)
 
-	relation.AddField("x_id", "ID", tableschema.String)
+	relation.AddField("x_id", "ID", dbschema.String)
 
 	for _, v := range fields {
 		m := v.(map[string]interface{})
@@ -56,14 +53,13 @@ func makeTableSchema(tableName string, tableLabel string, fields []interface{}) 
 		fieldName := m["field"].(string)
 		fieldLabel := m["label"].(string)
 
-		fieldType, err := tableschema.GetFieldTypeByName(m["type"].(string))
+		fieldType, err := dbschema.GetFieldTypeByName(m["type"].(string))
 		if err != nil {
-			logger.Err(err, "REST:makeTableSchema()")
-			continue
+			return nil, err
 		}
 
 		relation.AddField(fieldName, fieldLabel, fieldType)
 	}
 
-	return relation
+	return relation, nil
 }

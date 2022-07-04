@@ -1,31 +1,31 @@
 package flux
 
 import (
-	"github.com/amortaza/aceql/flux/tableschema"
+	"github.com/amortaza/aceql/flux/dbschema"
 )
 
 type TypedValue struct {
-	fieldType tableschema.FieldType
+	fieldType dbschema.FieldType
 	value     string
 }
 
-func NewTypedValue(value string, fieldType tableschema.FieldType) *TypedValue {
+func NewTypedValue(value string, fieldType dbschema.FieldType) *TypedValue {
 	return &TypedValue{value: value, fieldType: fieldType}
 }
 
 func (t *TypedValue) IsString() bool {
-	return t.fieldType == tableschema.String
+	return t.fieldType == dbschema.String
 }
 
 func (t *TypedValue) IsNumber() bool {
-	return t.fieldType == tableschema.Number
+	return t.fieldType == dbschema.Number
 }
 
 func (t *TypedValue) IsBool() bool {
-	return t.fieldType == tableschema.Bool
+	return t.fieldType == dbschema.Bool
 }
 
-func (t *TypedValue) SetValue(value string, fieldType tableschema.FieldType) {
+func (t *TypedValue) SetValue(value string, fieldType dbschema.FieldType) {
 	t.fieldType = fieldType
 	t.value = value
 }

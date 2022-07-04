@@ -2,7 +2,6 @@ package sql_runner
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/amortaza/aceql/logger"
 	"sync"
 	"time"
@@ -38,6 +37,9 @@ func (runner *SqlRunner) Run(sql string) error {
 	logger.Log(sql, "SQL:SqlRunner.Run()")
 
 	_, err := runner.db.Exec(sql)
+	if err != nil {
+		return logger.Err(err, "SqlRunner.Run")
+	}
 
 	return err
 }
@@ -47,7 +49,7 @@ func (runner *SqlRunner) Query(sql string) (*sql.Rows, error) {
 	defer lock.Unlock()
 
 	if err := runner.ping(); err != nil {
-		return nil, err
+		return nil, logger.Err(err, "SqlRunner.Query")
 	}
 
 	logger.Log(sql, "SQL:SqlRunner.Query()")
@@ -61,7 +63,7 @@ func (runner *SqlRunner) ping() error {
 
 		runner.db, err = sql.Open(runner.driverName, runner.dataSourceName)
 		if err != nil {
-			return fmt.Errorf("%v", err)
+			return logger.Err(err, "SqlRunner.ping")
 		}
 
 		runner.lastPing = time.Now()
@@ -76,6 +78,9 @@ func (runner *SqlRunner) ping() error {
 	runner.lastPing = time.Now()
 
 	err := runner.db.Ping()
+	if err != nil {
+		return logger.Err(err, "SqlRunner.ping")
+	}
 
-	return err
+	return nil
 }

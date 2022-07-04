@@ -1,4 +1,4 @@
-package tableschema
+package dbschema
 
 type Field struct {
 	Name  string

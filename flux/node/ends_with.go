@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type EndsWith struct {
@@ -31,7 +32,6 @@ func (endsWith *EndsWith) Compile() (string, error) {
 }
 
 func (endsWith *EndsWith) Put(kid Node) error {
-
 	if endsWith.Left == nil {
 		endsWith.Left = kid
 		return nil
@@ -42,5 +42,6 @@ func (endsWith *EndsWith) Put(kid Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside an ENDS WITH node")
+	err := fmt.Errorf("no capacity to Put() a node inside an ENDS WITH node")
+	return logger.Err(err, "???")
 }

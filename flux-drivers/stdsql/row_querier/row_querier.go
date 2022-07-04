@@ -2,26 +2,25 @@ package row_querier
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/compiler"
 	"github.com/amortaza/aceql/flux-drivers/stdsql/sql_runner"
+	"github.com/amortaza/aceql/flux/dbschema"
 	"github.com/amortaza/aceql/flux/node"
-	"github.com/amortaza/aceql/flux/tableschema"
 	"github.com/amortaza/aceql/logger"
 	"strconv"
 )
 
 type RowQuerier struct {
 	rows   *sql.Rows
-	fields []*tableschema.Field
+	fields []*dbschema.Field
 
 	sqlRunner      *sql_runner.SqlRunner
 	selectCompiler *compiler.SelectCompiler
 }
 
-func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, tableName string, fields []*tableschema.Field, root node.Node) *RowQuerier {
-	columns := tableschema.FieldsToNames(fields)
+func NewRowQuerier(sqlRunner *sql_runner.SqlRunner, tableName string, fields []*dbschema.Field, root node.Node) *RowQuerier {
+	columns := dbschema.FieldsToNames(fields)
 	selectCompiler := compiler.NewSelectCompiler(tableName, columns, root)
 
 	return &RowQuerier{
@@ -43,7 +42,7 @@ func (query *RowQuerier) Close() error {
 		logger.Log("Closing DB Connection - successful", "RowQuerier.Close()")
 	} else {
 		logger.Log("Closing DB Connection - UNSUCCESSFUL", "RowQuerier.Close()")
-		logger.Error(err.Error(), logger.ERROR)
+		logger.Err(err, logger.ERROR)
 	}
 
 	return err
@@ -52,30 +51,29 @@ func (query *RowQuerier) Close() error {
 func (query *RowQuerier) Query(paginationIndex int, paginationSize int, orderBy string, orderByAscending bool) (int, error) {
 	sqlstr, sqlstr_forCount, err := query.selectCompiler.Compile(paginationIndex, paginationSize, orderBy, orderByAscending)
 	if err != nil {
-		return -1, fmt.Errorf("%v", err)
+		return -1, err
 	}
 
-	//logger.Log( sqlstr, "SQL:RowQuerier.Query()" )
+	logger.Log(sqlstr, "SQL:RowQuerier.Query()")
 
 	query.rows, err = query.sqlRunner.Query(sqlstr)
 	if err != nil {
-		return -1, fmt.Errorf("%v", err)
+		return -1, err
 	}
 
 	rowcount, err2 := query.sqlRunner.Query(sqlstr_forCount)
 	if err2 != nil {
-		return -1, fmt.Errorf("%v", err2)
+		return -1, err2
 	}
+
+	defer rowcount.Close()
 
 	rowcount.Next()
 
 	count, err3 := readTotal(rowcount)
 	if err3 != nil {
-		return -1, fmt.Errorf("%v", err3)
+		return -1, err3
 	}
-
-	//debug logger.Log( "Closing DB Connection for COUNT(1)", "SQL:RowQuerier.Query()" )
-	rowcount.Close()
 
 	return count, nil
 }
@@ -94,16 +92,14 @@ func readTotal(rows *sql.Rows) (int, error) {
 	columnPointers[0] = &columns[0]
 
 	if err := rows.Scan(columnPointers...); err != nil {
-		logger.Error(err.Error(), "readTotal() could not scan")
-		return -1, err
+		return -1, logger.Err(err, "readTotal() could not scan")
 	}
 
 	value := columns[0]
 
 	total, err := strconv.ParseInt(value, 10, 32)
 	if err != nil {
-		logger.Error(err.Error(), "readTotal() could not parse answer")
-		return -1, err
+		return -1, logger.Err(err, "readTotal() could not parse answer")
 	}
 
 	return int(total), nil
@@ -125,7 +121,7 @@ func (query *RowQuerier) Next() (*flux.RecordMap, error) {
 	}
 
 	if err := query.rows.Scan(columnPointers...); err != nil {
-		return nil, logger.Error(err.Error(), "RowQuerier.Next() rows.Scan")
+		return nil, logger.Err(err, "RowQuerier.Next() rows.Scan")
 	}
 
 	valuesRecordMap := flux.NewRecordMap()

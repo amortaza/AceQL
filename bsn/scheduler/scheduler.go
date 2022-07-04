@@ -18,8 +18,8 @@ func StartScheduler() {
 		for {
 			time.Sleep(CADENCE_SECONDS * time.Second)
 
-			r := stdsql.NewRecord("x_jobs")
-			if r == nil {
+			r, err := stdsql.NewRecord("x_jobs")
+			if err != nil {
 				logger.Log("Stopping Scheduler, see logs", "Scheduler")
 				return
 			}
@@ -36,7 +36,9 @@ func StartScheduler() {
 
 			for {
 				hasNext, err := r.Next()
+
 				if err != nil {
+					logger.Log("Stopping Scheduler. r.Next(), see logs", "Scheduler")
 					break
 				}
 
@@ -46,7 +48,8 @@ func StartScheduler() {
 
 				at, err := atCadence(r)
 				if err != nil {
-					continue
+					logger.Log("Stopping Scheduler. atCadence(), see logs", "Scheduler")
+					break
 				}
 
 				if !at {
@@ -55,14 +58,17 @@ func StartScheduler() {
 
 				v, err := r.Get("x_script_name")
 				if err != nil {
+					logger.Log("Stopping Scheduler. r.Get(script_name), see logs", "Scheduler")
 					break
 				}
 
 				if err := grpcclient.GRPC_CallScript(v); err != nil {
+					logger.Err(err, "???")
 					continue
 				}
 
 				if err := setLastRun(r); err != nil {
+					logger.Err(err, "???")
 					continue
 				}
 			}

@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type Not struct {
@@ -19,11 +20,11 @@ func (notNode *Not) Compile() (string, error) {
 }
 
 func (notNode *Not) Put(kid Node) error {
-
 	if notNode.Left == nil {
 		notNode.Left = kid
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside a NOT node")
+	err := fmt.Errorf("no capacity to Put() a node inside a NOT node")
+	return logger.Err(err, "???")
 }

@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/logger"
 )
 
 type And struct {
@@ -20,7 +21,6 @@ func (and *And) Compile() (string, error) {
 }
 
 func (and *And) Put(kid Node) error {
-
 	if and.Left == nil {
 		and.Left = kid
 		return nil
@@ -31,5 +31,7 @@ func (and *And) Put(kid Node) error {
 		return nil
 	}
 
-	return fmt.Errorf("no capacity to Put() a node inside an AND node")
+	err := fmt.Errorf("no capacity to Put() a node inside an AND node")
+
+	return logger.Err(err, "???")
 }

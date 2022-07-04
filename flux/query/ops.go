@@ -1,18 +1,18 @@
 package query
 
 import (
-	"errors"
 	"github.com/amortaza/aceql/flux/node"
+	"github.com/amortaza/aceql/logger"
 	"strings"
 )
 
 type OpType string
 
 const (
-	Equals         OpType = "Equals"
-	NotEquals      OpType = "NotEquals"
-	LessThan     OpType = "LessThan"
-	LessOrEquals OpType = "LessOrEquals"
+	Equals          OpType = "Equals"
+	NotEquals       OpType = "NotEquals"
+	LessThan        OpType = "LessThan"
+	LessOrEquals    OpType = "LessOrEquals"
 	GreaterThan     OpType = "GreaterThan"
 	GreaterOrEquals OpType = "GreaterOrEquals"
 
@@ -25,28 +25,26 @@ const (
 )
 
 // IsEncodedOps : Ops is Equals, EncodedOps is =
-func IsEncodedOps( s string ) bool {
+func IsEncodedOps(s string) bool {
 	s = strings.ToLower(s)
 
 	return s == "=" ||
-		   s == "!=" ||
-		s == "<"  ||
-		s == "<="  ||
-		s == ">"  ||
-		s == ">="  ||
-
-		s == strings.ToLower(string(Equals))  ||
-		s == strings.ToLower(string(NotEquals))  ||
-		s == strings.ToLower(string(LessThan))  ||
-		s == strings.ToLower(string(LessOrEquals))  ||
-		s == strings.ToLower(string(GreaterThan))  ||
-		s == strings.ToLower(string(GreaterOrEquals))  ||
-
-		s == strings.ToLower(string(StartsWith))  ||
-		s == strings.ToLower(string(NotStartsWith))  ||
-		s == strings.ToLower(string(EndsWith))  ||
-		s == strings.ToLower(string(NotEndsWith))  ||
-		s == strings.ToLower(string(Contains))  ||
+		s == "!=" ||
+		s == "<" ||
+		s == "<=" ||
+		s == ">" ||
+		s == ">=" ||
+		s == strings.ToLower(string(Equals)) ||
+		s == strings.ToLower(string(NotEquals)) ||
+		s == strings.ToLower(string(LessThan)) ||
+		s == strings.ToLower(string(LessOrEquals)) ||
+		s == strings.ToLower(string(GreaterThan)) ||
+		s == strings.ToLower(string(GreaterOrEquals)) ||
+		s == strings.ToLower(string(StartsWith)) ||
+		s == strings.ToLower(string(NotStartsWith)) ||
+		s == strings.ToLower(string(EndsWith)) ||
+		s == strings.ToLower(string(NotEndsWith)) ||
+		s == strings.ToLower(string(Contains)) ||
 		s == strings.ToLower(string(NotContains))
 }
 
@@ -57,13 +55,13 @@ func EncodedOpToNode(op string, compiler node.Compiler) (node.Node, error) {
 		return node.NewEquals(compiler), nil
 	} else if op == "!=" || op == "notequals" {
 		return node.NewNotEquals(compiler), nil
-	} else if op == "<"  || op == "lessthan" {
+	} else if op == "<" || op == "lessthan" {
 		return node.NewLessThan(compiler), nil
-	} else if op == "<="  || op == "lessorequals"{
+	} else if op == "<=" || op == "lessorequals" {
 		return node.NewLessOrEquals(compiler), nil
-	} else if op == ">"  || op == "greaterthan"{
+	} else if op == ">" || op == "greaterthan" {
 		return node.NewGreaterThan(compiler), nil
-	} else if op == ">="  || op == "greaterorequals"{
+	} else if op == ">=" || op == "greaterorequals" {
 		return node.NewGreaterOrEquals(compiler), nil
 	} else if op == "startswith" {
 		return node.NewStartsWith(compiler), nil
@@ -83,5 +81,6 @@ func EncodedOpToNode(op string, compiler node.Compiler) (node.Node, error) {
 		return node.NewOr(compiler), nil
 	}
 
-	return nil, errors.New("EncodedOpToNode() does not recognize ---" + op + "---")
+	err := logger.Error("EncodedOpToNode() does not recognize ---"+op+"---", "???")
+	return nil, err
 }

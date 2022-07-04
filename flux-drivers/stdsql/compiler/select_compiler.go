@@ -7,9 +7,9 @@ import (
 )
 
 type SelectCompiler struct {
-	From  string
+	From    string
 	Columns []string
-	Where node.Node
+	Where   node.Node
 }
 
 func NewSelectCompiler(table string, columns []string, where node.Node) *SelectCompiler {
@@ -23,16 +23,15 @@ func NewSelectCompiler(table string, columns []string, where node.Node) *SelectC
 }
 
 func (s *SelectCompiler) Compile(paginationIndex int, paginationSize int, orderBy string, orderByAscending bool) (string, string, error) {
-
 	q := "SELECT "
 
 	if len(s.Columns) == 0 {
 		q += "* "
 	} else {
-		q += strings.Join( s.Columns[:],", ")
+		q += strings.Join(s.Columns[:], ", ")
 	}
 
-	q +=  " FROM " + s.From
+	q += " FROM " + s.From
 
 	queryUsedForCount := "SELECT COUNT(1) AS total FROM " + s.From
 
