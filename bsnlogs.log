@@ -1,0 +1,16 @@
+2022-07-04 02:04:18	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-04 02:04:18	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-04 02:04:18	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+2022-07-04 02:04:18	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-04 02:04:18	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-04 02:04:18	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+2022-07-04 02:04:18	error	GRPC	Response from Server: >>>>>>>>>>>>>>>>>>>>>> Job getting called at Mon Jul 04 2022 02:04:18 GMT-0700 (Mountain Standard Time)
+2022-07-04 02:04:18	error	???	Response from Server: >>>>>>>>>>>>>>>>>>>>>> Job getting called at Mon Jul 04 2022 02:04:18 GMT-0700 (Mountain Standard Time)
+2022-07-04 02:04:33	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-04 02:04:33	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-04 02:04:33	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+2022-07-04 02:04:33	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-04 02:04:33	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-04 02:04:33	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+2022-07-04 02:04:33	error	GRPC	Response from Server: >>>>>>>>>>>>>>>>>>>>>> Job getting called at Mon Jul 04 2022 02:04:33 GMT-0700 (Mountain Standard Time)
+2022-07-04 02:04:33	error	???	Response from Server: >>>>>>>>>>>>>>>>>>>>>> Job getting called at Mon Jul 04 2022 02:04:33 GMT-0700 (Mountain Standard Time)

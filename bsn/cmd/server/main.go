@@ -11,6 +11,7 @@ import (
 func main() {
 	stdsql.Init("mysql", "clown:1844@/bsn")
 
+	//debug
 	scheduler.StartScheduler()
 
 	e := echo.New()

@@ -3,7 +3,6 @@ package logger
 import (
 	"errors"
 	"fmt"
-	"time"
 )
 
 type Source string
@@ -17,8 +16,23 @@ const (
 	SQL                 = "SQL"
 )
 
+var g_logfile *Logfile
+
+func init() {
+	fmt.Println("initializing bsnlogs.log")
+
+	var err error
+	g_logfile, err = NewLogfile("bsnlogs.log")
+	if err != nil {
+		fmt.Println("***** ( ERROR ) could not initialize bsnlogs.log, see " + err.Error())
+	} else {
+		fmt.Println("successfully initialized bsnlogs.log")
+	}
+}
+
 func Log(msg string, source Source) {
-	fmt.Println(time.Now().Format(time.Kitchen), " (", source, ")", msg)
+	// fmt.Println(/*time.Now().Format(time.Kitchen),*/ "(", source, ")", msg)
+	g_logfile.Write("info", string(source), msg)
 }
 func Err(err error, source Source) error {
 	Error(err.Error(), source)
@@ -27,8 +41,9 @@ func Err(err error, source Source) error {
 
 func Error(msg string, source Source) error {
 	fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	fmt.Println( /*time.Now().Format(time.Kitchen), */ "***** ( ERROR )", source, msg)
 
-	fmt.Println(time.Now().Format(time.Kitchen), " ***** ( ERROR ) ", source, msg)
+	g_logfile.Write("error", string(source), msg)
 
 	return errors.New(msg)
 }
