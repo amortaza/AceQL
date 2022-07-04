@@ -16,6 +16,9 @@ func main() {
 
 	e := echo.New()
 
+	e.HideBanner = true
+	e.HidePort = true
+
 	e.Use(middleware.CORS())
 
 	// get
