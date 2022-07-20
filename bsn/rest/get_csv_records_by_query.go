@@ -124,7 +124,7 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 	encodedQuery := c.QueryParam("query")
 
 	if encodedQuery != "" {
-		logger.Log("query: "+encodedQuery, "CSV Export")
+		logger.Info("query: "+encodedQuery, "CSV Export")
 	}
 
 	orderByAscending := true

@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+// on the command-line: protoc --go_out=./grpc_hook --go_opt=paths=source_relative --go-grpc_out=./grpc_hook --go-grpc_opt=paths=source_relative grpc_hook.proto
+
+option go_package = "github.com/amortaza/aceql/bsn/grpc_hook";
+
+package grpc_hook;
+
+// --------------------------------
+// Import Set
+// --------------------------------
+
+message ImportSetRequest {
+    string adapter = 1;
+    int32 page = 2;
+    int32 pagesize = 3;
+}
+
+message Row {
+    repeated string values = 1;
+}
+
+message ImportSetResponse {
+    repeated string schema = 1;
+    repeated Row rows = 2;
+}
+
+// --------------------------------
+// script call
+// --------------------------------
+
+message ScriptRequest {
+    string scriptPath = 1;
+    map<string,string> params = 2;
+}
+
+message ScriptResponse {
+    map<string,string> answer = 1;
+}
+
+service HookService {
+    rpc OnScriptCall(ScriptRequest) returns (ScriptResponse) {}
+    rpc OnImportSet(ImportSetRequest) returns (ImportSetResponse) {}
+}

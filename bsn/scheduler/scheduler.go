@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-	"github.com/amortaza/aceql/bsn/grpcclient"
+	"github.com/amortaza/aceql/bsn/grpc_client"
 	bsntime "github.com/amortaza/aceql/bsn/time"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
@@ -20,17 +20,17 @@ func StartScheduler() {
 
 			r, err := stdsql.NewRecord("x_jobs")
 			if err != nil {
-				logger.Log("Stopping Scheduler, see logs", "Scheduler")
+				logger.Info("Stopping Scheduler, see logs", "Scheduler")
 				return
 			}
 
 			if err := r.Add("x_active", query.Equals, "true"); err != nil {
-				logger.Log("Stopping Scheduler, see logs", "Scheduler")
+				logger.Info("Stopping Scheduler, see logs", "Scheduler")
 				return
 			}
 
 			if _, err := r.Query(); err != nil {
-				logger.Log("Stopping Scheduler, see logs", "Scheduler")
+				logger.Info("Stopping Scheduler, see logs", "Scheduler")
 				return
 			}
 
@@ -38,7 +38,7 @@ func StartScheduler() {
 				hasNext, err := r.Next()
 
 				if err != nil {
-					logger.Log("Stopping Scheduler. r.Next(), see logs", "Scheduler")
+					logger.Info("Stopping Scheduler. r.Next(), see logs", "Scheduler")
 					break
 				}
 
@@ -48,7 +48,7 @@ func StartScheduler() {
 
 				at, err := atCadence(r)
 				if err != nil {
-					logger.Log("Stopping Scheduler. atCadence(), see logs", "Scheduler")
+					logger.Info("Stopping Scheduler. atCadence(), see logs", "Scheduler")
 					break
 				}
 
@@ -58,11 +58,11 @@ func StartScheduler() {
 
 				v, err := r.Get("x_script_name")
 				if err != nil {
-					logger.Log("Stopping Scheduler. r.Get(script_name), see logs", "Scheduler")
+					logger.Info("Stopping Scheduler. r.Get(script_name), see logs", "Scheduler")
 					break
 				}
 
-				if err := grpcclient.GRPC_CallScript(v); err != nil {
+				if err := grpc_client.GRPC_CallScript("../js/scheduled_jobs", v, nil); err != nil {
 					logger.Err(err, "???")
 					continue
 				}

@@ -1,0 +1,4 @@
+in bsn folder, next to hook.proto
+protoc --go_out=./hook --go_opt=paths=source_relative --go-grpc_out=./hook --go-grpc_opt=paths=source_relative hook.proto
+
+protoc --go_out=./grpc_hook --go_opt=paths=source_relative --go-grpc_out=./grpc_hook --go-grpc_opt=paths=source_relative grpc_hook.proto

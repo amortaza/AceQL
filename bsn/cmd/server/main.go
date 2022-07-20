@@ -44,6 +44,9 @@ func main() {
 	// upload CSV
 	e.POST("/csv/:table", rest.PostCSV)
 
+	// importset
+	e.POST("/importset/:adapter", rest.ImportSet)
+
 	// get CSV
 	e.GET("/csv/:table", rest.GetRecordsByQuery_CSV)
 

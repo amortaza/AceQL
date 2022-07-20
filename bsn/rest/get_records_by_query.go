@@ -14,7 +14,7 @@ func GetRecordsByQuery(c echo.Context) error {
 	encodedQuery := c.QueryParam("query")
 
 	if encodedQuery != "" {
-		logger.Log("query: "+encodedQuery, "REST:GetRecordsByQuery()")
+		logger.Info("query: "+encodedQuery, "REST:GetRecordsByQuery()")
 	}
 
 	orderByAscending := true

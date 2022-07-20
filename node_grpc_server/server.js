@@ -1,4 +1,4 @@
-var PROTO_PATH = __dirname + '/../bsn/hook.proto';
+var PROTO_PATH = __dirname + '/../bsn/grpc_hook.proto';
 
 var grpc = require('@grpc/grpc-js');
 
@@ -15,18 +15,18 @@ var packageDefinition = protoLoader.loadSync( PROTO_PATH, options );
 var hook_proto = grpc.loadPackageDefinition(packageDefinition).hook;
 
 // Implements the RPC method.
-function onRecordUpdate(call, callback) {
+function onScriptCall(call, callback) {
     try {
-        var scriptName = call.request.name;
+        var scriptPath = call.request.scriptPath;
         var params = call.request.params;
-        var path = "../businessrules/" + scriptName + ".js";
+        var ctx = call.request.ctx;
 
-        delete require.cache[require.resolve(path)]
+        delete require.cache[require.resolve(scriptPath)]
         
-        var script = require(path)
-        var result = script(params)
+        var script = require(scriptPath)
+        var scriptResult = script( ctx, params )
 
-        callback(null, {result: result});
+        callback(null, scriptResult);
     } catch ( e ) {
         console.log('****************** error: ' + e )
         callback(null, {result: 'there was an error'});
@@ -36,7 +36,7 @@ function onRecordUpdate(call, callback) {
 function main() {
   var server = new grpc.Server();
 
-  server.addService(hook_proto.HookService.service, {onRecordUpdate: onRecordUpdate} );
+  server.addService(hook_proto.HookService.service, {onScriptCall: onScriptCall} );
 
   server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
       console.log('Starting Server...')

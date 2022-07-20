@@ -14,7 +14,7 @@ func DeleteSchemaField(c echo.Context) error {
 
 	if err := c.Bind(m); err != nil {
 		c.JSON(500, err.Error())
-		return logger.Err(err, logger.REST)
+		return logger.Err(err, "REST")
 	}
 
 	schema := stdsql.NewSchema()

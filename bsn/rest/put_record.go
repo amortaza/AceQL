@@ -1,8 +1,6 @@
 package rest
 
 import (
-	"github.com/amortaza/aceql/bsn/cache"
-	"github.com/amortaza/aceql/bsn/grpcclient"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/logger"
@@ -79,18 +77,21 @@ func updateRecord(name string, id string, m *echo.Map) error {
 }
 
 func onAfterUpdate(rec *flux.Record) error {
-	grpcMap := rec.GetMapGRPC()
+	// todo undo
+	logger.Error("onAfterUpdate is commented out", "???")
 
-	scriptnames, err := cache.GetOnAfterUpdate_ScriptNames(rec.GetTable())
-	if err != nil {
-		return err
-	}
+	//grpcMap := rec.GetMapGRPC()
+	//
+	//scriptnames, err := cache.GetOnAfterUpdate_ScriptNames(rec.GetTable())
+	//if err != nil {
+	//	return err
+	//}
 
-	for _, script := range scriptnames {
-		if err := grpcclient.GRPC_OnRecordUpdate(script, grpcMap); err != nil {
-			return err
-		}
-	}
+	//for _, script := range scriptnames {
+	//if err := grpcclient.GRPC_OnRecordUpdate(script, grpcMap); err != nil {
+	//	return err
+	//}
+	//}
 
 	return nil
 }
