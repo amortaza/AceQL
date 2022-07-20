@@ -58,7 +58,7 @@ func (recmap *RecordMap) MarshalJSON() ([]byte, error) {
 		return nil, logger.Err(err, "RecordMap.MarshalJSON")
 	}
 
-	logger.Log(string(buffer.Bytes()), logger.JsonEncoding)
+	logger.Info(string(buffer.Bytes()), "JSON-ENCODING")
 
 	return buffer.Bytes(), nil
 }

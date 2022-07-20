@@ -39,10 +39,10 @@ func (query *RowQuerier) Close() error {
 	err := query.rows.Close()
 
 	if err == nil {
-		logger.Log("Closing DB Connection - successful", "RowQuerier.Close()")
+		logger.Info("Closing DB Connection - successful", "RowQuerier.Close()")
 	} else {
-		logger.Log("Closing DB Connection - UNSUCCESSFUL", "RowQuerier.Close()")
-		logger.Err(err, logger.ERROR)
+		logger.Info("Closing DB Connection - UNSUCCESSFUL", "RowQuerier.Close()")
+		logger.Err(err, "RowQuerier.Close()")
 	}
 
 	return err
@@ -54,7 +54,7 @@ func (query *RowQuerier) Query(paginationIndex int, paginationSize int, orderBy 
 		return -1, err
 	}
 
-	logger.Log(sqlstr, "SQL:RowQuerier.Query()")
+	logger.Info(sqlstr, "SQL:RowQuerier.Query()")
 
 	query.rows, err = query.sqlRunner.Query(sqlstr)
 	if err != nil {

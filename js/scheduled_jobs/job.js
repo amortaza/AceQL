@@ -1,3 +1,3 @@
 module.exports = function (params) {
-    return ">>>>>>>>>>>>>>>>>>>>>> Job getting called at " + new Date();
+    return {result: ">>>>>>>>>>>>>>>>>>>>>> Job getting called at " + new Date() + " " + JSON.stringify(params)};
 }

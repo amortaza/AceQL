@@ -3,47 +3,32 @@ package logger
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
-type Source string
+func Info(msg string, source string) {
+	entry := formatLog("info", string(source), msg)
 
-const (
-	Bootstrap    Source = "Bootstrap"
-	ERROR               = "ERROR"
-	GRPC                = "GRPC"
-	JsonEncoding        = "JSON-ENCODING"
-	REST                = "REST"
-	SQL                 = "SQL"
-)
-
-var g_logfile *Logfile
-
-func init() {
-	fmt.Println("initializing bsnlogs.log")
-
-	var err error
-	g_logfile, err = NewLogfile("bsnlogs.log")
-	if err != nil {
-		fmt.Println("***** ( ERROR ) could not initialize bsnlogs.log, see " + err.Error())
-	} else {
-		fmt.Println("successfully initialized bsnlogs.log")
-	}
+	fmt.Println(entry)
 }
 
-func Log(msg string, source Source) {
-	// fmt.Println(/*time.Now().Format(time.Kitchen),*/ "(", source, ")", msg)
-	g_logfile.Write("info", string(source), msg)
-}
-func Err(err error, source Source) error {
+func Err(err error, source string) error {
 	Error(err.Error(), source)
 	return err
 }
 
-func Error(msg string, source Source) error {
-	fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-	fmt.Println( /*time.Now().Format(time.Kitchen), */ "***** ( ERROR )", source, msg)
+func Error(msg string, source string) error {
+	entry := formatLog("error", string(source), msg)
 
-	g_logfile.Write("error", string(source), msg)
+	fmt.Println(entry)
 
 	return errors.New(msg)
+}
+
+func formatLog(entrytype, source, msg string) string {
+	timestr := time.Now().Format("2006-01-02 15:04:05")
+
+	entry := fmt.Sprintf("%s\t%s\t%s\t%s\n", timestr, entrytype, source, msg)
+
+	return entry
 }

@@ -45,7 +45,7 @@ func GetTableSchema(name string, crud CRUD) (*dbschema.Table, error) {
 		hasNext, err := r.Next()
 
 		if err != nil {
-			return nil, logger.Err(err, logger.SQL)
+			return nil, logger.Err(err, "SQL")
 		}
 
 		if !hasNext {
@@ -53,7 +53,7 @@ func GetTableSchema(name string, crud CRUD) (*dbschema.Table, error) {
 		}
 
 		if err := addField(r, table); err != nil {
-			return nil, logger.Err(err, logger.SQL)
+			return nil, logger.Err(err, "SQL")
 		}
 	}
 

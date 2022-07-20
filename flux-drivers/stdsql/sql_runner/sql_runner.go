@@ -34,7 +34,7 @@ func (runner *SqlRunner) Run(sql string) error {
 		return err
 	}
 
-	logger.Log(sql, "SQL:SqlRunner.Run()")
+	logger.Info(sql, "SQL:SqlRunner.Run()")
 
 	_, err := runner.db.Exec(sql)
 	if err != nil {
@@ -52,7 +52,7 @@ func (runner *SqlRunner) Query(sql string) (*sql.Rows, error) {
 		return nil, logger.Err(err, "SqlRunner.Query")
 	}
 
-	logger.Log(sql, "SQL:SqlRunner.Query()")
+	logger.Info(sql, "SQL:SqlRunner.Query()")
 
 	return runner.db.Query(sql)
 }

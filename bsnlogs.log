@@ -1,16 +1,74 @@
-2022-07-04 02:04:18	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
-2022-07-04 02:04:18	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
-2022-07-04 02:04:18	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
-2022-07-04 02:04:18	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
-2022-07-04 02:04:18	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
-2022-07-04 02:04:18	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
-2022-07-04 02:04:18	error	GRPC	Response from Server: >>>>>>>>>>>>>>>>>>>>>> Job getting called at Mon Jul 04 2022 02:04:18 GMT-0700 (Mountain Standard Time)
-2022-07-04 02:04:18	error	???	Response from Server: >>>>>>>>>>>>>>>>>>>>>> Job getting called at Mon Jul 04 2022 02:04:18 GMT-0700 (Mountain Standard Time)
-2022-07-04 02:04:33	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
-2022-07-04 02:04:33	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
-2022-07-04 02:04:33	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
-2022-07-04 02:04:33	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
-2022-07-04 02:04:33	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
-2022-07-04 02:04:33	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
-2022-07-04 02:04:33	error	GRPC	Response from Server: >>>>>>>>>>>>>>>>>>>>>> Job getting called at Mon Jul 04 2022 02:04:33 GMT-0700 (Mountain Standard Time)
-2022-07-04 02:04:33	error	???	Response from Server: >>>>>>>>>>>>>>>>>>>>>> Job getting called at Mon Jul 04 2022 02:04:33 GMT-0700 (Mountain Standard Time)
+2022-07-19 23:53:00	info	GRPC	ImportSet Schema: 3
+
+2022-07-19 23:53:00	info	GRPC	ImportSet Rows: 2
+
+2022-07-19 23:53:00	info	GRPC	Schema: 0 u_firstname
+
+2022-07-19 23:53:00	info	GRPC	Schema: 1 u_lastname
+
+2022-07-19 23:53:00	info	GRPC	Schema: 2 u_dob
+
+2022-07-19 23:53:00	info	GRPC	ImportSet Rows: 0 [David Nia 01-01-1990]
+
+2022-07-19 23:53:00	info	GRPC	ImportSet Rows: 1 [Tom Morrison 02-02-1992]
+
+2022-07-19 23:53:10	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:53:10	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:53:10	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-19 23:53:10	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:53:10	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:53:10	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-19 23:53:25	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:53:25	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:53:25	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-19 23:53:25	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:53:25	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:53:25	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-19 23:53:40	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:53:40	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:53:40	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-19 23:53:40	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:53:40	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:53:40	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-19 23:53:55	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:53:55	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:53:55	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-19 23:53:55	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:53:55	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:53:55	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-19 23:54:10	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:54:10	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-19 23:54:10	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-19 23:54:10	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:54:10	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-19 23:54:10	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
