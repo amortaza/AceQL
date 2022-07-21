@@ -3,6 +3,8 @@ package grpc_client
 import (
 	"fmt"
 	"github.com/amortaza/aceql/bsn/grpc_hook"
+	"github.com/amortaza/aceql/flux-drivers/stdsql"
+	"github.com/amortaza/aceql/flux/dbschema"
 	"github.com/amortaza/aceql/logger"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -46,12 +48,8 @@ func GRPC_CallScript(directory, scriptName string, params map[string]string) err
 	return nil
 }
 
-func GRPC_ImportSet(adapter string, params, ctx map[string]string) error {
+func GRPC_ImportSet(adapter string) error {
 	c := grpc_hook.NewHookServiceClient(gGRPC_Connection)
-
-	if params == nil {
-		params = map[string]string{"testParam1": "value1"}
-	}
 
 	importsetRequest := grpc_hook.ImportSetRequest{
 		Page:     12,
@@ -65,19 +63,77 @@ func GRPC_ImportSet(adapter string, params, ctx map[string]string) error {
 	}
 
 	if importsetResponse != nil {
-		schema := importsetResponse.Schema
+		table := importsetResponse.Table
+		fields := importsetResponse.Fields
 		rows := importsetResponse.Rows
 
-		logger.Info(fmt.Sprintf("ImportSet Schema: %d", len(schema)), "GRPC")
-		logger.Info(fmt.Sprintf("ImportSet Rows: %d", len(rows)), "GRPC")
+		//createImportTable(table, fields)
 
-		for i, field := range schema {
-			logger.Info(fmt.Sprintf("Schema: %d %s", i, field), "GRPC")
+		if err := insertRows(table, fields, rows); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func insertRows(table string, fields []*grpc_hook.Field, rows []*grpc_hook.Row) error {
+	for _, row := range rows {
+		if err := insertRow(table, fields, row); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func insertRow(table string, fields []*grpc_hook.Field, row *grpc_hook.Row) error {
+	gr, err := stdsql.NewRecord(table)
+	if err != nil {
+		return err
+	}
+
+	logger.Info(fmt.Sprintf("Hi field count %d", len(fields)), "GRPC")
+	logger.Info(fmt.Sprintf("Hi value count %d", len(row.Values)), "GRPC")
+
+	for i, field := range fields {
+		logger.Info(fmt.Sprintf("value %s", row.Values[i]), "GRPC")
+		err := gr.Set(field.Fieldname, row.Values[i])
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = gr.Insert()
+
+	return err
+}
+
+func createImportTable(tablename string, fields []*grpc_hook.Field) error {
+	table := dbschema.NewTable(tablename)
+
+	for _, field := range fields {
+		fieldtype, err := dbschema.GetFieldTypeByName(field.Fieldtype)
+		if err != nil {
+			return err
 		}
 
-		for i, row := range rows {
-			logger.Info(fmt.Sprintf("ImportSet Rows: %d %s", i, row.Values), "GRPC")
-			//logger.Info(fmt.Sprintf("ImportSet cool"), "GRPC")
+		table.AddField(field.Fieldname, field.Fieldname, fieldtype)
+	}
+
+	return createStdSqlTable(table)
+}
+
+func createStdSqlTable(tableschema *dbschema.Table) error {
+	schema := stdsql.NewSchema()
+
+	if err := schema.CreateTable_withName(tableschema.Name(), tableschema.Label(), tableschema.Name() != "x_schema"); err != nil {
+		return err
+	}
+
+	for _, field := range tableschema.Fields() {
+		if err := schema.CreateField(tableschema.Name(), field, tableschema.Name() != "x_schema"); err != nil {
+			return err
 		}
 	}
 

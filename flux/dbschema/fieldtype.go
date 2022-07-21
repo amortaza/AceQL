@@ -3,6 +3,7 @@ package dbschema
 import (
 	"fmt"
 	"github.com/amortaza/aceql/logger"
+	"strings"
 )
 
 type FieldType string
@@ -14,18 +15,19 @@ const (
 )
 
 func GetFieldTypeByName(name string) (FieldType, error) {
-	if name == "String" {
+	name = strings.ToLower(name)
+
+	if name == "string" {
 		return String, nil
 	}
 
-	if name == "Number" {
+	if name == "number" {
 		return Number, nil
 	}
 
-	if name == "Bool" {
+	if name == "bool" {
 		return Bool, nil
 	}
 
-	err := fmt.Errorf("no field-type has been defined for '%s'", name)
-	return "", logger.Err(err, "fieldtype.GetFieldTypeByName")
+	return "", logger.Error(fmt.Sprintf("no field-type has been defined for '%s'", name), "fieldtype.GetFieldTypeByName")
 }

@@ -1,3 +1,4 @@
+bsn gui delete table
 bootstrap sch
 does x_choice match bootstrap?
 lookupRecords is duplicated

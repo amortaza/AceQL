@@ -19,7 +19,7 @@ func ImportSet(c echo.Context) error {
 		return logger.Err(err, "???")
 	}
 
-	grpc_client.GRPC_ImportSet(adapter, nil, nil)
+	grpc_client.GRPC_ImportSet(adapter)
 
 	return c.String(200, "")
 }

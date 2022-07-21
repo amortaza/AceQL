@@ -22,7 +22,7 @@ func (schema *Schema) Close() error {
 }
 
 func (schema *Schema) CreateRelation_withFields(relation *dbschema.Table, journal bool) error {
-	if err := schema.CreateRelation_withName(relation.Name(), relation.Label(), journal); err != nil {
+	if err := schema.CreateTable_withName(relation.Name(), relation.Label(), journal); err != nil {
 		return err
 	}
 
@@ -35,7 +35,7 @@ func (schema *Schema) CreateRelation_withFields(relation *dbschema.Table, journa
 	return nil
 }
 
-func (schema *Schema) CreateRelation_withName(name string, label string, journal bool) error {
+func (schema *Schema) CreateTable_withName(name string, label string, journal bool) error {
 
 	// the order here is importan because if we are creating 'x_schema'
 	// we want to create the table first THEN journal it

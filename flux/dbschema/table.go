@@ -17,6 +17,7 @@ type Table struct {
 func NewTable(name string) *Table {
 	return &Table{
 		name:        name,
+		label:       name,
 		fields:      nil,
 		fieldByName: make(map[string]*Field),
 	}
@@ -38,12 +39,26 @@ func (table *Table) Fields() []*Field {
 	return table.fields
 }
 
-func (table *Table) AddField(name string, label string, fieldtype FieldType) {
+func (table *Table) AddField(name string, label string, fieldtype FieldType) error {
+	if name == "" {
+		return logger.Error(fmt.Sprintf("missing name parameter"), "AddField()")
+	}
+
+	if label == "" {
+		return logger.Error(fmt.Sprintf("missing label parameter"), "AddField()")
+	}
+
+	if fieldtype == "" {
+		return logger.Error(fmt.Sprintf("missing field type parameter"), "AddField()")
+	}
+
 	field := NewField(name, label, fieldtype)
 
 	table.fieldByName[name] = field
 
 	table.fields = append(table.fields, field)
+
+	return nil
 }
 
 func (table *Table) GetField(fieldname string) (*Field, error) {

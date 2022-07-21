@@ -1,74 +1,588 @@
-2022-07-19 23:53:00	info	GRPC	ImportSet Schema: 3
+2022-07-20 23:26:40	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:00	info	GRPC	ImportSet Rows: 2
+2022-07-20 23:26:40	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:00	info	GRPC	Schema: 0 u_firstname
+2022-07-20 23:26:40	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
 
-2022-07-19 23:53:00	info	GRPC	Schema: 1 u_lastname
+2022-07-20 23:26:40	info	GRPC	Hi field count 0
 
-2022-07-19 23:53:00	info	GRPC	Schema: 2 u_dob
+2022-07-20 23:26:40	info	GRPC	Hi value count 3
 
-2022-07-19 23:53:00	info	GRPC	ImportSet Rows: 0 [David Nia 01-01-1990]
+2022-07-20 23:26:40	info	SQL:SqlRunner.Run()	INSERT INTO `u_import_a` (`x_id`) VALUES('dec53605a078440da7678962d838bc5a');
 
-2022-07-19 23:53:00	info	GRPC	ImportSet Rows: 1 [Tom Morrison 02-02-1992]
+2022-07-20 23:26:40	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:10	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:26:40	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:10	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:26:40	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
 
-2022-07-19 23:53:10	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+2022-07-20 23:26:40	info	GRPC	Hi field count 0
 
-2022-07-19 23:53:10	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:26:40	info	GRPC	Hi value count 3
 
-2022-07-19 23:53:10	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:26:40	info	SQL:SqlRunner.Run()	INSERT INTO `u_import_a` (`x_id`) VALUES('40314a07d9494b5995bbf06c82a4d58f');
 
-2022-07-19 23:53:10	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+2022-07-20 23:26:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:25	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:26:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:25	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:26:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
 
-2022-07-19 23:53:25	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+2022-07-20 23:26:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
 
-2022-07-19 23:53:25	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:26:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
 
-2022-07-19 23:53:25	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:26:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
 
-2022-07-19 23:53:25	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+2022-07-20 23:27:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:40	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:27:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:40	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:27:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
 
-2022-07-19 23:53:40	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+2022-07-20 23:27:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
 
-2022-07-19 23:53:40	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:27:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
 
-2022-07-19 23:53:40	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:27:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
 
-2022-07-19 23:53:40	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+2022-07-20 23:27:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:55	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:27:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:53:55	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:27:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
 
-2022-07-19 23:53:55	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+2022-07-20 23:27:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
 
-2022-07-19 23:53:55	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:27:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
 
-2022-07-19 23:53:55	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:27:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
 
-2022-07-19 23:53:55	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+2022-07-20 23:27:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:54:10	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:27:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
 
-2022-07-19 23:54:10	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+2022-07-20 23:27:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
 
-2022-07-19 23:54:10	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+2022-07-20 23:27:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
 
-2022-07-19 23:54:10	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:27:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
 
-2022-07-19 23:54:10	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+2022-07-20 23:27:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
 
-2022-07-19 23:54:10	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+2022-07-20 23:27:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:27:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:27:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:27:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:27:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:27:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:28:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:28:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:28:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:28:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:28:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:28:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:28:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:28:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:28:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:28:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:28:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:28:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:28:38	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:38	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:38	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
+
+2022-07-20 23:28:38	info	GRPC	Hi field count 3
+
+2022-07-20 23:28:38	info	GRPC	Hi value count 3
+
+2022-07-20 23:28:38	info	GRPC	value David
+
+2022-07-20 23:28:38	info	GRPC	value Nia
+
+2022-07-20 23:28:38	info	GRPC	value 01-01-1990
+
+2022-07-20 23:28:38	info	SQL:SqlRunner.Run()	INSERT INTO `u_import_a` (`x_id`, `u_lastname`, `u_dob`, `u_firstname`) VALUES('eb1c0ce16b9a44febec24758f604f5d1', 'Nia', '01-01-1990', 'David');
+
+2022-07-20 23:28:38	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:38	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:38	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
+
+2022-07-20 23:28:38	info	GRPC	Hi field count 3
+
+2022-07-20 23:28:38	info	GRPC	Hi value count 3
+
+2022-07-20 23:28:38	info	GRPC	value Tom
+
+2022-07-20 23:28:38	info	GRPC	value Morrison
+
+2022-07-20 23:28:38	info	GRPC	value 02-02-1992
+
+2022-07-20 23:28:38	info	SQL:SqlRunner.Run()	INSERT INTO `u_import_a` (`x_id`, `u_firstname`, `u_lastname`, `u_dob`) VALUES('9f640d5becb34b72b147ea17e60eeb1b', 'Tom', 'Morrison', '02-02-1992');
+
+2022-07-20 23:28:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:28:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:28:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:28:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:28:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:29:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:29:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:29:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:29:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:29:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:29:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:29:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:29:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:29:26	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'x_choice_list' ORDER BY x_id ASC
+
+2022-07-20 23:29:26	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'x_choice_list' ORDER BY x_id ASC
+
+2022-07-20 23:29:26	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_choice_list' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:26	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE x_table = 'x_choice_list'
+
+2022-07-20 23:29:26	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_choice_list' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_table" : "x_choice_list","x_field" : "x_field","x_field_type" : "String","x_label" : "Field","x_id" : "3d7380342fa24a889e6b7d798b826e37","x_type" : "field"}
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_field" : "x_order","x_field_type" : "Number","x_label" : "Order","x_id" : "6ad40d20c168407fa35fda63bbbcd909","x_type" : "field","x_table" : "x_choice_list"}
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_id" : "8498deb0c4e740609dcf0cc7d0f8a9ae","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_name","x_field_type" : "String","x_label" : "Name"}
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_table" : "x_choice_list","x_field" : "x_id","x_field_type" : "String","x_label" : "Choice List","x_id" : "a83d387024e248b2af445081ac650b99","x_type" : "relation"}
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_id" : "b505843331224d88b0c2fafaff4dabaf","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_value","x_field_type" : "String","x_label" : "Value"}
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "ID","x_id" : "c50585331234d88b0c2fafa7ff4dabef","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_id"}
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_label" : "Table","x_id" : "e51b24b9cbb64b25aa7e7a1703c10025","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_table","x_field_type" : "String"}
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_id" : "ee989f93e64f41059961072b261a9a1b","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_enabled","x_field_type" : "Bool","x_label" : "Enabled"}
+
+2022-07-20 23:29:26	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:29:26	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_choice_list' AND x_type = 'field' )
+
+2022-07-20 23:29:26	info	SQL:RowQuerier.Query()	SELECT x_field, x_order, x_name, x_value, x_id, x_table, x_enabled FROM x_choice_list ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:29:26	info	SQL:SqlRunner.Query()	SELECT x_field, x_order, x_name, x_value, x_id, x_table, x_enabled FROM x_choice_list ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:29:26	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_choice_list
+
+2022-07-20 23:29:26	info	JSON-ENCODING	{"x_id" : "19131b18eb7d46aa8b21e6f1bfad5ef9","x_table" : "x_schema","x_enabled" : 1,"x_field" : "x_type","x_order" : 34.3,"x_name" : "Relation","x_value" : "relation"}
+
+2022-07-20 23:29:26	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:29:28	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'u_import_a' ORDER BY x_id ASC
+
+2022-07-20 23:29:28	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'u_import_a' ORDER BY x_id ASC
+
+2022-07-20 23:29:28	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:28	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE x_table = 'u_import_a'
+
+2022-07-20 23:29:28	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:28	info	JSON-ENCODING	{"x_id" : "17ff7d90730c477985f670ac0fd257b8","x_type" : "field","x_table" : "u_import_a","x_field" : "u_dob","x_field_type" : "String","x_label" : "u_dob"}
+
+2022-07-20 23:29:28	info	JSON-ENCODING	{"x_type" : "field","x_table" : "u_import_a","x_field" : "u_lastname","x_field_type" : "String","x_label" : "u_lastname","x_id" : "328dc22612424fe998404ff50e885ffb"}
+
+2022-07-20 23:29:28	info	JSON-ENCODING	{"x_table" : "u_import_a","x_field" : "u_firstname","x_field_type" : "String","x_label" : "u_firstname","x_id" : "8a3240f7b03b4654a7d05edfaa1a0841","x_type" : "field"}
+
+2022-07-20 23:29:28	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "","x_id" : "ddc7cf071e9a42c4a2e3d4eac5ed02f6","x_type" : "relation","x_table" : "u_import_a","x_field" : "x_id"}
+
+2022-07-20 23:29:28	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:29:28	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
+
+2022-07-20 23:29:28	info	SQL:RowQuerier.Query()	SELECT u_dob, u_lastname, u_firstname FROM u_import_a ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:29:28	info	SQL:SqlRunner.Query()	SELECT u_dob, u_lastname, u_firstname FROM u_import_a ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:29:28	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM u_import_a
+
+2022-07-20 23:29:28	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:29:32	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema ORDER BY x_id ASC LIMIT 0, 100
+
+2022-07-20 23:29:32	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema ORDER BY x_id ASC LIMIT 0, 100
+
+2022-07-20 23:29:32	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_table" : "x_user","x_field" : "x_age","x_field_type" : "String","x_label" : "Age","x_id" : "06c267747af547a08ffabe1f62e6765d","x_type" : "field"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "0f41a9af981b4257b49b913a2f6477ba","x_type" : "relation","x_table" : "x_user","x_field" : "x_id","x_field_type" : "String","x_label" : "Users"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_type" : "field","x_table" : "u_import_a","x_field" : "u_dob","x_field_type" : "String","x_label" : "u_dob","x_id" : "17ff7d90730c477985f670ac0fd257b8"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "328dc22612424fe998404ff50e885ffb","x_type" : "field","x_table" : "u_import_a","x_field" : "u_lastname","x_field_type" : "String","x_label" : "u_lastname"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "3d7380342fa24a889e6b7d798b826e37","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_field","x_field_type" : "String","x_label" : "Field"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_user","x_field" : "x_firstname","x_field_type" : "String","x_label" : "First Name","x_id" : "4aa4edce8179461dbd86badfa8863ada"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "4e0186bc33b541cfb645eb35c55ec08d","x_type" : "field","x_table" : "x_jobs","x_field" : "x_id","x_field_type" : "String","x_label" : "ID"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_table" : "x_jobs","x_field" : "x_starting_datetime","x_field_type" : "String","x_label" : "Starting Datetime","x_id" : "528b099d0219495a8133d2fd7a362562","x_type" : "field"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_label" : "ID","x_id" : "59ac9b572db74392b5827f11e1224963","x_type" : "field","x_table" : "x_business_rule","x_field" : "x_id","x_field_type" : "String"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "6ad40d20c168407fa35fda63bbbcd909","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_order","x_field_type" : "Number","x_label" : "Order"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "8498deb0c4e740609dcf0cc7d0f8a9ae","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_name","x_field_type" : "String","x_label" : "Name"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_type" : "field","x_table" : "u_import_a","x_field" : "u_firstname","x_field_type" : "String","x_label" : "u_firstname","x_id" : "8a3240f7b03b4654a7d05edfaa1a0841"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_field" : "x_active","x_field_type" : "String","x_label" : "Active","x_id" : "92d0c28ba7874adf889e6294e892698c","x_type" : "field","x_table" : "x_jobs"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_table" : "x_business_rule","x_field" : "x_table_name","x_field_type" : "String","x_label" : "Table Name","x_id" : "a154b929cedc4ffb8b50fb2707b1d1bd","x_type" : "field"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_label" : "Choice List","x_id" : "a83d387024e248b2af445081ac650b99","x_type" : "relation","x_table" : "x_choice_list","x_field" : "x_id","x_field_type" : "String"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_user","x_field" : "x_lastname","x_field_type" : "String","x_label" : "Last Name","x_id" : "a93ed72a0e354dddb125edeb09ab7e5c"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_table" : "x_choice_list","x_field" : "x_value","x_field_type" : "String","x_label" : "Value","x_id" : "b505843331224d88b0c2fafaff4dabaf","x_type" : "field"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_label" : "Script Name","x_id" : "be051acff200425ba7895105ae6e97ff","x_type" : "field","x_table" : "x_jobs","x_field" : "x_script_name","x_field_type" : "String"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "ID","x_id" : "c50585331234d88b0c2fafa7ff4dabef","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_id"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "d042e31034024ed3a137162348a0980c","x_type" : "field","x_table" : "x_business_rule","x_field" : "x_script_name","x_field_type" : "String","x_label" : "Script Name"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "ID","x_id" : "d50584331234d88bac2fafa7ff4dabe0","x_type" : "field","x_table" : "x_user","x_field" : "x_id"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "ddc7cf071e9a42c4a2e3d4eac5ed02f6","x_type" : "relation","x_table" : "u_import_a","x_field" : "x_id","x_field_type" : "String","x_label" : ""}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Phone","x_id" : "dfae8bb39ab749cb85858384d4f9024c","x_type" : "field","x_table" : "x_user","x_field" : "x_phone"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_field" : "x_table","x_field_type" : "String","x_label" : "Table","x_id" : "e51b24b9cbb64b25aa7e7a1703c10025","x_type" : "field","x_table" : "x_choice_list"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_id" : "ed7bc95173b34ed6af28016833c1a5c1","x_type" : "relation","x_table" : "x_jobs","x_field" : "x_id","x_field_type" : "String","x_label" : "Scheduled Jobs"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_choice_list","x_field" : "x_enabled","x_field_type" : "Bool","x_label" : "Enabled","x_id" : "ee989f93e64f41059961072b261a9a1b"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Cadense in Seconds","x_id" : "eebd74ff2ba748699ecc3d3eab752eb6","x_type" : "field","x_table" : "x_jobs","x_field" : "x_seconds"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_table" : "x_business_rule","x_field" : "x_id","x_field_type" : "String","x_label" : "Business Rule","x_id" : "f1554df867914b28a8937883a411004e","x_type" : "relation"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Last Run","x_id" : "f1e0c9348386442d97b7ccaaa7497f84","x_type" : "field","x_table" : "x_jobs","x_field" : "x_last_run"}
+
+2022-07-20 23:29:32	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:29:32	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'u_import_a' ORDER BY x_id ASC
+
+2022-07-20 23:29:32	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'u_import_a' ORDER BY x_id ASC
+
+2022-07-20 23:29:32	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:32	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE x_table = 'u_import_a'
+
+2022-07-20 23:29:32	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_table" : "u_import_a","x_field" : "u_dob","x_field_type" : "String","x_label" : "u_dob","x_id" : "17ff7d90730c477985f670ac0fd257b8","x_type" : "field"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_label" : "u_lastname","x_id" : "328dc22612424fe998404ff50e885ffb","x_type" : "field","x_table" : "u_import_a","x_field" : "u_lastname","x_field_type" : "String"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_field" : "u_firstname","x_field_type" : "String","x_label" : "u_firstname","x_id" : "8a3240f7b03b4654a7d05edfaa1a0841","x_type" : "field","x_table" : "u_import_a"}
+
+2022-07-20 23:29:32	info	JSON-ENCODING	{"x_type" : "relation","x_table" : "u_import_a","x_field" : "x_id","x_field_type" : "String","x_label" : "","x_id" : "ddc7cf071e9a42c4a2e3d4eac5ed02f6"}
+
+2022-07-20 23:29:32	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:29:32	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
+
+2022-07-20 23:29:32	info	SQL:RowQuerier.Query()	SELECT u_dob, u_lastname, u_firstname FROM u_import_a ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:29:32	info	SQL:SqlRunner.Query()	SELECT u_dob, u_lastname, u_firstname FROM u_import_a ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:29:32	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM u_import_a
+
+2022-07-20 23:29:32	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:29:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:29:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:29:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:29:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:29:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:29:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:29:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:29:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:29:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:30:00	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:00	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:00	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
+
+2022-07-20 23:30:00	info	GRPC	Hi field count 3
+
+2022-07-20 23:30:00	info	GRPC	Hi value count 3
+
+2022-07-20 23:30:00	info	GRPC	value David
+
+2022-07-20 23:30:00	info	GRPC	value Nia
+
+2022-07-20 23:30:00	info	GRPC	value 01-01-1990
+
+2022-07-20 23:30:00	info	SQL:SqlRunner.Run()	INSERT INTO `u_import_a` (`x_id`, `u_firstname`, `u_lastname`, `u_dob`) VALUES('41f12c4d1ded439881836323b97e3523', 'David', 'Nia', '01-01-1990');
+
+2022-07-20 23:30:00	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:00	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:00	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
+
+2022-07-20 23:30:00	info	GRPC	Hi field count 3
+
+2022-07-20 23:30:00	info	GRPC	Hi value count 3
+
+2022-07-20 23:30:00	info	GRPC	value Tom
+
+2022-07-20 23:30:00	info	GRPC	value Morrison
+
+2022-07-20 23:30:00	info	GRPC	value 02-02-1992
+
+2022-07-20 23:30:00	info	SQL:SqlRunner.Run()	INSERT INTO `u_import_a` (`x_id`, `u_dob`, `u_firstname`, `u_lastname`) VALUES('54625c1a6d99458b9c0f75efa9059553', '02-02-1992', 'Tom', 'Morrison');
+
+2022-07-20 23:30:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:30:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:30:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:30:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:30:18	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'x_choice_list' ORDER BY x_id ASC
+
+2022-07-20 23:30:18	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'x_choice_list' ORDER BY x_id ASC
+
+2022-07-20 23:30:18	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_choice_list' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:18	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE x_table = 'x_choice_list'
+
+2022-07-20 23:30:18	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_choice_list' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_label" : "Field","x_id" : "3d7380342fa24a889e6b7d798b826e37","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_field","x_field_type" : "String"}
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_table" : "x_choice_list","x_field" : "x_order","x_field_type" : "Number","x_label" : "Order","x_id" : "6ad40d20c168407fa35fda63bbbcd909","x_type" : "field"}
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Name","x_id" : "8498deb0c4e740609dcf0cc7d0f8a9ae","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_name"}
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_type" : "relation","x_table" : "x_choice_list","x_field" : "x_id","x_field_type" : "String","x_label" : "Choice List","x_id" : "a83d387024e248b2af445081ac650b99"}
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_id" : "b505843331224d88b0c2fafaff4dabaf","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_value","x_field_type" : "String","x_label" : "Value"}
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_table" : "x_choice_list","x_field" : "x_id","x_field_type" : "String","x_label" : "ID","x_id" : "c50585331234d88b0c2fafa7ff4dabef","x_type" : "field"}
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_choice_list","x_field" : "x_table","x_field_type" : "String","x_label" : "Table","x_id" : "e51b24b9cbb64b25aa7e7a1703c10025"}
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_field_type" : "Bool","x_label" : "Enabled","x_id" : "ee989f93e64f41059961072b261a9a1b","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_enabled"}
+
+2022-07-20 23:30:18	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:30:18	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_choice_list' AND x_type = 'field' )
+
+2022-07-20 23:30:18	info	SQL:RowQuerier.Query()	SELECT x_field, x_order, x_name, x_value, x_id, x_table, x_enabled FROM x_choice_list ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:30:18	info	SQL:SqlRunner.Query()	SELECT x_field, x_order, x_name, x_value, x_id, x_table, x_enabled FROM x_choice_list ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:30:18	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_choice_list
+
+2022-07-20 23:30:18	info	JSON-ENCODING	{"x_id" : "19131b18eb7d46aa8b21e6f1bfad5ef9","x_table" : "x_schema","x_enabled" : 1,"x_field" : "x_type","x_order" : 34.3,"x_name" : "Relation","x_value" : "relation"}
+
+2022-07-20 23:30:18	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:30:19	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'u_import_a' ORDER BY x_id ASC
+
+2022-07-20 23:30:19	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'u_import_a' ORDER BY x_id ASC
+
+2022-07-20 23:30:19	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE x_table = 'u_import_a'
+
+2022-07-20 23:30:19	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:19	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:19	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "u_dob","x_id" : "17ff7d90730c477985f670ac0fd257b8","x_type" : "field","x_table" : "u_import_a","x_field" : "u_dob"}
+
+2022-07-20 23:30:19	info	JSON-ENCODING	{"x_table" : "u_import_a","x_field" : "u_lastname","x_field_type" : "String","x_label" : "u_lastname","x_id" : "328dc22612424fe998404ff50e885ffb","x_type" : "field"}
+
+2022-07-20 23:30:19	info	JSON-ENCODING	{"x_id" : "8a3240f7b03b4654a7d05edfaa1a0841","x_type" : "field","x_table" : "u_import_a","x_field" : "u_firstname","x_field_type" : "String","x_label" : "u_firstname"}
+
+2022-07-20 23:30:19	info	JSON-ENCODING	{"x_label" : "","x_id" : "ddc7cf071e9a42c4a2e3d4eac5ed02f6","x_type" : "relation","x_table" : "u_import_a","x_field" : "x_id","x_field_type" : "String"}
+
+2022-07-20 23:30:19	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:30:19	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'u_import_a' AND x_type = 'field' )
+
+2022-07-20 23:30:19	info	SQL:RowQuerier.Query()	SELECT u_dob, u_lastname, u_firstname FROM u_import_a ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:30:19	info	SQL:SqlRunner.Query()	SELECT u_dob, u_lastname, u_firstname FROM u_import_a ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-20 23:30:19	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM u_import_a
+
+2022-07-20 23:30:19	info	JSON-ENCODING	{"u_dob" : "01-01-1990","u_lastname" : "Nia","u_firstname" : "David"}
+
+2022-07-20 23:30:19	info	JSON-ENCODING	{"u_firstname" : "Tom","u_dob" : "02-02-1992","u_lastname" : "Morrison"}
+
+2022-07-20 23:30:19	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-20 23:30:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:30:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:30:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:30:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:30:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:30:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:30:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:30:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:30:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:30:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:30:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:30:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:30:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:31:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:31:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:31:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:31:05	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:31:05	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:31:05	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:31:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:31:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:31:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:31:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:31:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:31:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:31:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:31:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:31:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:31:35	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:31:35	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:31:35	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
+
+2022-07-20 23:31:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:31:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-20 23:31:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_jobs' AND x_type = 'field' )
+
+2022-07-20 23:31:50	info	SQL:RowQuerier.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:31:50	info	SQL:SqlRunner.Query()	SELECT x_id, x_starting_datetime, x_active, x_script_name, x_seconds, x_last_run FROM x_jobs WHERE x_active = 'true' ORDER BY x_id ASC
+
+2022-07-20 23:31:50	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_jobs WHERE x_active = 'true'
 

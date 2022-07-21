@@ -22,7 +22,7 @@ func Run() error {
 func bootstrap(tableschema *dbschema.Table, records []*flux.Record) error {
 	schema := stdsql.NewSchema()
 
-	if err := schema.CreateRelation_withName(tableschema.Name(), tableschema.Label(), tableschema.Name() != "x_schema"); err != nil {
+	if err := schema.CreateTable_withName(tableschema.Name(), tableschema.Label(), tableschema.Name() != "x_schema"); err != nil {
 		return err
 	}
 
