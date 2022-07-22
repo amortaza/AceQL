@@ -1,11 +1,25 @@
-bsn gui delete table
-bootstrap sch
+core
+----
+system defined default values in schema
+!user defined default values in schema
+!allow reference types
+    remove x_mapping from x_importset
+bootstrap x_schema
 does x_choice match bootstrap?
-lookupRecords is duplicated
 
-record.Initialize()
+gui
+---
+dictionary sort by name
+fields in forms should be consistent ordering
+make front end aware of field types
 add "upload" to the list views
 add "upload" to the form views
-add created on
-what happens when script does not exist
-make front end aware of field types
+bsn gui delete table
+why is schema GUI showing x_id twice?
+list view, "1 of 0" is bad
+rename "dictionary" -> "schema"
+rename "tables" -> "view table data"
+table label should be editable
+id should not be editable in create form
+refresh a form or page every so often?
+hints for fields

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 )
 
@@ -13,7 +11,9 @@ func init() {
 // 5
 func main() {
 	//encodedQuery = "where age=\"45\" and name=\"afshin \\\"the clown\\\"\" and thats it"
-
+	//bootstrap.Run()
+	//parseMappings("first >> u_first, last >> u_last")
+	//parseMappings("first>>u_first,last>>u_last")
 }
 
 func main4() {
@@ -52,6 +52,7 @@ func main3() {
 	//}
 }
 
+/*
 func main2() {
 	a := flux.GetTableSchema("x_user", stdsql.NewCRUD())
 	if a == nil {
@@ -62,7 +63,7 @@ func main2() {
 	//f mt.Println( a.Fields()[0].Name )
 	//f mt.Println( a.Fields()[0].Type )
 }
-
+*/
 func main1() {
 	/*
 		stdsql.Init( "mysql", "clown:1844@/bsn")
@@ -79,7 +80,7 @@ func main1() {
 			rec.Set("x_table", "new table")
 			rec.Set("x_field", "new field")
 			rec.Set("x_value", "new value")
-			rec.Set("x_enabled", "0")
+			rec.Set("x_active", "0")
 
 			rec.Update()
 		}

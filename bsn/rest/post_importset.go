@@ -11,15 +11,15 @@ import (
 
 // http://localhost:8000/importset/{adapter}
 func ImportSet(c echo.Context) error {
-	adapter := c.Param("adapter")
+	importsetName := c.Param("importset_name")
 
-	if adapter == "" {
+	if importsetName == "" {
 		err := fmt.Errorf("missing parameter \"adapter\"")
 		c.String(400, err.Error())
 		return logger.Err(err, "???")
 	}
 
-	grpc_client.GRPC_ImportSet(adapter)
+	grpc_client.GRPC_ImportSet(importsetName)
 
 	return c.String(200, "")
 }

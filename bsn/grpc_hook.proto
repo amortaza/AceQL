@@ -20,15 +20,9 @@ message Row {
     repeated string values = 1;
 }
 
-message Field {
-    string fieldname = 1;
-    string fieldtype = 2;
-}
-
 message ImportSetResponse {
-    string table = 1;
-    repeated Field fields = 2;
-    repeated Row rows = 3;
+    repeated string fields = 1;
+    repeated Row rows = 2;
 }
 
 // --------------------------------

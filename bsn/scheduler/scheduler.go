@@ -18,7 +18,7 @@ func StartScheduler() {
 		for {
 			time.Sleep(CADENCE_SECONDS * time.Second)
 
-			r, err := stdsql.NewRecord("x_jobs")
+			r, err := stdsql.NewRecord("x_scheduled_job")
 			if err != nil {
 				logger.Info("Stopping Scheduler, see logs", "Scheduler")
 				return

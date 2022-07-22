@@ -8,6 +8,9 @@ import (
 	"github.com/amortaza/aceql/logger"
 )
 
+/*
+***** ANY CHANGES HERE SHOULD ALSO UPDATE Initialize() function below!
+ */
 type Record struct {
 	tableName string
 	fields    []*dbschema.Field
@@ -36,6 +39,11 @@ func NewRecord(table *dbschema.Table, crud CRUD) *Record {
 // beause this is low level, it cannot take "Table" type
 // it must take table name and field list (so we can hard code it when bootstrapping)
 func NewRecord_withDefinition(tableName string, fields []*dbschema.Field, crud CRUD) *Record {
+
+	/*
+	***** ANY CHANGES HERE SHOULD ALSO UPDATE Initialize() function below!
+	 */
+
 	rec := &Record{
 		filterQuery:    query.NewFilterQuery(crud.Compiler()),
 		crud:           crud,
@@ -54,6 +62,16 @@ func NewRecord_withDefinition(tableName string, fields []*dbschema.Field, crud C
 	}
 
 	return rec
+}
+
+func (rec *Record) Initialize() {
+	rec.filterQuery = query.NewFilterQuery(rec.crud.Compiler())
+	rec.paginationSize = -1
+	rec.paginationIndex = 0
+	rec.values = NewRecordMap()
+	rec.userValues = NewRecordMap()
+	rec.orderBy = ""
+	rec.orderByAscending = false
 }
 
 func (rec *Record) MarshalJSON() ([]byte, error) {

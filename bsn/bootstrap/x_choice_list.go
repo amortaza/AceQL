@@ -9,6 +9,8 @@ import (
 func makeSpecificationFor_ChoiceList() *dbschema.Table {
 	table := dbschema.NewTable("x_choice_list")
 
+	table.SetLabel("Choice Lists")
+
 	table.AddField("x_id", "ID", dbschema.String)
 	table.AddField("x_table", "Table", dbschema.String)
 	table.AddField("x_field", "Field", dbschema.String)

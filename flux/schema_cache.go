@@ -98,7 +98,16 @@ func addField(r *Record, relation *dbschema.Table) error {
 		relation.AddField(field, "TODO", dbschema.Bool)
 
 		return nil
+	} else if fieldtype == string(dbschema.DateTime) {
+		field, err := r.Get("x_field")
+		if err != nil {
+			return err
+		}
+
+		relation.AddField(field, "TODO", dbschema.DateTime)
+
+		return nil
 	}
 
-	return fmt.Errorf("unrecognized fieldtype \"%s\" in bsn/schema/schema_cache.go", fieldtype)
+	return fmt.Errorf("unrecognized fieldtype \"%s\" in directory flux/schema_cache.go", fieldtype)
 }

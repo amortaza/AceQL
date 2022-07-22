@@ -11,8 +11,77 @@ func Run() error {
 	// we do not need to bootstrap schema, because it is hard-coded in code!
 	// todo test bootstrap
 
-	// choice list
-	if err := bootstrap(makeSpecificationFor_ChoiceList(), makeRecordsFor_ChoiceList()); err != nil {
+	if err := bootstrap_BusinessRule(); err != nil {
+		return err
+	}
+
+	if err := bootstrap_ChoiceList(); err != nil {
+		return err
+	}
+
+	if err := bootstrap_ImportSet(); err != nil {
+		return err
+	}
+
+	if err := bootstrap_ScheduledJob(); err != nil {
+		return err
+	}
+
+	if err := bootstrap_User(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func bootstrap_BusinessRule() error {
+	var records []*flux.Record
+
+	if err := bootstrap(makeSpecificationFor_BusinessRule(), records); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func bootstrap_ScheduledJob() error {
+	var records []*flux.Record
+
+	if err := bootstrap(makeSpecificationFor_ScheduledJob(), records); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func bootstrap_ImportSet() error {
+	var records []*flux.Record
+
+	if err := bootstrap(makeSpecificationFor_ImportSet(), records); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func bootstrap_ChoiceList() error {
+	records, err := makeRecordsFor_ChoiceList()
+	if err != nil {
+		return err
+	}
+	if err := bootstrap(makeSpecificationFor_ChoiceList(), records); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func bootstrap_User() error {
+	records, err := makeRecordsFor_User()
+	if err != nil {
+		return err
+	}
+	if err := bootstrap(makeSpecificationFor_User(), records); err != nil {
 		return err
 	}
 

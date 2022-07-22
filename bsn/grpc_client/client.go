@@ -3,12 +3,13 @@ package grpc_client
 import (
 	"fmt"
 	"github.com/amortaza/aceql/bsn/grpc_hook"
+	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
-	"github.com/amortaza/aceql/flux/dbschema"
 	"github.com/amortaza/aceql/logger"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
+	"strings"
 )
 
 var gGRPC_Connection *grpc.ClientConn
@@ -48,8 +49,25 @@ func GRPC_CallScript(directory, scriptName string, params map[string]string) err
 	return nil
 }
 
-func GRPC_ImportSet(adapter string) error {
+func GRPC_ImportSet(importsetName string) error {
 	c := grpc_hook.NewHookServiceClient(gGRPC_Connection)
+
+	importset, err := getImportSetRecord(importsetName)
+
+	adapter, err := importset.Get("x_adapter")
+	if err != nil {
+		return err
+	}
+
+	target, err := importset.Get("x_target_table")
+	if err != nil {
+		return err
+	}
+
+	mappings_str, err := importset.Get("x_mappings")
+	if err != nil {
+		return err
+	}
 
 	importsetRequest := grpc_hook.ImportSetRequest{
 		Page:     12,
@@ -63,13 +81,12 @@ func GRPC_ImportSet(adapter string) error {
 	}
 
 	if importsetResponse != nil {
-		table := importsetResponse.Table
 		fields := importsetResponse.Fields
 		rows := importsetResponse.Rows
 
 		//createImportTable(table, fields)
 
-		if err := insertRows(table, fields, rows); err != nil {
+		if err := insertRows(target, mappings_str, fields, rows); err != nil {
 			return err
 		}
 	}
@@ -77,9 +94,44 @@ func GRPC_ImportSet(adapter string) error {
 	return nil
 }
 
-func insertRows(table string, fields []*grpc_hook.Field, rows []*grpc_hook.Row) error {
+func getImportSetRecord(importsetName string) (*flux.Record, error) {
+	record, err := stdsql.NewRecord("x_importset")
+	if err != nil {
+		return nil, err
+	}
+
+	record.AddEq("x_name", importsetName)
+
+	count, err2 := record.Query()
+	if err2 != nil {
+		return nil, err2
+	}
+
+	if count > 1 {
+		return nil, logger.Error(fmt.Sprintf("found duplicatte %d importsets \"%s\"", count, importsetName), "importset")
+	}
+
+	if count == 0 {
+		return nil, logger.Error(fmt.Sprintf("found no importsets named \"%s\"", importsetName), "importset")
+	}
+
+	hasNext, err3 := record.Next()
+	if err3 != nil {
+		return nil, err3
+	}
+
+	if !hasNext {
+		return nil, logger.Error(fmt.Sprintf("found importset named \"%s\", but record.Next() returned false", importsetName), "importset")
+	}
+
+	return record, nil
+}
+
+func insertRows(table, mappings_str string, fields []string, rows []*grpc_hook.Row) error {
+	mappings := parseMappings(mappings_str)
+
 	for _, row := range rows {
-		if err := insertRow(table, fields, row); err != nil {
+		if err := insertRow(table, mappings, fields, row); err != nil {
 			return err
 		}
 	}
@@ -87,18 +139,38 @@ func insertRows(table string, fields []*grpc_hook.Field, rows []*grpc_hook.Row) 
 	return nil
 }
 
-func insertRow(table string, fields []*grpc_hook.Field, row *grpc_hook.Row) error {
+func parseMappings(str string) map[string]string {
+	str = strings.ReplaceAll(str, " ", "")
+	parts := strings.Split(str, ",")
+
+	mapping := make(map[string]string)
+
+	for _, part := range parts {
+		left_right := strings.Split(part, ">>")
+		mapping[left_right[0]] = left_right[1]
+	}
+
+	return mapping
+}
+
+func insertRow(table string, mapping map[string]string, fields []string, row *grpc_hook.Row) error {
 	gr, err := stdsql.NewRecord(table)
 	if err != nil {
 		return err
 	}
 
-	logger.Info(fmt.Sprintf("Hi field count %d", len(fields)), "GRPC")
-	logger.Info(fmt.Sprintf("Hi value count %d", len(row.Values)), "GRPC")
+	//logger.Info(fmt.Sprintf("Hi field count %d", len(fields)), "GRPC")
+	//logger.Info(fmt.Sprintf("Hi value count %d", len(row.Values)), "GRPC")
 
 	for i, field := range fields {
 		logger.Info(fmt.Sprintf("value %s", row.Values[i]), "GRPC")
-		err := gr.Set(field.Fieldname, row.Values[i])
+
+		mappedField, ok := mapping[field]
+		if !ok {
+			return logger.Error(fmt.Sprintf("mapping not found \"%s\"", field), "importset")
+		}
+
+		err := gr.Set(mappedField, row.Values[i])
 		if err != nil {
 			return err
 		}
@@ -109,6 +181,7 @@ func insertRow(table string, fields []*grpc_hook.Field, row *grpc_hook.Row) erro
 	return err
 }
 
+/*
 func createImportTable(tablename string, fields []*grpc_hook.Field) error {
 	table := dbschema.NewTable(tablename)
 
@@ -139,3 +212,4 @@ func createStdSqlTable(tableschema *dbschema.Table) error {
 
 	return nil
 }
+*/

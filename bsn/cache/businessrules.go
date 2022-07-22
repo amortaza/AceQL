@@ -23,7 +23,7 @@ func GetOnAfterUpdate_ScriptNames(tablename string) ([]string, error) {
 			return nil, err
 		}
 
-		if err := gr.Add("x_table_name", query.Equals, tablename); err != nil {
+		if err := gr.Add("x_table", query.Equals, tablename); err != nil {
 			return nil, err
 		}
 

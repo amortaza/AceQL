@@ -6,12 +6,24 @@ import (
 	"strings"
 )
 
+/*
+
+
+
+any change here requires change to schema_cache.go
+
+
+
+
+*/
+
 type FieldType string
 
 const (
-	String FieldType = "String"
-	Number           = "Number"
-	Bool             = "Bool"
+	String   FieldType = "String"
+	Number             = "Number"
+	Bool               = "Bool"
+	DateTime           = "DateTime"
 )
 
 func GetFieldTypeByName(name string) (FieldType, error) {
@@ -27,6 +39,10 @@ func GetFieldTypeByName(name string) (FieldType, error) {
 
 	if name == "bool" {
 		return Bool, nil
+	}
+
+	if name == "datetime" {
+		return DateTime, nil
 	}
 
 	return "", logger.Error(fmt.Sprintf("no field-type has been defined for '%s'", name), "fieldtype.GetFieldTypeByName")
