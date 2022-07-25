@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+// on the command-line in BSN: protoc --go_out=./grpc_record --go_opt=paths=source_relative --go-grpc_out=./grpc_record --go-grpc_opt=paths=source_relative grpc_record.proto
+
+option go_package = "github.com/amortaza/aceql/bsn/grpc_record";
+
+package grpc_record;
+
+// --------------------------------
+// record!
+// --------------------------------
+
+message Request {
+    string operation = 1;
+    string param = 2;
+}
+
+message Response {
+    string answer = 1;
+    string fault = 2;
+}
+
+service RecordService {
+    rpc BabaSays(Request) returns (Response) {}
+}
