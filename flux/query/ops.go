@@ -1,6 +1,7 @@
 package query
 
 import (
+	"fmt"
 	"github.com/amortaza/aceql/flux/node"
 	"github.com/amortaza/aceql/logger"
 	"strings"
@@ -23,6 +24,60 @@ const (
 	Contains      OpType = "Contains"
 	NotContains   OpType = "NotContains"
 )
+
+func GetOpTypeByName(name string) (OpType, error) {
+	name = strings.ToLower(name)
+
+	if name == "equals" {
+		return Equals, nil
+	}
+
+	if name == "notequals" {
+		return NotEquals, nil
+	}
+
+	if name == "lessthan" {
+		return LessThan, nil
+	}
+
+	if name == "lessorequals" {
+		return LessOrEquals, nil
+	}
+
+	if name == "greaterthan" {
+		return GreaterThan, nil
+	}
+
+	if name == "greaterorequals" {
+		return GreaterOrEquals, nil
+	}
+
+	if name == "startswith" {
+		return StartsWith, nil
+	}
+
+	if name == "notstartswith" {
+		return NotStartsWith, nil
+	}
+
+	if name == "endswith" {
+		return EndsWith, nil
+	}
+
+	if name == "notendswith" {
+		return NotEndsWith, nil
+	}
+
+	if name == "contains" {
+		return Contains, nil
+	}
+
+	if name == "notcontains" {
+		return NotContains, nil
+	}
+
+	return "", logger.Error(fmt.Sprintf("unrecognized OpType \"%s\"", name), "query.GetOpTypeByName()")
+}
 
 // IsEncodedOps : Ops is Equals, EncodedOps is =
 func IsEncodedOps(s string) bool {

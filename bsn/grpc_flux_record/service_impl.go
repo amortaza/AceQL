@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
+	"github.com/amortaza/aceql/flux/query"
 	"github.com/amortaza/aceql/logger"
 	"strconv"
 )
 
-type MyServer struct {
-	UnimplementedRecordServiceServer
+type FluxRecordServiceImp struct {
+	UnimplementedFluxRecordServiceServer
 }
 
 func init() {
@@ -18,7 +19,7 @@ func init() {
 
 const LOG_SOURCE = "grpc_record"
 
-func (MyServer) BabaSays(s RecordService_BabaSaysServer) error {
+func (FluxRecordServiceImp) GetServiceStream(s FluxRecordService_GetServiceStreamServer) error {
 	var record *flux.Record
 	defer func() {
 		logger.Info("closing flux.Record", LOG_SOURCE)
@@ -33,7 +34,7 @@ func (MyServer) BabaSays(s RecordService_BabaSaysServer) error {
 			return logger.Err(err, LOG_SOURCE)
 		}
 
-		logger.Info("baba received - "+request.Operation+", "+request.Param, LOG_SOURCE)
+		logger.Info("baba received - "+request.Operation+", "+request.Param1, LOG_SOURCE)
 
 		// stdsql.NewRecord(tablename)
 		if request.Operation == "NewRecord()" {
@@ -59,10 +60,10 @@ func (MyServer) BabaSays(s RecordService_BabaSaysServer) error {
 			if err := _GetTable(s, request, record); err != nil {
 				return err
 			}
-		} else if request.Operation == "GetMap()" {
-			if err := _GetMap(s, request, record); err != nil {
-				return err
-			}
+			//} else if request.Operation == "GetMap()" {
+			//	if err := _GetMap(s, request, record); err != nil {
+			//		return err
+			//	}
 		} else if request.Operation == "SetOrderByDesc()" {
 			if err := _SetOrderByDesc(s, request, record); err != nil {
 				return err
@@ -146,7 +147,7 @@ func (MyServer) BabaSays(s RecordService_BabaSaysServer) error {
 // We distinguish between "send_err" and "flux_err"
 // We report flux_err via Response.Fault, we do not return error because that will kill FluxRecord session.
 // We do however send back "send_err" becasude this means the session is dead anyways.
-func _Not(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Not(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Not() called", LOG_SOURCE)
 
 	record.Not()
@@ -158,7 +159,7 @@ func _Not(s RecordService_BabaSaysServer, request *Request, record *flux.Record)
 	return nil
 }
 
-func _OrGroup(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _OrGroup(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_OrGroup() called", LOG_SOURCE)
 
 	flux_err := record.OrGroup()
@@ -177,7 +178,7 @@ func _OrGroup(s RecordService_BabaSaysServer, request *Request, record *flux.Rec
 	return nil
 }
 
-func _AndGroup(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _AndGroup(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_AndGroup() called", LOG_SOURCE)
 
 	flux_err := record.AndGroup()
@@ -196,14 +197,23 @@ func _AndGroup(s RecordService_BabaSaysServer, request *Request, record *flux.Re
 	return nil
 }
 
-func _AddOr(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _AddOr(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_AddOr() called", LOG_SOURCE)
 
-	field := request.Param
-	opType := request.Param2
+	field := request.Param1
+	opTypeName := request.Param2
 	rhs := request.Param3
 
-	flux_err := record.AddOr(field, opType, rhs)
+	opType, flux_err := query.GetOpTypeByName(opTypeName)
+	if flux_err != nil {
+		if send_err := s.Send(&Response{Fault: flux_err.Error()}); send_err != nil {
+			return logger.Err(send_err, LOG_SOURCE)
+		}
+
+		return nil
+	}
+
+	flux_err = record.AddOr(field, opType, rhs)
 	if flux_err != nil {
 		if send_err := s.Send(&Response{Fault: flux_err.Error()}); send_err != nil {
 			return logger.Err(send_err, LOG_SOURCE)
@@ -219,10 +229,10 @@ func _AddOr(s RecordService_BabaSaysServer, request *Request, record *flux.Recor
 	return nil
 }
 
-func _AddEq(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _AddEq(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_AddEq() called", LOG_SOURCE)
 
-	field := request.Param
+	field := request.Param1
 	rhs := request.Param2
 
 	flux_err := record.AddEq(field, rhs)
@@ -241,14 +251,23 @@ func _AddEq(s RecordService_BabaSaysServer, request *Request, record *flux.Recor
 	return nil
 }
 
-func _Add(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Add(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Add() called", LOG_SOURCE)
 
-	field := request.Param
-	opType := request.Param2
+	field := request.Param1
+	opTypeName := request.Param2
 	rhs := request.Param3
 
-	flux_err := record.Add(field, opType, rhs)
+	opType, flux_err := query.GetOpTypeByName(opTypeName)
+	if flux_err != nil {
+		if send_err := s.Send(&Response{Fault: flux_err.Error()}); send_err != nil {
+			return logger.Err(send_err, LOG_SOURCE)
+		}
+
+		return nil
+	}
+
+	flux_err = record.Add(field, opType, rhs)
 	if flux_err != nil {
 		if send_err := s.Send(&Response{Fault: flux_err.Error()}); send_err != nil {
 			return logger.Err(send_err, LOG_SOURCE)
@@ -264,10 +283,10 @@ func _Add(s RecordService_BabaSaysServer, request *Request, record *flux.Record)
 	return nil
 }
 
-func _SetEncodedQuery(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _SetEncodedQuery(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_SetEncodedQuery() called", LOG_SOURCE)
 
-	encodedQuery := request.Param
+	encodedQuery := request.Param1
 
 	record.SetEncodedQuery(encodedQuery)
 
@@ -278,10 +297,10 @@ func _SetEncodedQuery(s RecordService_BabaSaysServer, request *Request, record *
 	return nil
 }
 
-func _AddPK(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _AddPK(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_AddPK() called", LOG_SOURCE)
 
-	id := request.Param
+	id := request.Param1
 
 	flux_err := record.AddPK(id)
 	if flux_err != nil {
@@ -299,10 +318,10 @@ func _AddPK(s RecordService_BabaSaysServer, request *Request, record *flux.Recor
 	return nil
 }
 
-func _Get(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Get(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Get() called", LOG_SOURCE)
 
-	fieldname := request.Param
+	fieldname := request.Param1
 
 	value, flux_err := record.Get(fieldname)
 	if flux_err != nil {
@@ -320,10 +339,10 @@ func _Get(s RecordService_BabaSaysServer, request *Request, record *flux.Record)
 	return nil
 }
 
-func _Pagination(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Pagination(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Pagination() called", LOG_SOURCE)
 
-	indexParam := request.Param
+	indexParam := request.Param1
 	sizeParam := request.Param2
 
 	var flux_err error
@@ -359,7 +378,7 @@ func _Pagination(s RecordService_BabaSaysServer, request *Request, record *flux.
 	return nil
 }
 
-func _Delete(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Delete(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Delete() called", LOG_SOURCE)
 
 	flux_err := record.Delete()
@@ -378,7 +397,7 @@ func _Delete(s RecordService_BabaSaysServer, request *Request, record *flux.Reco
 	return nil
 }
 
-func _Update(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Update(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Update() called", LOG_SOURCE)
 
 	flux_err := record.Update()
@@ -397,7 +416,7 @@ func _Update(s RecordService_BabaSaysServer, request *Request, record *flux.Reco
 	return nil
 }
 
-func _Insert(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Insert(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Insert() called", LOG_SOURCE)
 
 	id, flux_err := record.Insert()
@@ -416,7 +435,7 @@ func _Insert(s RecordService_BabaSaysServer, request *Request, record *flux.Reco
 	return nil
 }
 
-func _Close(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Close(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Close() called", LOG_SOURCE)
 
 	flux_err := record.Close()
@@ -435,10 +454,10 @@ func _Close(s RecordService_BabaSaysServer, request *Request, record *flux.Recor
 	return nil
 }
 
-func _GetFieldType(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _GetFieldType(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_GetFieldType() called", LOG_SOURCE)
 
-	fieldname := request.Param
+	fieldname := request.Param1
 
 	fieldType, flux_err := record.GetFieldType(fieldname)
 	if flux_err != nil {
@@ -456,10 +475,10 @@ func _GetFieldType(s RecordService_BabaSaysServer, request *Request, record *flu
 	return nil
 }
 
-func _Set(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Set(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Set() called", LOG_SOURCE)
 
-	fieldname := request.Param
+	fieldname := request.Param1
 	value := request.Param2
 
 	flux_err := record.Set(fieldname, value)
@@ -478,10 +497,10 @@ func _Set(s RecordService_BabaSaysServer, request *Request, record *flux.Record)
 	return nil
 }
 
-func _SetOrderBy(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _SetOrderBy(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_SetOrderBy() called", LOG_SOURCE)
 
-	fields := request.Param
+	fields := request.Param1
 
 	record.SetOrderBy(fields)
 
@@ -492,10 +511,10 @@ func _SetOrderBy(s RecordService_BabaSaysServer, request *Request, record *flux.
 	return nil
 }
 
-func _SetOrderByDesc(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _SetOrderByDesc(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_SetOrderByDesc() called", LOG_SOURCE)
 
-	fields := request.Param
+	fields := request.Param1
 
 	if flux_err := record.SetOrderByDesc(fields); flux_err != nil {
 		if send_err := s.Send(&Response{Fault: flux_err.Error()}); send_err != nil {
@@ -512,7 +531,7 @@ func _SetOrderByDesc(s RecordService_BabaSaysServer, request *Request, record *f
 	return nil
 }
 
-func _GetTable(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _GetTable(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_GetTable() called", LOG_SOURCE)
 
 	table := record.GetTable()
@@ -524,7 +543,7 @@ func _GetTable(s RecordService_BabaSaysServer, request *Request, record *flux.Re
 	return nil
 }
 
-func _Initialize(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Initialize(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Initialize() called", LOG_SOURCE)
 
 	record.Initialize()
@@ -536,7 +555,7 @@ func _Initialize(s RecordService_BabaSaysServer, request *Request, record *flux.
 	return nil
 }
 
-func _Next(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Next(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Next() called", LOG_SOURCE)
 
 	has, flux_err := record.Next()
@@ -555,7 +574,7 @@ func _Next(s RecordService_BabaSaysServer, request *Request, record *flux.Record
 	return nil
 }
 
-func _Query(s RecordService_BabaSaysServer, request *Request, record *flux.Record) error {
+func _Query(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Query() called", LOG_SOURCE)
 
 	count, flux_err := record.Query()
@@ -574,10 +593,10 @@ func _Query(s RecordService_BabaSaysServer, request *Request, record *flux.Recor
 	return nil
 }
 
-func _NewRecord(s RecordService_BabaSaysServer, request *Request) (*flux.Record, error) {
+func _NewRecord(s FluxRecordService_GetServiceStreamServer, request *Request) (*flux.Record, error) {
 	logger.Info("_NewRecord() called", LOG_SOURCE)
 
-	record, flux_err := stdsql.NewRecord(request.Param)
+	record, flux_err := stdsql.NewRecord(request.Param1)
 	if flux_err != nil {
 		if send_err := s.Send(&Response{Fault: flux_err.Error()}); send_err != nil {
 			return nil, send_err
@@ -593,4 +612,4 @@ func _NewRecord(s RecordService_BabaSaysServer, request *Request) (*flux.Record,
 	return record, nil
 }
 
-func (MyServer) mustEmbedUnimplementedRecordServiceServer() {}
+func (FluxRecordServiceImp) mustEmbedUnimplementedRecordServiceServer() {}

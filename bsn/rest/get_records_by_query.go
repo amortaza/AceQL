@@ -19,6 +19,7 @@ func GetRecordsByQuery(c echo.Context) error {
 
 	orderByAscending := true
 	orderBy := c.QueryParam("order_by")
+
 	if orderBy == "" {
 		orderBy = c.QueryParam("order_by_desc")
 		orderByAscending = false
@@ -61,13 +62,15 @@ func GetRecordsByQuery(c echo.Context) error {
 
 	r.Pagination(index, size)
 
-	if orderByAscending {
-		if err := r.SetOrderBy(orderBy); err != nil {
-			return err
-		}
-	} else {
-		if err := r.SetOrderByDesc(orderBy); err != nil {
-			return err
+	if orderBy != "" {
+		if orderByAscending {
+			if err := r.SetOrderBy(orderBy); err != nil {
+				return err
+			}
+		} else {
+			if err := r.SetOrderByDesc(orderBy); err != nil {
+				return err
+			}
 		}
 	}
 

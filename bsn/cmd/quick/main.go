@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
+	"strconv"
 )
 
 func init() {
@@ -14,6 +17,81 @@ func main() {
 	//bootstrap.Run()
 	//parseMappings("first >> u_first, last >> u_last")
 	//parseMappings("first>>u_first,last>>u_last")
+
+	testGetUser()
+}
+
+func testGetUser() {
+	name := "x_user"
+
+	orderByAscending := true
+	orderBy := "x_name"
+
+	paginationIndex := "0"
+	paginationSize := "3"
+
+	crud := stdsql.NewCRUD()
+
+	tableschema, err := flux.GetTableSchema(name, crud)
+	if err != nil {
+		fmt.Println("error!")
+	}
+
+	r := flux.NewRecord(tableschema, crud)
+	defer r.Close()
+
+	index, err := strconv.Atoi(paginationIndex)
+	if err != nil {
+		fmt.Println("error!")
+	}
+
+	size, err := strconv.Atoi(paginationSize)
+	if err != nil {
+		fmt.Println("error!")
+	}
+
+	r.Pagination(index, size)
+
+	if orderBy != "" {
+		if orderByAscending {
+			if err := r.SetOrderBy(orderBy); err != nil {
+				fmt.Println("error!")
+			}
+		} else {
+			if err := r.SetOrderByDesc(orderBy); err != nil {
+				fmt.Println("error!")
+			}
+		}
+	}
+
+	_, err = r.Query()
+	if err != nil {
+		fmt.Println("error!")
+	}
+
+	list := make([]*flux.RecordMap, 0)
+
+	for {
+		hasNext, err := r.Next()
+
+		if err != nil {
+			fmt.Println("error!")
+		}
+
+		if !hasNext {
+			break
+		}
+
+		list = append(list, r.GetMap())
+
+		v := r.GetMap()
+		d := v.Data
+		for a, b := range d {
+			fmt.Println(a, b.GetValue())
+		}
+	}
+
+	fmt.Println("done")
 }
 
 func main4() {

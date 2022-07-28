@@ -1,6 +1,8 @@
 core
 ----
 
+add previous to business rules
+automate created_on
 implement modules
 
 system and user defined default values in schema

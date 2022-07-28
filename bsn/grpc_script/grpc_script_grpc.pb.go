@@ -4,7 +4,7 @@
 // - protoc             v3.19.1
 // source: grpc_script.proto
 
-package grpc_script_client
+package grpc_script
 
 import (
 	context "context"

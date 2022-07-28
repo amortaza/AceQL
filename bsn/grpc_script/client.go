@@ -2,7 +2,6 @@ package grpc_script
 
 import (
 	"fmt"
-	"github.com/amortaza/aceql/bsn/grpc_hook"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/logger"
@@ -26,13 +25,13 @@ func init() {
 }
 
 func GRPC_CallScript(directory, scriptName string, params map[string]string) error {
-	c := grpc_hook.NewHookServiceClient(gGRPC_Connection)
+	c := NewScriptServiceClient(gGRPC_Connection)
 
 	if params == nil {
 		params = map[string]string{"testParam1": "value1"}
 	}
 
-	scriptRequest := grpc_hook.ScriptRequest{
+	scriptRequest := ScriptRequest{
 		ScriptPath: directory + "/" + scriptName + ".js",
 		Params:     params,
 	}
@@ -50,7 +49,7 @@ func GRPC_CallScript(directory, scriptName string, params map[string]string) err
 }
 
 func GRPC_ImportSet(importsetName string) error {
-	c := grpc_hook.NewHookServiceClient(gGRPC_Connection)
+	c := NewScriptServiceClient(gGRPC_Connection)
 
 	importset, err := getImportSetRecord(importsetName)
 
@@ -69,7 +68,7 @@ func GRPC_ImportSet(importsetName string) error {
 		return err
 	}
 
-	importsetRequest := grpc_hook.ImportSetRequest{
+	importsetRequest := ImportSetRequest{
 		Page:     12,
 		Pagesize: 50,
 		Adapter:  adapter,
@@ -127,7 +126,7 @@ func getImportSetRecord(importsetName string) (*flux.Record, error) {
 	return record, nil
 }
 
-func insertRows(table, mappings_str string, fields []string, rows []*grpc_hook.Row) error {
+func insertRows(table, mappings_str string, fields []string, rows []*Row) error {
 	mappings := parseMappings(mappings_str)
 
 	for _, row := range rows {
@@ -153,7 +152,7 @@ func parseMappings(str string) map[string]string {
 	return mapping
 }
 
-func insertRow(table string, mapping map[string]string, fields []string, row *grpc_hook.Row) error {
+func insertRow(table string, mapping map[string]string, fields []string, row *Row) error {
 	gr, err := stdsql.NewRecord(table)
 	if err != nil {
 		return err
@@ -182,7 +181,7 @@ func insertRow(table string, mapping map[string]string, fields []string, row *gr
 }
 
 /*
-func createImportTable(tablename string, fields []*grpc_hook.Field) error {
+func createImportTable(tablename string, fields []*Field) error {
 	table := dbschema.NewTable(tablename)
 
 	for _, field := range fields {

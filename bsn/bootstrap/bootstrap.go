@@ -11,6 +11,10 @@ func Run() error {
 	// we do not need to bootstrap schema, because it is hard-coded in code!
 	// todo test bootstrap
 
+	if err := bootstrap_History(); err != nil {
+		return err
+	}
+
 	if err := bootstrap_BusinessRule(); err != nil {
 		return err
 	}
@@ -28,6 +32,16 @@ func Run() error {
 	}
 
 	if err := bootstrap_User(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func bootstrap_History() error {
+	var records []*flux.Record
+
+	if err := bootstrap(makeSpecificationFor_History(), records); err != nil {
 		return err
 	}
 

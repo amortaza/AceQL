@@ -2,6 +2,7 @@ package rest
 
 import (
 	"fmt"
+	"github.com/amortaza/aceql/bsn/grpc_script"
 	"github.com/amortaza/aceql/logger"
 	"github.com/labstack/echo"
 )
@@ -18,7 +19,7 @@ func ImportSet(c echo.Context) error {
 		return logger.Err(err, "???")
 	}
 
-	grpc_script_client.GRPC_ImportSet(importsetName)
+	grpc_script.GRPC_ImportSet(importsetName)
 
 	return c.String(200, "")
 }
