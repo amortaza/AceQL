@@ -1,8 +1,9 @@
-package main
+package grpc_flux_record
 
+/*
 import (
 	"fmt"
-	"github.com/amortaza/aceql/bsn/grpc_record"
+	"github.com/amortaza/aceql/bsn/grpc_flux_record"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"io"
@@ -20,14 +21,14 @@ func main() {
 	}
 	defer conn.Close()
 
-	c := grpc_record.NewRecordServiceClient(conn) // Connect chat service
+	c := grpc_flux_record.NewRecordServiceClient(conn) // Connect chat service
 
 	runit(c)
 
 	fmt.Println("bye")
 }
 
-func runit(client grpc_record.RecordServiceClient) {
+func runit(client grpc_flux_record.RecordServiceClient) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -56,14 +57,14 @@ func runit(client grpc_record.RecordServiceClient) {
 	}()
 
 	go func() {
-		request := grpc_record.Request{Param: "p1", Operation: "operation cool cat"}
+		request := grpc_flux_record.Request{Param: "p1", Operation: "operation cool cat"}
 		if err := stream.Send(&request); err != nil {
 			log.Fatalf("Server failed failed: %v", err)
 		}
 
 		time.Sleep(1000 * time.Millisecond)
 
-		request = grpc_record.Request{Param: "p1b", Operation: "operation cool cat"}
+		request = grpc_flux_record.Request{Param: "p1b", Operation: "operation cool cat"}
 		if err := stream.Send(&request); err != nil {
 			log.Fatalf("Server failed failed: %v", err)
 		}
@@ -83,3 +84,4 @@ func runit(client grpc_record.RecordServiceClient) {
 	fmt.Println("done waiting, closing stream")
 	stream.CloseSend()
 }
+*/

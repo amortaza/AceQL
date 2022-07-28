@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/amortaza/aceql/bsn/grpc_record"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -16,11 +15,11 @@ func main() {
 		log.Fatalf("failed %v", err)
 	}
 
-	s := grpc_record.MyServer{}
+	s := grpc_flux_record.MyServer{}
 
 	grpcServer := grpc.NewServer()
 
-	grpc_record.RegisterRecordServiceServer(grpcServer, &s)
+	grpc_flux_record.RegisterRecordServiceServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed %v", err)

@@ -20,7 +20,7 @@ module.exports = function(table) {
     var that = this;
     this.table = table;
 
-    var stream = client.BabaSays();
+    var stream = client.GetFluxRecordStream();
 
     this.resolvers = [];
 

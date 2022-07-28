@@ -1,4 +1,4 @@
-var PROTO_PATH = __dirname + '/../bsn/grpc_hook.proto';
+var PROTO_PATH = __dirname + '/../bsn/grpc_script.proto';
 
 var grpc = require('@grpc/grpc-js');
 
@@ -12,7 +12,7 @@ var options = { keepCase: true,
 
 var packageDefinition = protoLoader.loadSync( PROTO_PATH, options );
 
-var hook_proto = grpc.loadPackageDefinition(packageDefinition).grpc_hook;
+var grpc_script = grpc.loadPackageDefinition(packageDefinition).grpc_script;
 
 // Implements the RPC method.
 function onScriptCall(call, callback) {
@@ -53,7 +53,7 @@ function onImportSet(call, callback) {
 function main() {
   var server = new grpc.Server();
 
-  server.addService(hook_proto.HookService.service, {onScriptCall: onScriptCall, onImportSet: onImportSet} );
+  server.addService(grpc_script.ScriptService.service, {onScriptCall: onScriptCall, onImportSet: onImportSet} );
 
   server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
       console.log('Starting Server...')

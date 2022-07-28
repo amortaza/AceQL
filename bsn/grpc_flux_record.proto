@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+// on the command-line in BSN: protoc --go_out=./grpc_flux_record --go_opt=paths=source_relative --go-grpc_out=./grpc_flux_record --go-grpc_opt=paths=source_relative grpc_flux_record.proto
+
+option go_package = "github.com/amortaza/aceql/bsn/grpc_flux_record";
+
+package grpc_flux_record;
+
+// --------------------------------
+// record!
+// --------------------------------
+
+message Request {
+    string operation = 1;
+    string param1 = 2;
+    string param2 = 3;
+    string param3 = 4;
+}
+
+message Response {
+    string answer = 1;
+    string fault = 2;
+}
+
+service FluxRecordService {
+    rpc GetServiceStream(stream Request) returns (stream Response) {}
+}

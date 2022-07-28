@@ -31,6 +31,7 @@ type Record struct {
 }
 
 // NewRecord NEVER FAILS (0)
+// grpc linked
 func NewRecord(table *dbschema.Table, crud CRUD) *Record {
 	return NewRecord_withDefinition(table.Name(), table.Fields(), crud)
 }
@@ -64,16 +65,6 @@ func NewRecord_withDefinition(tableName string, fields []*dbschema.Field, crud C
 	return rec
 }
 
-func (rec *Record) Initialize() {
-	rec.filterQuery = query.NewFilterQuery(rec.crud.Compiler())
-	rec.paginationSize = -1
-	rec.paginationIndex = 0
-	rec.values = NewRecordMap()
-	rec.userValues = NewRecordMap()
-	rec.orderBy = ""
-	rec.orderByAscending = false
-}
-
 func (rec *Record) MarshalJSON() ([]byte, error) {
 	var bytes []byte
 	var err error
@@ -83,10 +74,6 @@ func (rec *Record) MarshalJSON() ([]byte, error) {
 	}
 
 	return bytes, nil
-}
-
-func (rec *Record) GetTable() string {
-	return rec.tableName
 }
 
 func (rec *Record) GetMap() *RecordMap {
@@ -105,16 +92,47 @@ func (rec *Record) GetMapGRPC() map[string]string {
 	return m
 }
 
-func (rec *Record) SetOrderByDesc(fields string) {
+// grpc linked
+func (rec *Record) Initialize() {
+	rec.filterQuery = query.NewFilterQuery(rec.crud.Compiler())
+	rec.paginationSize = -1
+	rec.paginationIndex = 0
+	rec.values = NewRecordMap()
+	rec.userValues = NewRecordMap()
+	rec.orderBy = ""
+	rec.orderByAscending = false
+}
+
+// grpc linked
+func (rec *Record) GetTable() string {
+	return rec.tableName
+}
+
+// grpc linked
+func (rec *Record) SetOrderByDesc(fields string) error {
+	if fields == "" {
+		return logger.Error(fmt.Sprintf("%s", "missing parameter \"fields\""), "flux.Record.SetOrderByDesc()")
+	}
+
 	rec.orderByAscending = false
 	rec.orderBy = fields
+
+	return nil
 }
 
-func (rec *Record) SetOrderBy(fields string) {
+// grpc linked
+func (rec *Record) SetOrderBy(fields string) error {
+	if fields == "" {
+		return logger.Error(fmt.Sprintf("%s", "missing parameter \"fields\""), "flux.Record.SetOrderBy()")
+	}
+
 	rec.orderByAscending = true
 	rec.orderBy = fields
+
+	return nil
 }
 
+// grpc linked
 func (rec *Record) GetFieldType(fieldname string) (dbschema.FieldType, error) {
 	fieldType, ok := rec.fieldnameToFieldType[fieldname]
 
@@ -125,6 +143,7 @@ func (rec *Record) GetFieldType(fieldname string) (dbschema.FieldType, error) {
 	return fieldType, nil
 }
 
+// grpc linked
 func (rec *Record) Set(fieldname string, value string) error {
 	fieldType, ok := rec.fieldnameToFieldType[fieldname]
 	if !ok {
@@ -136,6 +155,7 @@ func (rec *Record) Set(fieldname string, value string) error {
 	return nil
 }
 
+// grpc linked
 func (rec *Record) Close() error {
 	if err := rec.crud.Close(); err != nil {
 		return err
@@ -144,6 +164,7 @@ func (rec *Record) Close() error {
 	return nil
 }
 
+// grpc linked
 func (rec *Record) Insert() (string, error) {
 	var id string
 	var err error
@@ -155,6 +176,7 @@ func (rec *Record) Insert() (string, error) {
 	return id, nil
 }
 
+// grpc linked
 func (rec *Record) Update() error {
 	id, err := rec.Get("x_id")
 	if err != nil {
@@ -168,6 +190,7 @@ func (rec *Record) Update() error {
 	return nil
 }
 
+// grpc linked
 func (rec *Record) Delete() error {
 	id, err := rec.Get("x_id")
 	if err != nil {
@@ -181,6 +204,7 @@ func (rec *Record) Delete() error {
 	return nil
 }
 
+// grpc linked
 func (rec *Record) Query() (int, error) {
 	root, err := rec.filterQuery.GetRoot()
 	if err != nil {
@@ -196,6 +220,7 @@ func (rec *Record) Query() (int, error) {
 }
 
 // Next will return false when no records left.
+// grpc linked
 func (rec *Record) Next() (bool, error) {
 	rec.userValues = NewRecordMap()
 
@@ -217,11 +242,13 @@ func (rec *Record) Next() (bool, error) {
 	return true, err
 }
 
+// grpc linked
 func (rec *Record) Pagination(index, size int) {
 	rec.paginationIndex = index
 	rec.paginationSize = size
 }
 
+// grpc linked
 func (rec *Record) Get(field string) (string, error) {
 	if rec.userValues.HasField(field) {
 		return rec.userValues.GetFieldValue(field)
@@ -234,6 +261,7 @@ func (rec *Record) Get(field string) (string, error) {
 	return "", logger.Error(fmt.Sprintf("field '%s' does not exist in record", field), "Record.Get")
 }
 
+// grpc linked
 func (rec *Record) AddPK(id string) error {
 	if err := rec.filterQuery.Add("x_id", query.Equals, id); err != nil {
 		return logger.Err(err, "Record.AddPK")
@@ -243,10 +271,13 @@ func (rec *Record) AddPK(id string) error {
 }
 
 //todo validate encoded query
+// grpc linked
 func (rec *Record) SetEncodedQuery(encodedQuery string) {
 	rec.filterQuery.SetEncodedQuery(encodedQuery)
 }
 
+// todo error check
+// grpc linked
 func (rec *Record) Add(field string, op query.OpType, rhs string) error {
 	if err := rec.filterQuery.Add(field, op, rhs); err != nil {
 		return err
@@ -255,6 +286,8 @@ func (rec *Record) Add(field string, op query.OpType, rhs string) error {
 	return nil
 }
 
+// todo error check
+// grpc linked
 func (rec *Record) AddEq(field string, rhs string) error {
 	if err := rec.filterQuery.Add(field, query.Equals, rhs); err != nil {
 		return err
@@ -263,6 +296,7 @@ func (rec *Record) AddEq(field string, rhs string) error {
 	return nil
 }
 
+// grpc linked
 func (rec *Record) AddOr(field string, op query.OpType, rhs string) error {
 	if err := rec.filterQuery.AddOr(field, op, rhs); err != nil {
 		return err
@@ -271,6 +305,7 @@ func (rec *Record) AddOr(field string, op query.OpType, rhs string) error {
 	return nil
 }
 
+// grpc linked
 func (rec *Record) AndGroup() error {
 	if err := rec.filterQuery.AndGroup(); err != nil {
 		return err
@@ -279,6 +314,7 @@ func (rec *Record) AndGroup() error {
 	return nil
 }
 
+// grpc linked
 func (rec *Record) OrGroup() error {
 	if err := rec.filterQuery.OrGroup(); err != nil {
 		return err
@@ -287,6 +323,7 @@ func (rec *Record) OrGroup() error {
 	return nil
 }
 
+// grpc linked
 func (rec *Record) Not() {
 	rec.filterQuery.Not()
 }

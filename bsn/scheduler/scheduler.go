@@ -1,7 +1,6 @@
 package scheduler
 
 import (
-	"github.com/amortaza/aceql/bsn/grpc_client"
 	bsntime "github.com/amortaza/aceql/bsn/time"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
@@ -62,7 +61,7 @@ func StartScheduler() {
 					break
 				}
 
-				if err := grpc_client.GRPC_CallScript("../js/scheduled_jobs", v, nil); err != nil {
+				if err := grpc_script_client.GRPC_CallScript("../js/scheduled_jobs", v, nil); err != nil {
 					logger.Err(err, "???")
 					continue
 				}

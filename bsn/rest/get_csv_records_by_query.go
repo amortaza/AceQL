@@ -164,9 +164,13 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 	r.Pagination(index, size)
 
 	if orderByAscending {
-		r.SetOrderBy(orderBy)
+		if err := r.SetOrderBy(orderBy); err != nil {
+			return nil, err
+		}
 	} else {
-		r.SetOrderByDesc(orderBy)
+		if err := r.SetOrderByDesc(orderBy); err != nil {
+			return nil, err
+		}
 	}
 
 	return r, nil
