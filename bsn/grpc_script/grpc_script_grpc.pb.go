@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ScriptServiceClient interface {
+	OnBusinessRule(ctx context.Context, in *BusinessRuleRequest, opts ...grpc.CallOption) (*BusinessRuleResponse, error)
 	OnScriptCall(ctx context.Context, in *ScriptRequest, opts ...grpc.CallOption) (*ScriptResponse, error)
 	OnImportSet(ctx context.Context, in *ImportSetRequest, opts ...grpc.CallOption) (*ImportSetResponse, error)
 }
@@ -32,6 +33,15 @@ type scriptServiceClient struct {
 
 func NewScriptServiceClient(cc grpc.ClientConnInterface) ScriptServiceClient {
 	return &scriptServiceClient{cc}
+}
+
+func (c *scriptServiceClient) OnBusinessRule(ctx context.Context, in *BusinessRuleRequest, opts ...grpc.CallOption) (*BusinessRuleResponse, error) {
+	out := new(BusinessRuleResponse)
+	err := c.cc.Invoke(ctx, "/grpc_script.ScriptService/OnBusinessRule", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *scriptServiceClient) OnScriptCall(ctx context.Context, in *ScriptRequest, opts ...grpc.CallOption) (*ScriptResponse, error) {
@@ -56,6 +66,7 @@ func (c *scriptServiceClient) OnImportSet(ctx context.Context, in *ImportSetRequ
 // All implementations must embed UnimplementedScriptServiceServer
 // for forward compatibility
 type ScriptServiceServer interface {
+	OnBusinessRule(context.Context, *BusinessRuleRequest) (*BusinessRuleResponse, error)
 	OnScriptCall(context.Context, *ScriptRequest) (*ScriptResponse, error)
 	OnImportSet(context.Context, *ImportSetRequest) (*ImportSetResponse, error)
 	mustEmbedUnimplementedScriptServiceServer()
@@ -65,6 +76,9 @@ type ScriptServiceServer interface {
 type UnimplementedScriptServiceServer struct {
 }
 
+func (UnimplementedScriptServiceServer) OnBusinessRule(context.Context, *BusinessRuleRequest) (*BusinessRuleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OnBusinessRule not implemented")
+}
 func (UnimplementedScriptServiceServer) OnScriptCall(context.Context, *ScriptRequest) (*ScriptResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OnScriptCall not implemented")
 }
@@ -82,6 +96,24 @@ type UnsafeScriptServiceServer interface {
 
 func RegisterScriptServiceServer(s grpc.ServiceRegistrar, srv ScriptServiceServer) {
 	s.RegisterService(&ScriptService_ServiceDesc, srv)
+}
+
+func _ScriptService_OnBusinessRule_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BusinessRuleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScriptServiceServer).OnBusinessRule(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc_script.ScriptService/OnBusinessRule",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScriptServiceServer).OnBusinessRule(ctx, req.(*BusinessRuleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ScriptService_OnScriptCall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -127,6 +159,10 @@ var ScriptService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "grpc_script.ScriptService",
 	HandlerType: (*ScriptServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "OnBusinessRule",
+			Handler:    _ScriptService_OnBusinessRule_Handler,
+		},
 		{
 			MethodName: "OnScriptCall",
 			Handler:    _ScriptService_OnScriptCall_Handler,

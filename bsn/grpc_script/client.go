@@ -13,6 +13,13 @@ import (
 
 var gGRPC_Connection *grpc.ClientConn
 
+const (
+	BUSINESS_RULE_ON_CREATE = "on_create"
+	BUSINESS_RULE_ON_READ   = "on_read"
+	BUSINESS_RULE_ON_UPDATE = "on_update"
+	BUSINESS_RULE_ON_DELETE = "on_delete"
+)
+
 func init() {
 	var err error
 	gGRPC_Connection, err = grpc.Dial(":50051", grpc.WithInsecure()) // :9000
@@ -22,6 +29,49 @@ func init() {
 
 	// TODO: use signals to close(), see https://gobyexample.com/signals
 	//defer conn.Close()
+}
+
+func GRPC_CallBusinessRule(directory, scriptName, table, recordId string, originals, current map[string]string) error {
+	LOG_SOURCE := "GRPC_CallBusinessRule"
+
+	c := NewScriptServiceClient(gGRPC_Connection)
+
+	logger.Info("GRPC_CallBusinessRule: current , see below", LOG_SOURCE)
+	for k, v := range (current) {
+		logger.Info("GRPC_CallBusinessRule: current "+k+" "+v, LOG_SOURCE)
+	}
+
+	businessRuleRequest := BusinessRuleRequest{
+		ScriptPath: directory + "/" + scriptName + ".js",
+		Action:     BUSINESS_RULE_ON_UPDATE,
+		Table:      table,
+		RecordId:   recordId,
+		Originals:  originals,
+		Current:    current,
+	}
+
+	businessRuleResponse, err := c.OnBusinessRule(context.Background(), &businessRuleRequest)
+	if err != nil {
+		return logger.Err(err, "GRPC")
+	}
+
+	if businessRuleResponse != nil {
+		if businessRuleResponse.Fault != "" {
+			logger.Info("BusinessRule Error: "+err.Error(), LOG_SOURCE)
+
+		} else if businessRuleResponse.CancelAction != "" {
+			logger.Info("BusinessRule Cancel Action: "+businessRuleResponse.CancelAction, LOG_SOURCE)
+
+		} else if businessRuleResponse.MessageToDisplay != "" {
+			logger.Info("BusinessRule Message: "+businessRuleResponse.MessageToDisplay, LOG_SOURCE)
+
+		} else if businessRuleResponse.ErrorToDisplay != "" {
+			logger.Info("BusinessRule Error Message: "+businessRuleResponse.ErrorToDisplay, LOG_SOURCE)
+
+		}
+	}
+
+	return nil
 }
 
 func GRPC_CallScript(directory, scriptName string, params map[string]string) error {
@@ -42,7 +92,11 @@ func GRPC_CallScript(directory, scriptName string, params map[string]string) err
 	}
 
 	if scriptResponse != nil {
-		logger.Info(fmt.Sprintf("Answer: %s", scriptResponse.Answer), "GRPC")
+		m := scriptResponse.Answer
+		for k, v := range m {
+			logger.Info("Answer "+k+" : "+v, "GRPC: Script Response")
+		}
+		logger.Info(fmt.Sprintf("Answer: %s", scriptResponse.Answer), "GRPC: Script Response")
 	}
 
 	return nil

@@ -1,6 +1,8 @@
 package rest
 
 import (
+	"github.com/amortaza/aceql/bsn/cache"
+	"github.com/amortaza/aceql/bsn/grpc_script"
 	"github.com/amortaza/aceql/flux"
 	"github.com/amortaza/aceql/flux-drivers/stdsql"
 	"github.com/amortaza/aceql/logger"
@@ -8,6 +10,8 @@ import (
 )
 
 func PutRecord(c echo.Context) error {
+	LOG_SOURCE := "REST:PutRecord"
+
 	name := c.Param("table")
 	id := c.Param("id")
 
@@ -15,12 +19,12 @@ func PutRecord(c echo.Context) error {
 
 	if err := c.Bind(m); err != nil {
 		c.JSON(500, err.Error())
-		return logger.Err(err, "REST:PutRecord")
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	if err := updateRecord(name, id, m); err != nil {
 		c.JSON(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	c.JSON(200, "")
@@ -77,21 +81,28 @@ func updateRecord(name string, id string, m *echo.Map) error {
 }
 
 func onAfterUpdate(rec *flux.Record) error {
-	// todo undo
-	logger.Error("onAfterUpdate is commented out", "???")
+	// to do undo
+	// logger.Error("onAfterUpdate is commented out", "REST:onAfterUpdate")
+	//LOG_SOURCE := "CORE:put_record.onAfterUpdate"
 
-	//grpcMap := rec.GetMapGRPC()
-	//
-	//scriptnames, err := cache.GetOnAfterUpdate_ScriptNames(rec.GetTable())
-	//if err != nil {
-	//	return err
-	//}
+	scriptnames, err := cache.GetOnAfterUpdate_ScriptNames(rec.GetTable())
+	if err != nil {
+		return err
+	}
 
-	//for _, script := range scriptnames {
-	//if err := grpcclient.GRPC_OnRecordUpdate(script, grpcMap); err != nil {
-	//	return err
-	//}
-	//}
+	grpcMap := rec.GetMapGRPC()
+
+	for _, script := range scriptnames {
+		logger.Info("calling script "+script, "REST:onAfterUpdate")
+		x_id, err := rec.Get("x_id")
+		if err != nil {
+			return logger.PushStackTrace("put_record.onAfterUpdate()", err)
+		}
+
+		if err := grpc_script.GRPC_CallBusinessRule("../js/businessrules/", script, rec.GetTable(), x_id, grpcMap, grpcMap); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }

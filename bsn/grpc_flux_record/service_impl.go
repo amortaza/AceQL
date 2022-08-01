@@ -37,8 +37,8 @@ func (FluxRecordServiceImp) GetServiceStream(s FluxRecordService_GetServiceStrea
 		logger.Info("baba received - "+request.Operation+", "+request.Param1, LOG_SOURCE)
 
 		// stdsql.NewRecord(tablename)
-		if request.Operation == "NewRecord()" {
-			r, err := _NewRecord(s, request)
+		if request.Operation == "Open()" {
+			r, err := _Open(s, request)
 			if err != nil {
 				return err
 			}
@@ -318,6 +318,7 @@ func _AddPK(s FluxRecordService_GetServiceStreamServer, request *Request, record
 	return nil
 }
 
+// in client_flux_record
 func _Get(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Get() called", LOG_SOURCE)
 
@@ -397,6 +398,7 @@ func _Delete(s FluxRecordService_GetServiceStreamServer, request *Request, recor
 	return nil
 }
 
+// in client_flux_record
 func _Update(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Update() called", LOG_SOURCE)
 
@@ -416,6 +418,7 @@ func _Update(s FluxRecordService_GetServiceStreamServer, request *Request, recor
 	return nil
 }
 
+// in client_flux_record
 func _Insert(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Insert() called", LOG_SOURCE)
 
@@ -435,6 +438,7 @@ func _Insert(s FluxRecordService_GetServiceStreamServer, request *Request, recor
 	return nil
 }
 
+// in client_flux_record
 func _Close(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Close() called", LOG_SOURCE)
 
@@ -475,6 +479,7 @@ func _GetFieldType(s FluxRecordService_GetServiceStreamServer, request *Request,
 	return nil
 }
 
+// in client_flux_record
 func _Set(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Set() called", LOG_SOURCE)
 
@@ -555,6 +560,7 @@ func _Initialize(s FluxRecordService_GetServiceStreamServer, request *Request, r
 	return nil
 }
 
+// in client_flux_record
 func _Next(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Next() called", LOG_SOURCE)
 
@@ -574,6 +580,7 @@ func _Next(s FluxRecordService_GetServiceStreamServer, request *Request, record 
 	return nil
 }
 
+// in client_flux_record
 func _Query(s FluxRecordService_GetServiceStreamServer, request *Request, record *flux.Record) error {
 	logger.Info("_Query() called", LOG_SOURCE)
 
@@ -593,7 +600,8 @@ func _Query(s FluxRecordService_GetServiceStreamServer, request *Request, record
 	return nil
 }
 
-func _NewRecord(s FluxRecordService_GetServiceStreamServer, request *Request) (*flux.Record, error) {
+// in client_flux_record
+func _Open(s FluxRecordService_GetServiceStreamServer, request *Request) (*flux.Record, error) {
 	logger.Info("_NewRecord() called", LOG_SOURCE)
 
 	record, flux_err := stdsql.NewRecord(request.Param1)

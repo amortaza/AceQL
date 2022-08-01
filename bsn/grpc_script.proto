@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// on the command-line: protoc --go_out=./grpc_script --go_opt=paths=source_relative --go-grpc_out=./grpc_script --go-grpc_opt=paths=source_relative grpc_script.proto
+// on the command-line BSN: protoc --go_out=./grpc_script --go_opt=paths=source_relative --go-grpc_out=./grpc_script --go-grpc_opt=paths=source_relative grpc_script.proto
 
 option go_package = "github.com/amortaza/aceql/bsn/grpc_script";
 
@@ -38,7 +38,28 @@ message ScriptResponse {
     map<string,string> answer = 1;
 }
 
+// --------------------------------
+// business rule
+// --------------------------------
+
+message BusinessRuleRequest {
+    string scriptPath = 1;
+    string action = 2;
+    string table = 3;
+    string record_id = 4;
+    map<string,string> originals = 5;
+    map<string,string> current = 6;
+}
+
+message BusinessRuleResponse {
+    string cancel_action = 1;
+    string fault = 2;
+    string message_to_display = 3;
+    string error_to_display = 4;
+}
+
 service ScriptService {
+    rpc OnBusinessRule(BusinessRuleRequest) returns (BusinessRuleResponse) {}
     rpc OnScriptCall(ScriptRequest) returns (ScriptResponse) {}
     rpc OnImportSet(ImportSetRequest) returns (ImportSetResponse) {}
 }
