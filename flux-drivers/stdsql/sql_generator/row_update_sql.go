@@ -73,7 +73,7 @@ func writeFieldUpdateSQL(fieldname string, recordmap *flux.RecordMap) (string, e
 		sql = fmt.Sprintf("`%s` = %s", fieldname, valueAsString)
 
 	} else if isBool {
-		sql = fmt.Sprintf("`%s` = %s", fieldname, valueAsString)
+		sql = fmt.Sprintf("`%s` = '%s'", fieldname, valueAsString)
 
 	} else {
 		return "invalid sql", logger.Error("unrecognized type, cant even see it", "???")

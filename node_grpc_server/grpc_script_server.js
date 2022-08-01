@@ -15,17 +15,44 @@ var packageDefinition = protoLoader.loadSync( PROTO_PATH, options );
 var grpc_script = grpc.loadPackageDefinition(packageDefinition).grpc_script;
 
 // Implements the RPC method.
+async function onBusinessRule(call, callback) {
+    try {
+        var scriptPath = call.request.scriptPath;
+        var action = call.request.action;
+        var table = call.request.table;
+        var record_id = call.request.record_id;
+        var originals = call.request.originals;
+        var current = call.request.current;
+
+        // console.log("onBussinessRule: current is " + JSON.stringify(current));
+
+        delete require.cache[require.resolve(scriptPath)]
+        
+        var script = require(scriptPath)
+        var businessRuleResponse = await script( action, table, record_id, originals, current );
+
+        console.log("onBusinessRule: response " + JSON.stringify(businessRuleResponse));
+
+        callback(null, businessRuleResponse);
+    } catch ( e ) {
+        console.log('****************** error: ' + e )
+        callback(null, {error_to_display: e});
+    }
+}
+
 function onScriptCall(call, callback) {
     try {
         var scriptPath = call.request.scriptPath;
         var params = call.request.params;
 
         delete require.cache[require.resolve(scriptPath)]
-        
+
         var script = require(scriptPath)
         var scriptResponse = script( params )
 
-        callback(null, scriptResponse);
+        console.log("onScriptCall: response " + JSON.stringify(scriptResponse));
+
+        callback(null, {answer: scriptResponse});
     } catch ( e ) {
         console.log('****************** error: ' + e )
         callback(null, {result: 'there was an error'});
@@ -53,10 +80,19 @@ function onImportSet(call, callback) {
 function main() {
   var server = new grpc.Server();
 
-  server.addService(grpc_script.ScriptService.service, {onScriptCall: onScriptCall, onImportSet: onImportSet} );
+  server.addService(
+      grpc_script.ScriptService.service, {
+          onBusinessRule: onBusinessRule,
+          onScriptCall: onScriptCall,
+          onImportSet: onImportSet
+      });
 
   server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
-      console.log('Starting Server...')
+      console.log('starting SCRIPT server...');
+      console.log('...business rules');
+      console.log('...importsets');
+      console.log('...general scripts');
+
       server.start();
   });
 }

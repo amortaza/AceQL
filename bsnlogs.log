@@ -1,1 +1,382 @@
-{"time":"2022-07-27T22:41:36.1040425-07:00","level":"FATAL","prefix":"echo","file":"main.go","line":"52","message":"listen tcp :8000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted."}
+2022-07-31 21:46:53	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' )
+
+2022-07-31 21:46:53	info	SQL:RowQuerier.Query()	SELECT x_active, x_id, x_name FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93' ORDER BY x_id ASC
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Query()	SELECT x_active, x_id, x_name FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93' ORDER BY x_id ASC
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93'
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Run()	UPDATE `x_user` SET  `x_name` = 'clown', `x_active` = 'true' WHERE x_id ='32087ff656e8454da58f6879392a3e93';
+
+2022-07-31 21:46:53	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_business_rule' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_business_rule' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_business_rule' AND x_type = 'field' )
+
+2022-07-31 21:46:53	info	SQL:RowQuerier.Query()	SELECT x_id, x_table, x_script_name, x_active FROM x_business_rule WHERE x_table = 'x_user' ORDER BY x_id ASC
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Query()	SELECT x_id, x_table, x_script_name, x_active FROM x_business_rule WHERE x_table = 'x_user' ORDER BY x_id ASC
+
+2022-07-31 21:46:53	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_business_rule WHERE x_table = 'x_user'
+
+2022-07-31 21:46:53	info	REST:onAfterUpdate	calling script OnUpdate_x_user
+
+2022-07-31 21:46:53	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current , see below
+
+2022-07-31 21:46:53	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_name clown
+
+2022-07-31 21:46:53	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_active true
+
+2022-07-31 21:46:53	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_id 32087ff656e8454da58f6879392a3e93
+
+2022-07-31 21:46:53	info	GRPC_CallBusinessRule	BusinessRule Message: success
+
+2022-07-31 21:46:53	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:48:13	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:48:13	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:48:13	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' )
+
+2022-07-31 21:48:13	info	SQL:RowQuerier.Query()	SELECT x_active, x_id, x_name FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93' ORDER BY x_id ASC
+
+2022-07-31 21:48:13	info	SQL:SqlRunner.Query()	SELECT x_active, x_id, x_name FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93' ORDER BY x_id ASC
+
+2022-07-31 21:48:13	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93'
+
+2022-07-31 21:48:13	info	SQL:SqlRunner.Run()	UPDATE `x_user` SET  `x_active` = 'true', `x_name` = 'clown' WHERE x_id ='32087ff656e8454da58f6879392a3e93';
+
+2022-07-31 21:48:13	info	REST:onAfterUpdate	calling script OnUpdate_x_user
+
+2022-07-31 21:48:13	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current , see below
+
+2022-07-31 21:48:13	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_name clown
+
+2022-07-31 21:48:13	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_active true
+
+2022-07-31 21:48:13	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_id 32087ff656e8454da58f6879392a3e93
+
+2022-07-31 21:48:13	info	GRPC_CallBusinessRule	BusinessRule Message: success
+
+2022-07-31 21:48:13	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:50:20	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:50:20	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:50:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' )
+
+2022-07-31 21:50:20	info	SQL:RowQuerier.Query()	SELECT x_active, x_id, x_name FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93' ORDER BY x_id ASC
+
+2022-07-31 21:50:20	info	SQL:SqlRunner.Query()	SELECT x_active, x_id, x_name FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93' ORDER BY x_id ASC
+
+2022-07-31 21:50:20	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93'
+
+2022-07-31 21:50:20	info	SQL:SqlRunner.Run()	UPDATE `x_user` SET  `x_name` = 'clown', `x_active` = 'true' WHERE x_id ='32087ff656e8454da58f6879392a3e93';
+
+2022-07-31 21:50:20	info	REST:onAfterUpdate	calling script OnUpdate_x_user
+
+2022-07-31 21:50:20	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current , see below
+
+2022-07-31 21:50:20	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_name clown
+
+2022-07-31 21:50:20	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_active true
+
+2022-07-31 21:50:20	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_id 32087ff656e8454da58f6879392a3e93
+
+2022-07-31 21:50:20	info	GRPC_CallBusinessRule	BusinessRule Error Message: ReferenceError: filed is not defined
+
+2022-07-31 21:50:20	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:50:30	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema ORDER BY x_id ASC LIMIT 0, 100
+
+2022-07-31 21:50:30	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema ORDER BY x_id ASC LIMIT 0, 100
+
+2022-07-31 21:50:30	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Old Value","x_id" : "0e08b242d6ec4c5c8fe1d2dd2c4103fa","x_type" : "field","x_table" : "x_history","x_field" : "x_old"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "relation","x_table" : "x_user","x_field" : "x_id","x_field_type" : "String","x_label" : "Users","x_id" : "0f41a9af981b4257b49b913a2f6477ba"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_id" : "19c74b216f864d9d843b1b0546e3e943","x_type" : "relation","x_table" : "x_history","x_field" : "x_id","x_field_type" : "String","x_label" : "History"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_id" : "3242bbc567db44cd9a6a5eef6b9ec647","x_type" : "field","x_table" : "x_importset","x_field" : "x_id","x_field_type" : "String","x_label" : "ID"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_id" : "375b5b9005fb477cb4a0820388619eb9","x_type" : "field","x_table" : "x_importset","x_field" : "x_target_table","x_field_type" : "String","x_label" : "Target Table"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_choice_list","x_field" : "x_field","x_field_type" : "String","x_label" : "Field","x_id" : "3d7380342fa24a889e6b7d798b826e37"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_label" : "ID","x_id" : "4e0186bc33b541cfb645eb35c55ec08d","x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_id","x_field_type" : "String"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "x_scheduled_job","x_field" : "x_starting_datetime","x_field_type" : "DateTime","x_label" : "Starting Datetime","x_id" : "528b099d0219495a8133d2fd7a362562","x_type" : "field"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_label" : "Target Record ID","x_id" : "5992c75ebb0d4191bda084d3de0063ec","x_type" : "field","x_table" : "x_history","x_field" : "x_record_id","x_field_type" : "String"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_business_rule","x_field" : "x_id","x_field_type" : "String","x_label" : "ID","x_id" : "59ac9b572db74392b5827f11e1224963"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "x_importset","x_field" : "x_adapter","x_field_type" : "String","x_label" : "Adapter","x_id" : "5d56c1fae6cb450dbcebfd817d6a5bd7","x_type" : "field"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field" : "x_field","x_field_type" : "String","x_label" : "Field","x_id" : "64a9113026724c33961c07b8a71c58a8","x_type" : "field","x_table" : "x_history"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_choice_list","x_field" : "x_order","x_field_type" : "Number","x_label" : "Order","x_id" : "6ad40d20c168407fa35fda63bbbcd909"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "x_history","x_field" : "x_id","x_field_type" : "String","x_label" : "ID","x_id" : "80505b389d7541c0b722cd8ca733201b","x_type" : "field"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_id" : "8498deb0c4e740609dcf0cc7d0f8a9ae","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_name","x_field_type" : "String","x_label" : "Name"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "x_history","x_field" : "x_new","x_field_type" : "String","x_label" : "New Value","x_id" : "902d3e74357945b6b7048da3549c83b7","x_type" : "field"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_label" : "Active","x_id" : "92d0c28ba7874adf889e6294e892698c","x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_active","x_field_type" : "Bool"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_label" : "Table","x_id" : "a154b929cedc4ffb8b50fb2707b1d1bd","x_type" : "field","x_table" : "x_business_rule","x_field" : "x_table","x_field_type" : "String"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_id" : "a83d387024e248b2af445081ac650b99","x_type" : "relation","x_table" : "x_choice_list","x_field" : "x_id","x_field_type" : "String","x_label" : "Choice Lists"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "x_user","x_field" : "x_active","x_field_type" : "Bool","x_label" : "Active","x_id" : "a93ed72a0e354dddb125edeb09ab7e5c","x_type" : "field"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_choice_list","x_field" : "x_value","x_field_type" : "String","x_label" : "Value","x_id" : "b505843331224d88b0c2fafaff4dabaf"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field" : "x_script_name","x_field_type" : "String","x_label" : "Script Name","x_id" : "be051acff200425ba7895105ae6e97ff","x_type" : "field","x_table" : "x_scheduled_job"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_label" : "Name","x_id" : "bfc436bacfec4e829624e58f95d9b6c4","x_type" : "field","x_table" : "x_importset","x_field" : "x_name","x_field_type" : "String"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "x_choice_list","x_field" : "x_id","x_field_type" : "String","x_label" : "ID","x_id" : "c50585331234d88b0c2fafa7ff4dabef","x_type" : "field"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_history","x_field" : "x_table","x_field_type" : "String","x_label" : "Table","x_id" : "cb48a425a77844f3b9882d68e0633519"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_label" : "Script Name","x_id" : "d042e31034024ed3a137162348a0980c","x_type" : "field","x_table" : "x_business_rule","x_field" : "x_script_name","x_field_type" : "String"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_user","x_field" : "x_id","x_field_type" : "String","x_label" : "ID","x_id" : "d50584331234d88bac2fafa7ff4dabe0"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Name","x_id" : "dfae8bb39ab749cb85858384d4f9024c","x_type" : "field","x_table" : "x_user","x_field" : "x_name"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_importset","x_field" : "x_mappings","x_field_type" : "String","x_label" : "Mappings","x_id" : "e0a4c1ced00145aa9df1f5f9092cb6c5"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_label" : "Table","x_id" : "e51b24b9cbb64b25aa7e7a1703c10025","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_table","x_field_type" : "String"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Import Sets","x_id" : "ebd69ea124b542438fa425a78f6deeaf","x_type" : "relation","x_table" : "x_importset","x_field" : "x_id"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "relation","x_table" : "x_scheduled_job","x_field" : "x_id","x_field_type" : "String","x_label" : "Scheduled Jobs","x_id" : "ed7bc95173b34ed6af28016833c1a5c1"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_id" : "ee989f93e64f41059961072b261a9a1b","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_active","x_field_type" : "Bool","x_label" : "Active"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field_type" : "Bool","x_label" : "Active","x_id" : "ee989f93e64f41159961072b261a9a1c","x_type" : "field","x_table" : "x_business_rule","x_field" : "x_active"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_id" : "eebd74ff2ba748699ecc3d3eab752eb6","x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_seconds","x_field_type" : "Number","x_label" : "Cadence in Seconds"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "x_history","x_field" : "x_created","x_field_type" : "String","x_label" : "Created On","x_id" : "efdc57dc8d1d4be180208541b9287a1a","x_type" : "field"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "relation","x_table" : "x_business_rule","x_field" : "x_id","x_field_type" : "String","x_label" : "Business Rules","x_id" : "f1554df867914b28a8937883a411004e"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_last_run","x_field_type" : "DateTime","x_label" : "Last Run","x_id" : "f1e0c9348386442d97b7ccaaa7497f84"}
+
+2022-07-31 21:50:30	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:50:30	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'x_history' ORDER BY x_id ASC
+
+2022-07-31 21:50:30	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'x_history' ORDER BY x_id ASC
+
+2022-07-31 21:50:30	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_history' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:50:30	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE x_table = 'x_history'
+
+2022-07-31 21:50:30	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_history' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Old Value","x_id" : "0e08b242d6ec4c5c8fe1d2dd2c4103fa","x_type" : "field","x_table" : "x_history","x_field" : "x_old"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "relation","x_table" : "x_history","x_field" : "x_id","x_field_type" : "String","x_label" : "History","x_id" : "19c74b216f864d9d843b1b0546e3e943"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field" : "x_record_id","x_field_type" : "String","x_label" : "Target Record ID","x_id" : "5992c75ebb0d4191bda084d3de0063ec","x_type" : "field","x_table" : "x_history"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "x_history","x_field" : "x_field","x_field_type" : "String","x_label" : "Field","x_id" : "64a9113026724c33961c07b8a71c58a8","x_type" : "field"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_id" : "80505b389d7541c0b722cd8ca733201b","x_type" : "field","x_table" : "x_history","x_field" : "x_id","x_field_type" : "String","x_label" : "ID"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_history","x_field" : "x_new","x_field_type" : "String","x_label" : "New Value","x_id" : "902d3e74357945b6b7048da3549c83b7"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_field" : "x_table","x_field_type" : "String","x_label" : "Table","x_id" : "cb48a425a77844f3b9882d68e0633519","x_type" : "field","x_table" : "x_history"}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_history","x_field" : "x_created","x_field_type" : "String","x_label" : "Created On","x_id" : "efdc57dc8d1d4be180208541b9287a1a"}
+
+2022-07-31 21:50:30	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:50:30	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_history' AND x_type = 'field' )
+
+2022-07-31 21:50:30	info	SQL:RowQuerier.Query()	SELECT x_old, x_record_id, x_field, x_id, x_new, x_table, x_created FROM x_history ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-31 21:50:30	info	SQL:SqlRunner.Query()	SELECT x_old, x_record_id, x_field, x_id, x_new, x_table, x_created FROM x_history ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-31 21:50:30	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_history
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_created" : "","x_old" : "","x_record_id" : "","x_field" : "","x_id" : "1b25f57b2bb04af4b8ceaf4024743f7b","x_new" : "","x_table" : ""}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "","x_created" : "","x_old" : "","x_record_id" : "","x_field" : "","x_id" : "80acc073930d4f1caff15a53d8b6659b","x_new" : ""}
+
+2022-07-31 21:50:30	info	JSON-ENCODING	{"x_table" : "","x_created" : "","x_old" : "","x_record_id" : "","x_field" : "","x_id" : "e30f678b7500497c8b5481181aca5171","x_new" : ""}
+
+2022-07-31 21:50:30	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:51:06	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:51:06	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:51:06	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_user' AND x_type = 'field' )
+
+2022-07-31 21:51:06	info	SQL:RowQuerier.Query()	SELECT x_active, x_id, x_name FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93' ORDER BY x_id ASC
+
+2022-07-31 21:51:06	info	SQL:SqlRunner.Query()	SELECT x_active, x_id, x_name FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93' ORDER BY x_id ASC
+
+2022-07-31 21:51:06	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_user WHERE x_id = '32087ff656e8454da58f6879392a3e93'
+
+2022-07-31 21:51:06	info	SQL:SqlRunner.Run()	UPDATE `x_user` SET  `x_active` = 'true', `x_name` = 'clown' WHERE x_id ='32087ff656e8454da58f6879392a3e93';
+
+2022-07-31 21:51:06	info	REST:onAfterUpdate	calling script OnUpdate_x_user
+
+2022-07-31 21:51:06	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current , see below
+
+2022-07-31 21:51:06	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_id 32087ff656e8454da58f6879392a3e93
+
+2022-07-31 21:51:06	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_name clown
+
+2022-07-31 21:51:06	info	GRPC_CallBusinessRule	GRPC_CallBusinessRule: current x_active true
+
+2022-07-31 21:51:06	info	GRPC_CallBusinessRule	BusinessRule Message: success
+
+2022-07-31 21:51:06	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:51:12	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema ORDER BY x_id ASC LIMIT 0, 100
+
+2022-07-31 21:51:12	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema ORDER BY x_id ASC LIMIT 0, 100
+
+2022-07-31 21:51:12	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Old Value","x_id" : "0e08b242d6ec4c5c8fe1d2dd2c4103fa","x_type" : "field","x_table" : "x_history","x_field" : "x_old","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Users","x_id" : "0f41a9af981b4257b49b913a2f6477ba","x_type" : "relation","x_table" : "x_user","x_field" : "x_id","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_table" : "x_history","x_field" : "x_id","x_field_type" : "String","x_label" : "History","x_id" : "19c74b216f864d9d843b1b0546e3e943","x_type" : "relation"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field" : "x_id","x_field_type" : "String","x_label" : "ID","x_id" : "3242bbc567db44cd9a6a5eef6b9ec647","x_type" : "field","x_table" : "x_importset"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_importset","x_field" : "x_target_table","x_field_type" : "String","x_label" : "Target Table","x_id" : "375b5b9005fb477cb4a0820388619eb9"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Field","x_id" : "3d7380342fa24a889e6b7d798b826e37","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_field"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "ID","x_id" : "4e0186bc33b541cfb645eb35c55ec08d","x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_id"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "528b099d0219495a8133d2fd7a362562","x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_starting_datetime","x_field_type" : "DateTime","x_label" : "Starting Datetime"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field" : "x_record_id","x_field_type" : "String","x_label" : "Target Record ID","x_id" : "5992c75ebb0d4191bda084d3de0063ec","x_type" : "field","x_table" : "x_history"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "59ac9b572db74392b5827f11e1224963","x_type" : "field","x_table" : "x_business_rule","x_field" : "x_id","x_field_type" : "String","x_label" : "ID"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "5d56c1fae6cb450dbcebfd817d6a5bd7","x_type" : "field","x_table" : "x_importset","x_field" : "x_adapter","x_field_type" : "String","x_label" : "Adapter"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Field","x_id" : "64a9113026724c33961c07b8a71c58a8","x_type" : "field","x_table" : "x_history","x_field" : "x_field","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "6ad40d20c168407fa35fda63bbbcd909","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_order","x_field_type" : "Number","x_label" : "Order"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "80505b389d7541c0b722cd8ca733201b","x_type" : "field","x_table" : "x_history","x_field" : "x_id","x_field_type" : "String","x_label" : "ID"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_table" : "x_choice_list","x_field" : "x_name","x_field_type" : "String","x_label" : "Name","x_id" : "8498deb0c4e740609dcf0cc7d0f8a9ae","x_type" : "field"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "New Value","x_id" : "902d3e74357945b6b7048da3549c83b7","x_type" : "field","x_table" : "x_history","x_field" : "x_new","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_table" : "x_scheduled_job","x_field" : "x_active","x_field_type" : "Bool","x_label" : "Active","x_id" : "92d0c28ba7874adf889e6294e892698c","x_type" : "field"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_business_rule","x_field" : "x_table","x_field_type" : "String","x_label" : "Table","x_id" : "a154b929cedc4ffb8b50fb2707b1d1bd"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_table" : "x_choice_list","x_field" : "x_id","x_field_type" : "String","x_label" : "Choice Lists","x_id" : "a83d387024e248b2af445081ac650b99","x_type" : "relation"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field" : "x_active","x_field_type" : "Bool","x_label" : "Active","x_id" : "a93ed72a0e354dddb125edeb09ab7e5c","x_type" : "field","x_table" : "x_user"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Value","x_id" : "b505843331224d88b0c2fafaff4dabaf","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_value"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "be051acff200425ba7895105ae6e97ff","x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_script_name","x_field_type" : "String","x_label" : "Script Name"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_importset","x_field" : "x_name","x_field_type" : "String","x_label" : "Name","x_id" : "bfc436bacfec4e829624e58f95d9b6c4"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "ID","x_id" : "c50585331234d88b0c2fafa7ff4dabef","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_id"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field" : "x_table","x_field_type" : "String","x_label" : "Table","x_id" : "cb48a425a77844f3b9882d68e0633519","x_type" : "field","x_table" : "x_history"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Script Name","x_id" : "d042e31034024ed3a137162348a0980c","x_type" : "field","x_table" : "x_business_rule","x_field" : "x_script_name","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_user","x_field" : "x_id","x_field_type" : "String","x_label" : "ID","x_id" : "d50584331234d88bac2fafa7ff4dabe0"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Name","x_id" : "dfae8bb39ab749cb85858384d4f9024c","x_type" : "field","x_table" : "x_user","x_field" : "x_name","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Mappings","x_id" : "e0a4c1ced00145aa9df1f5f9092cb6c5","x_type" : "field","x_table" : "x_importset","x_field" : "x_mappings","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "e51b24b9cbb64b25aa7e7a1703c10025","x_type" : "field","x_table" : "x_choice_list","x_field" : "x_table","x_field_type" : "String","x_label" : "Table"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "relation","x_table" : "x_importset","x_field" : "x_id","x_field_type" : "String","x_label" : "Import Sets","x_id" : "ebd69ea124b542438fa425a78f6deeaf"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Scheduled Jobs","x_id" : "ed7bc95173b34ed6af28016833c1a5c1","x_type" : "relation","x_table" : "x_scheduled_job","x_field" : "x_id","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field" : "x_active","x_field_type" : "Bool","x_label" : "Active","x_id" : "ee989f93e64f41059961072b261a9a1b","x_type" : "field","x_table" : "x_choice_list"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "ee989f93e64f41159961072b261a9a1c","x_type" : "field","x_table" : "x_business_rule","x_field" : "x_active","x_field_type" : "Bool","x_label" : "Active"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Cadence in Seconds","x_id" : "eebd74ff2ba748699ecc3d3eab752eb6","x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_seconds","x_field_type" : "Number"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Created On","x_id" : "efdc57dc8d1d4be180208541b9287a1a","x_type" : "field","x_table" : "x_history","x_field" : "x_created"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_label" : "Business Rules","x_id" : "f1554df867914b28a8937883a411004e","x_type" : "relation","x_table" : "x_business_rule","x_field" : "x_id","x_field_type" : "String"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "f1e0c9348386442d97b7ccaaa7497f84","x_type" : "field","x_table" : "x_scheduled_job","x_field" : "x_last_run","x_field_type" : "DateTime","x_label" : "Last Run"}
+
+2022-07-31 21:51:12	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:51:12	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'x_history' ORDER BY x_id ASC
+
+2022-07-31 21:51:12	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE x_table = 'x_history' ORDER BY x_id ASC
+
+2022-07-31 21:51:12	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE x_table = 'x_history'
+
+2022-07-31 21:51:12	info	SQL:RowQuerier.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_history' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_history","x_field" : "x_old","x_field_type" : "String","x_label" : "Old Value","x_id" : "0e08b242d6ec4c5c8fe1d2dd2c4103fa"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "relation","x_table" : "x_history","x_field" : "x_id","x_field_type" : "String","x_label" : "History","x_id" : "19c74b216f864d9d843b1b0546e3e943"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_id" : "5992c75ebb0d4191bda084d3de0063ec","x_type" : "field","x_table" : "x_history","x_field" : "x_record_id","x_field_type" : "String","x_label" : "Target Record ID"}
+
+2022-07-31 21:51:12	info	SQL:SqlRunner.Query()	SELECT x_id, x_type, x_table, x_field, x_field_type, x_label FROM x_schema WHERE ( x_table = 'x_history' AND x_type = 'field' ) ORDER BY x_id ASC
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_table" : "x_history","x_field" : "x_field","x_field_type" : "String","x_label" : "Field","x_id" : "64a9113026724c33961c07b8a71c58a8","x_type" : "field"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_history","x_field" : "x_id","x_field_type" : "String","x_label" : "ID","x_id" : "80505b389d7541c0b722cd8ca733201b"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_history","x_field" : "x_new","x_field_type" : "String","x_label" : "New Value","x_id" : "902d3e74357945b6b7048da3549c83b7"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field_type" : "String","x_label" : "Table","x_id" : "cb48a425a77844f3b9882d68e0633519","x_type" : "field","x_table" : "x_history","x_field" : "x_table"}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_type" : "field","x_table" : "x_history","x_field" : "x_created","x_field_type" : "String","x_label" : "Created On","x_id" : "efdc57dc8d1d4be180208541b9287a1a"}
+
+2022-07-31 21:51:12	info	RowQuerier.Close()	Closing DB Connection - successful
+
+2022-07-31 21:51:12	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_schema WHERE ( x_table = 'x_history' AND x_type = 'field' )
+
+2022-07-31 21:51:12	info	SQL:RowQuerier.Query()	SELECT x_old, x_record_id, x_field, x_id, x_new, x_table, x_created FROM x_history ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-31 21:51:12	info	SQL:SqlRunner.Query()	SELECT x_old, x_record_id, x_field, x_id, x_new, x_table, x_created FROM x_history ORDER BY x_id ASC LIMIT 0, 5
+
+2022-07-31 21:51:12	info	SQL:SqlRunner.Query()	SELECT COUNT(1) AS total FROM x_history
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_table" : "","x_created" : "","x_old" : "","x_record_id" : "","x_field" : "","x_id" : "1b25f57b2bb04af4b8ceaf4024743f7b","x_new" : ""}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_old" : "","x_record_id" : "","x_field" : "","x_id" : "80acc073930d4f1caff15a53d8b6659b","x_new" : "","x_table" : "","x_created" : ""}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field" : "","x_id" : "e30f678b7500497c8b5481181aca5171","x_new" : "","x_table" : "","x_created" : "","x_old" : "","x_record_id" : ""}
+
+2022-07-31 21:51:12	info	JSON-ENCODING	{"x_field" : "x_active","x_id" : "f04d9db4d6ff41d2898cd3ada01fe8d1","x_new" : "true","x_table" : "x_user","x_created" : "","x_old" : "","x_record_id" : "32087ff656e8454da58f6879392a3e93"}
+
+2022-07-31 21:51:12	info	RowQuerier.Close()	Closing DB Connection - successful
+

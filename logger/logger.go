@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+func PushStackTrace(s string, err error) error {
+	return errors.New(s + " > " + err.Error())
+}
+
 func Info(msg string, source string) {
 	entry := formatLog("info", string(source), msg)
 

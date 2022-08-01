@@ -47,7 +47,7 @@ func (generator *RowInsert_SqlGenerator) typedValueToSQL(typedValue *flux.TypedV
 		sql = fmt.Sprintf("%s", value)
 
 	} else if typedValue.IsBool() {
-		sql = fmt.Sprintf("%s", value)
+		sql = fmt.Sprintf("'%s'", value)
 
 	} else {
 		return "invalid sql", logger.Error("unrecognized type, cant even see what type it is it", "???")
