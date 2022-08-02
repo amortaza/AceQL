@@ -8,7 +8,14 @@ import (
 	"strconv"
 )
 
+// !log
 func GetRecordsByQuery(c echo.Context) error {
+	LOG_SOURCE := "REST.GetRecordsByQuery()"
+
+	if err := confirmAccess(c); err != nil {
+		return logger.Err(err, LOG_SOURCE)
+	}
+
 	name := c.Param("table")
 
 	encodedQuery := c.QueryParam("query")
@@ -38,7 +45,7 @@ func GetRecordsByQuery(c echo.Context) error {
 	tableschema, err := flux.GetTableSchema(name, crud)
 	if err != nil {
 		c.String(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	r := flux.NewRecord(tableschema, crud)
@@ -51,13 +58,13 @@ func GetRecordsByQuery(c echo.Context) error {
 	index, err := strconv.Atoi(paginationIndex)
 	if err != nil {
 		c.String(500, err.Error())
-		return logger.Err(err, "???")
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	size, err := strconv.Atoi(paginationSize)
 	if err != nil {
 		c.String(500, err.Error())
-		return logger.Err(err, "???")
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	r.Pagination(index, size)
@@ -77,7 +84,7 @@ func GetRecordsByQuery(c echo.Context) error {
 	total, err := r.Query()
 	if err != nil {
 		c.String(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	list := make([]*flux.RecordMap, 0)
@@ -87,7 +94,7 @@ func GetRecordsByQuery(c echo.Context) error {
 
 		if err != nil {
 			c.String(500, err.Error())
-			return err
+			return logger.Err(err, LOG_SOURCE)
 		}
 
 		if !hasNext {

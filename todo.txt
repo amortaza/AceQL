@@ -1,5 +1,6 @@
 core
 ----
+parameterizie SECRET, duration
 wrap await
 the idea of having lower function ONLY display error is bad...you should do it to to give the stack
 have a speciak GetId() in record

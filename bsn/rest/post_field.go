@@ -7,7 +7,14 @@ import (
 	"github.com/labstack/echo"
 )
 
+// !log
 func PostSchemaField(c echo.Context) error {
+	LOG_SOURCE := "REST.PostSchemaField()"
+
+	if err := confirmAccess(c); err != nil {
+		return logger.Err(err, LOG_SOURCE)
+	}
+
 	table := c.Param("table")
 	fieldName := c.Param("field")
 
@@ -15,7 +22,7 @@ func PostSchemaField(c echo.Context) error {
 
 	if err := c.Bind(m); err != nil {
 		c.JSON(500, err.Error())
-		return logger.Err(err, "REST:PostSchemaField()")
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	fieldTypeAsString := (*m)["type"].(string)
@@ -32,14 +39,14 @@ func PostSchemaField(c echo.Context) error {
 	fieldType, err := dbschema.GetFieldTypeByName(fieldTypeAsString)
 	if err != nil {
 		c.JSON(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	field := &dbschema.Field{Name: fieldName, Label: fieldLabel, Type: fieldType}
 
 	if err := schema.CreateField(table, field, true); err != nil {
 		c.JSON(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	return c.JSON(200, "")

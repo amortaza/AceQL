@@ -9,18 +9,25 @@ import (
 	"strconv"
 )
 
+// !log
 func GetRecordsByQuery_CSV(c echo.Context) error {
+	LOG_SOURCE := "REST.GetRecordsByQuery_CSV()"
+
+	if err := confirmAccess(c); err != nil {
+		return logger.Err(err, LOG_SOURCE)
+	}
+
 	r, err := lookupRecords(c)
 	if err != nil {
 		c.String(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 	defer r.Close()
 
 	total, err := r.Query()
 	if err != nil {
 		c.String(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	name := c.Param("table")
@@ -38,17 +45,21 @@ func GetRecordsByQuery_CSV(c echo.Context) error {
 	defer writer.Flush()
 
 	if err := writeRecords(writer, r); err != nil {
-		return err
+		// not writting 500 stream on purpose
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	return nil
 }
 
+// !log
 func writeRecords(writer *csv.Writer, r *flux.Record) error {
+	LOG_SOURCE := "REST.writeRecords()"
+
 	hasNext, err := r.Next()
 
 	if err != nil {
-		return err
+		return logger.PushStackTrace(LOG_SOURCE, err)
 	}
 
 	if !hasNext {
@@ -58,18 +69,18 @@ func writeRecords(writer *csv.Writer, r *flux.Record) error {
 
 	keys, err := writeHeader(writer, r)
 	if err != nil {
-		return err
+		return logger.PushStackTrace(LOG_SOURCE, err)
 	}
 
 	if err := writeRecord(writer, r, keys); err != nil {
-		return err
+		return logger.PushStackTrace(LOG_SOURCE, err)
 	}
 
 	for {
 		hasNext, err := r.Next()
 
 		if err != nil {
-			return err
+			return logger.PushStackTrace(LOG_SOURCE, err)
 		}
 
 		if !hasNext {
@@ -77,14 +88,17 @@ func writeRecords(writer *csv.Writer, r *flux.Record) error {
 		}
 
 		if err := writeRecord(writer, r, keys); err != nil {
-			return err
+			return logger.PushStackTrace(LOG_SOURCE, err)
 		}
 	}
 
 	return nil
 }
 
+// !log
 func writeHeader(writer *csv.Writer, r *flux.Record) ([]string, error) {
+	LOG_SOURCE := "REST.writeHeader()"
+
 	data := r.GetMap().Data
 	keys := make([]string, 0)
 
@@ -93,13 +107,16 @@ func writeHeader(writer *csv.Writer, r *flux.Record) ([]string, error) {
 	}
 
 	if err := writer.Write(keys); err != nil {
-		return nil, logger.Err(err, "CSV Export")
+		return nil, logger.PushStackTrace(LOG_SOURCE, err)
 	}
 
 	return keys, nil
 }
 
+// !log
 func writeRecord(writer *csv.Writer, r *flux.Record, keys []string) error {
+	LOG_SOURCE := "REST.writeRecord()"
+
 	values := make([]string, 0)
 
 	var v string
@@ -113,13 +130,16 @@ func writeRecord(writer *csv.Writer, r *flux.Record, keys []string) error {
 	}
 
 	if err := writer.Write(values); err != nil {
-		return logger.Err(err, "CSV Export")
+		return logger.PushStackTrace(LOG_SOURCE, err)
 	}
 
 	return nil
 }
 
+// !log
 func lookupRecords(c echo.Context) (*flux.Record, error) {
+	LOG_SOURCE := "REST.lookupRecords()"
+
 	name := c.Param("table")
 	encodedQuery := c.QueryParam("query")
 
@@ -144,7 +164,7 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 
 	r, err := stdsql.NewRecord(name)
 	if err != nil {
-		return nil, err
+		return nil, logger.PushStackTrace(LOG_SOURCE, err)
 	}
 
 	if encodedQuery != "" {
@@ -153,23 +173,23 @@ func lookupRecords(c echo.Context) (*flux.Record, error) {
 
 	index, err := strconv.Atoi(paginationIndex)
 	if err != nil {
-		return nil, logger.Err(err, "CSV Export")
+		return nil, logger.PushStackTrace(LOG_SOURCE, err)
 	}
 
 	size, err := strconv.Atoi(paginationSize)
 	if err != nil {
-		return nil, logger.Err(err, "CSV Export")
+		return nil, logger.PushStackTrace(LOG_SOURCE, err)
 	}
 
 	r.Pagination(index, size)
 
 	if orderByAscending {
 		if err := r.SetOrderBy(orderBy); err != nil {
-			return nil, err
+			return nil, logger.PushStackTrace(LOG_SOURCE, err)
 		}
 	} else {
 		if err := r.SetOrderByDesc(orderBy); err != nil {
-			return nil, err
+			return nil, logger.PushStackTrace(LOG_SOURCE, err)
 		}
 	}
 

@@ -11,8 +11,14 @@ func init() {
 	stdsql.Init("mysql", "clown:1844@/bsn")
 }
 
-// 5
 func main() {
+	//auth := authn.NewAuthN("mysecret")
+	//token, _ := auth.CreateToken("ace", time.Second*5)
+	//_, ok := auth.VerifyToken(token)
+}
+
+// 5
+func main2() {
 	//encodedQuery = "where age=\"45\" and name=\"afshin \\\"the clown\\\"\" and thats it"
 	//bootstrap.Run()
 	//parseMappings("first >> u_first, last >> u_last")

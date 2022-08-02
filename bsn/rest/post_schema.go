@@ -7,15 +7,22 @@ import (
 	"github.com/labstack/echo"
 )
 
+// !log
 // PostSchemaTable is where a Table is defined! We are creating a table here.
 func PostSchemaTable(c echo.Context) error {
+	LOG_SOURCE := "REST.PostSchemaField()"
+
+	if err := confirmAccess(c); err != nil {
+		return logger.Err(err, LOG_SOURCE)
+	}
+
 	tableName := c.Param("table")
 
 	m := &echo.Map{}
 
 	if err := c.Bind(m); err != nil {
 		c.JSON(500, err.Error())
-		return logger.Err(err, "REST:PostSchemaTable()")
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	fields := (*m)["fields"].([]interface{})
@@ -26,7 +33,7 @@ func PostSchemaTable(c echo.Context) error {
 	tableschema, err = makeTableSchema(tableName, tableLabel, fields)
 	if err != nil {
 		c.JSON(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	schema := stdsql.NewSchema()
@@ -34,13 +41,16 @@ func PostSchemaTable(c echo.Context) error {
 
 	if err := schema.CreateRelation_withFields(tableschema, true); err != nil {
 		c.JSON(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	return c.JSON(200, "")
 }
 
+// !log
 func makeTableSchema(tableName string, tableLabel string, fields []interface{}) (*dbschema.Table, error) {
+	LOG_SOURCE := "REST.makeTableSchema()"
+
 	relation := dbschema.NewTable(tableName)
 
 	relation.SetLabel(tableLabel)
@@ -55,7 +65,7 @@ func makeTableSchema(tableName string, tableLabel string, fields []interface{}) 
 
 		fieldType, err := dbschema.GetFieldTypeByName(m["type"].(string))
 		if err != nil {
-			return nil, err
+			return nil, logger.PushStackTrace(LOG_SOURCE, err)
 		}
 
 		relation.AddField(fieldName, fieldLabel, fieldType)

@@ -6,7 +6,14 @@ import (
 	"github.com/labstack/echo"
 )
 
+// !log
 func DeleteSchemaField(c echo.Context) error {
+	LOG_SOURCE := "REST.DeleteSchemaField()"
+
+	if err := confirmAccess(c); err != nil {
+		return logger.Err(err, LOG_SOURCE)
+	}
+
 	table := c.Param("table")
 	fieldName := c.Param("field")
 
@@ -14,7 +21,7 @@ func DeleteSchemaField(c echo.Context) error {
 
 	if err := c.Bind(m); err != nil {
 		c.JSON(500, err.Error())
-		return logger.Err(err, "REST")
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	schema := stdsql.NewSchema()
@@ -22,7 +29,7 @@ func DeleteSchemaField(c echo.Context) error {
 
 	if err := schema.DeleteField(table, fieldName); err != nil {
 		c.JSON(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	return c.JSON(200, "")

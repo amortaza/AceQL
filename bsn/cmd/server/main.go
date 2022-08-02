@@ -20,6 +20,10 @@ func main() {
 
 	e.Use(middleware.CORS())
 
+	// login, authn, authz
+	e.POST("/auth", rest.PostAuth)
+	e.POST("/auth/refresh", rest.PostAuthRefresh)
+
 	// get
 	e.GET("/table/:table", rest.GetRecordsByQuery)
 	e.GET("/table/:table/:id", rest.GetRecordById)

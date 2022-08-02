@@ -9,27 +9,34 @@ import (
 	"strconv"
 )
 
+// !log
 // http://localhost:8000/table/x_schema/0
 func GetRecordById(c echo.Context) error {
+	LOG_SOURCE := "REST.GetRecordById()"
+
+	if err := confirmAccess(c); err != nil {
+		return logger.Err(err, LOG_SOURCE)
+	}
+
 	name := c.Param("table")
 	id := c.Param("id")
 
 	r, err := stdsql.NewRecord(name)
 	if err != nil {
 		c.String(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 	defer r.Close()
 
 	if err := r.Add("x_id", query.Equals, id); err != nil {
 		c.String(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	total, err := r.Query()
 	if err != nil {
 		c.String(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	if total == 0 {
@@ -42,7 +49,7 @@ func GetRecordById(c echo.Context) error {
 	_, err = r.Next()
 	if err != nil {
 		c.String(500, err.Error())
-		return err
+		return logger.Err(err, LOG_SOURCE)
 	}
 
 	b, err := json.Marshal(r)
